@@ -46,7 +46,7 @@ def create_card(index):
                         [
                             dbc.Col(
                                 dbc.CardBody(
-                                    [html.H4(name, className="card-title")]
+                                    [html.H4(name, className="card-title", style={"height": "26px", "overflow-x": "scroll", "overflow-y": "hidden", "overflow": "overlay"})]
                                     )
                                 ), 
                             dbc.Col(dbc.CardBody(
@@ -73,7 +73,7 @@ def create_card(index):
                                         html.P(
                                             biography,
                                             className="card-text",
-                                            style={"position": "relative"}
+                                            style={"position": "relative", "height": "120px", "overflow-y": "scroll", "overflow-x": "hidden", "overflow": "overlay"}
                                         ),
                                         html.Hr(),
                                         html.Div([
@@ -107,13 +107,17 @@ def create_card(index):
                     className="g-0 d-flex align-items-center",
                     ),
 
-                    dbc.Button("See more", id="open-fs", class_name="mt-auto", style={"align-self": "stretch", "width": "100%", "flex": "1 1 auto"}),
+                    dbc.Button("See more", value=index, id="open-fs", class_name="mt-auto", style={"align-self": "stretch", "width": "100%", "flex": "1 1 auto"}),
                     dbc.Modal(
                         [
                             dbc.ModalHeader(dbc.ModalTitle("Influencer Profile")),
                             html.Div(
-                                children = [html.Iframe(src="https://www.instagram.com/p/CkqAwI-hWJu/embed")]
-        )
+                                [
+                                    html.H4(name),
+                                    html.Iframe(src="https://www.instagram.com/p/CkqAwI-hWJu/embed")
+                                ]
+                                
+                            )
                         ],
                         id="modal-fs",
                         fullscreen=True,
