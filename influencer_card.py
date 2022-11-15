@@ -73,7 +73,7 @@ def create_card(index):
                                         html.P(
                                             biography,
                                             className="card-text",
-                                            style={"position": "relative", "height": "120px", "overflow-y": "scroll", "overflow-x": "hidden", "overflow": "overlay"}
+                                            style={"position": "relative", "height": "100px", "overflow-y": "scroll", "overflow-x": "hidden", "overflow": "overlay"}
                                         ),
                                         html.Hr(),
                                         html.Div([
