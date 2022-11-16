@@ -4,3 +4,16 @@ iframe{
     overflow-x: hidden; 
     overflow-y: hidden;
 }
+
+.text-muted{
+    padding-top: 15px; 
+}
+
+.btn-hash{
+    background-color: white;
+    color: black; 
+    /* outline-width: 1px;  */
+    border: 1px solid black; 
+    padding: 8px; 
+
+}
