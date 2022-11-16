@@ -1,6 +1,6 @@
 import pandas as pd 
 import numpy as np
-
+import json
 
 ### change the influencers by changing the csv file inserted here. after every analysis can save as a new csv file then insert here!!!! 
 
@@ -33,9 +33,17 @@ def get_profile_data(index):
 
  
     # # 1. for pie chart (type of posts) ## THIS IS FAKE DATA
-    # labels = ['image', 'sidecar', 'video']
+    # labels = ['Images', 'Sidecars', 'Videos']
     # values = [17, 13, 20]
 
+    # res = dict(zip(labels, values))
+    # data_pie = json.dumps(res)
+
+    data_pie = [
+        { 'value': 17, 'name': 'Images' },
+        { 'value': 13, 'name': 'Sidecars' },
+        { 'value': 20, 'name': 'Videos' },
+    ]
     # # 2. radio chart 
 
     # # 3. pie chart (num sponsored?)
@@ -44,6 +52,13 @@ def get_profile_data(index):
 
 
 
-    return name, username, biography, num_followers, dp_path, recent_post
+    return name, username, biography, num_followers, dp_path, recent_post, data_pie
 
-# def generate_pie_chart(label, values): 
+def dropdown_options():
+    options = []
+    for i in range(len(data)): 
+        dic_item = {"label": [], "value": []}
+        dic_item["label"] = data['username'][i]
+        dic_item["value"] = i
+        options.append(dic_item)
+    return options 

@@ -1,10 +1,16 @@
 # Dash components, html, and dash tables
-from dash import dcc 
+from dash import dcc     
+import dash_echarts
+from dash.exceptions import PreventUpdate
+from os import path
+import json
+
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
 from data import get_card_data, get_profile_data
 
 from dash import Input, Output, State, html, callback 
+from echarts import option_graph, create_pie_chart, create_radar
 
 def create_listgroup(list):
     item_list = []
@@ -19,6 +25,13 @@ def hashtag_buttons(list):
         button = dbc.Button("#"+item, className="btn-hash", href="https://www.instagram.com/explore/tags/" + item)
         hash_list.append(button)
     return hash_list
+
+data = {"Images": 17, "Sidecars": 13, "Videos": 20}
+datajson = json.dumps(data)
+
+# def pie_chart(): 
+#     option = "{ tooltip: {trigger: 'item'},legend: {top: '5%',left: 'center'},series: [{name: 'Access From',type: 'pie',radius: ['40%', '70%'],avoidLabelOverlap: false,itemStyle: {borderRadius: 10,borderColor: '#fff',borderWidth: 2},label: {show: false,position: 'center'},emphasis: {label: {show: true,fontSize: '40',fontWeight: 'bold'}},labelLine: {show: false},data: { value: 17, name: 'Images' },{ value: 13, name: 'Sidecars' },{ value: 20, name: 'Videos' }}]};"
+#     return option 
 
 def create_card(index):
     name, username, biography, num_followers, dp_path = get_card_data(index)
@@ -113,11 +126,11 @@ def create_card(index):
     className="mb-3",
     style = {"margin": "30px", "maxWidth": "600px"}
     )
-    return(card)
+    return card 
 
 def create_profile(index): 
     index = int(index)
-    name, username, biography, num_followers, dp_path, recent_post = get_profile_data(index)
+    name, username, biography, num_followers, dp_path, recent_post, data_pie = get_profile_data(index)
 
     # creating table 
     table_header = [html.Thead(html.Tr([html.Th("Followers"), html.Th(str(num_followers))]))]
@@ -127,7 +140,6 @@ def create_profile(index):
     row4 = html.Tr([html.Td("Engagement Rate"), html.Td("63%")])
     table_body = [html.Tbody([row1, row2, row3, row4])]
     table = dbc.Table(table_header + table_body, bordered=True, hover=True, responsive=True)
-
 
 
     profile = html.Div(
@@ -166,8 +178,6 @@ def create_profile(index):
 
                                     html.H4("Hashtags", className='text-muted'), 
                                     html.Div(hashtag_buttons(["movingrubber", "groomingtips", "hairstyling", "TrustBankSG", "RicolaSG"]))
-                                    # hashtag_buttons(["movingrubber", "groomingtips", "hairstyling", "TrustBankSG", "RicolaSG"])
-                                    # dbc.Button("#kjahsdkjasd", className="btn-hash", href="https://www.instagram.com/explore/tags/movingrubber/")
                                 ]
                             ),
                             dbc.Col(
@@ -176,16 +186,61 @@ def create_profile(index):
                                     html.H4("Recent Post", className='text-muted'),
                                     html.Iframe(src="https://www.instagram.com/p/" + recent_post + "/embed")
                                 ]
-                                
-
                             )
                         ]
                     ), 
                     html.H3("Visualisations", style={"margin-top": "15px"}),
                     dbc.Progress(value=70),
 
+                    html.Div([
+                        dbc.Row([
+                            dbc.Col(
+                                className='col', 
+                                children=[
+                                html.H4("Type of Posts", className='text-muted'), 
+                                # pie chart 
+                                dash_echarts.DashECharts(
+                                    option = create_pie_chart(data_pie),
+                                    # events = events,
+                                    id='echarts_pie',
+                                    style={
+                                        "width": '40vw',
+                                        "height": '30vh',
+                                    },
+                                ),
+                            ]), 
+                            dbc.Col(
+                                className='col', 
+                                children=[
+                                html.H4("Compared with Average", className='text-muted'), 
+                                dash_echarts.DashECharts(
+                                    option = create_radar(),
+                                    # events = events,
+                                    id='echarts_radar',
+                                    style={
+                                        "width": '40vw',
+                                        "height": '30vh',
+                                    },
+                                ),
+
+                            ])
+                        ])
+                    ]),
+
+                    
+
                     html.H3("Connections", style={"margin-top": "15px"}),
                     dbc.Progress(value=100),
+
+                    dash_echarts.DashECharts(
+                        option = option_graph,
+                        # events = events,
+                        id='echarts_graph',
+                        style={
+                            "width": '100vw',
+                            "height": '90vh',
+                        },
+                    )
                     
                 ], 
             )

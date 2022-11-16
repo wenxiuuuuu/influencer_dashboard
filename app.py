@@ -57,7 +57,6 @@ def display_page(pathname):
         return navbar, comparison_page
     else:
         return navbar, home_page
-    # You could also return a 404 "URL not found" page here
 
 if __name__ == '__main__':
     app.run_server(debug=True)
