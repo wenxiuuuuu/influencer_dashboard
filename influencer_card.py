@@ -254,12 +254,14 @@ empty_div = html.Div("Influencer's profile cannot be found :(")
 
 @callback(
     output=[Output("modal-fs", "is_open"), Output("modal-fs", "children")],
-    inputs=Input("open_fs", "n_clicks"),
-    state=[State("modal-fs", "is_open"), State("open_fs", "value")]
+    inputs=[Input("open_fs", "n_clicks"), Input("open_fs", "value")], 
+    state=[State("modal-fs", "is_open") ]
 )
-def toggle_modal(n, is_open, open_fs):
+def toggle_modal(n, open_fs, is_open):
     if n:
         profile = create_profile(open_fs)
+        # profile = html.H3("HIII" + open_fs)
+        print(n, open_fs, is_open)
         return [(not is_open), profile]
     
     return [is_open, empty_div]
