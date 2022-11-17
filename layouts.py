@@ -115,7 +115,7 @@ comparison_page = html.Div(
                 ])
             ]), 
         ]), 
-        dbc.Button("Submit", id="compare-options", n_clicks=0, style={"width": "30%", "justify-content": "center", "display": "flex"}), 
+        dbc.Button("Submit", id="compare_options", n_clicks=0, style={"width": "30%", "justify-content": "center", "display": "flex"}), 
         html.Div(id='comparison')
     ]
 )
@@ -138,10 +138,10 @@ def dropdown_two(dropdown_2):
 
 @callback(
     output=Output(component_id="comparison", component_property="children"), 
-    inputs=[Input(component_id="compare-options", component_property="n_clicks"), 
+    inputs=[Input(component_id="compare_options", component_property="n_clicks"), 
     Input(component_id='dropdown_1', component_property="value"), Input(component_id='dropdown_2', component_property="value")]
 )
-def show_comparison(dropdown_1, dropdown_2, compare_options): 
+def show_comparison(compare_options, dropdown_1, dropdown_2): 
     if compare_options>0: 
         result = html.H3("choice 1 is " + str(dropdown_1) + " choice2 is " + str(dropdown_2))
     # result = html.H3("Please make your choice!")
