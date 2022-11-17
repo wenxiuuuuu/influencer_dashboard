@@ -1,0 +1,4 @@
+dash-bootstrap-components
+chart-studio
+dash
+dash-echarts
