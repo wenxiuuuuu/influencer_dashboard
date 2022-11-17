@@ -54,7 +54,7 @@ def create_card(index):
                                     [html.H4(username, className="card-title", style={"text-align": "right"})]
                                 )
                             ),
-                            html.Hr()
+                            html.Hr(style={'margin-top':'-1vw', 'margin-left': '0.8vw', 'width':'40vw'})
                         ]
                     ), 
                     dbc.Row(
@@ -63,7 +63,7 @@ def create_card(index):
                                 dbc.CardImg(
                                     src=dp_path,
                                     className="img-fluid rounded-start",
-                                    # style = {"max-width": "180px", "max-height": "180px"}
+                                    style = {"max-width": "180px", "min-height": "180px", 'border-radius': '50%'}
                                 ),
                                 className="col-md-4",
                             ),
@@ -105,10 +105,10 @@ def create_card(index):
                                 className="col-md-8",
                             ),
                         ],
-                    className="g-0 d-flex align-items-center",
+                    className="g-0 d-flex align-items-center", style={'margin-top':'-1vw'}
                     ),
 
-                    dbc.Button("See more", value=index, id=f"open_fs{index}", class_name="mt-auto",style={"width": "100%"}),
+                    dbc.Button("See more", value=index, id=f"open_fs{index}", class_name="mt-auto", style={"width": "100%"}),
                     # style={"align-self": "stretch", "width": "105%", "flex": "1 1 auto"}
                     dbc.Modal(
                         # [

@@ -102,7 +102,7 @@ influencer_posts_df['video_view_count'] = influencer_posts_df['video_view_count'
     
 #     return result_dict
 
-data = influencer_profile_df
+data = influencer_profile_df.sort_values('username').reset_index(drop=True)
 
 def get_data_length(): 
     return len(data)
@@ -228,7 +228,7 @@ def get_influencer_statistics(username):
     result_dict['post_type'] = dict(current_influencer_posts['post_type'].value_counts())
     result_dict['avg_video_views'] = current_influencer_posts['video_view_count'].mean()
     all_mentions = []
-    print(len(current_influencer_posts['mentions']))
+    # print(len(current_influencer_posts['mentions']))
     for row in current_influencer_posts['mentions']:
         # for i in eval(row):
         for i in row:
