@@ -139,6 +139,6 @@ def dropdown_two(dropdown_2):
 )
 def show_comparison(compare_options, dropdown_1, dropdown_2): 
     if compare_options>0: 
-        result = html.H3("no of clicks is " + str(compare_options) + " choice1 is " + str(dropdown_2) + "choice2 is " + str(dropdown_2))
-        # result = html.H3("Please make your choice!")
+        result = html.H3("choice 1 is " + str(dropdown_1) + " choice2 is " + str(dropdown_2))
+    # result = html.H3("Please make your choice!")
         return result
