@@ -38,7 +38,8 @@ def create_card(index):
     # name, username, biography, num_followers, dp_path = get_card_data(index)
     name, username, biography, num_followers, dp_path, recent_post, avg_comments, avg_likes, avg_video_views, post_type, mentions, hashtags, category_counts = get_profile_data(index)
 
-    card = dbc.Card(
+    card = dbc.Container([
+        dbc.Card(
         [
             html.Div(
                 [
@@ -53,7 +54,7 @@ def create_card(index):
                                     [html.H4(username, className="card-title", style={"text-align": "right"})]
                                 )
                             ),
-                            html.Hr()
+                            html.Hr(style={'margin-top':'-1vw', 'margin-left': '0.8vw', 'width':'40vw'})
                         ]
                     ), 
                     dbc.Row(
@@ -62,7 +63,7 @@ def create_card(index):
                                 dbc.CardImg(
                                     src=dp_path,
                                     className="img-fluid rounded-start",
-                                    # style = {"max-width": "180px", "max-height": "180px"}
+                                    style = {"max-width": "180px", "min-height": "180px", 'border-radius': '50%'}
                                 ),
                                 className="col-md-4",
                             ),
@@ -104,10 +105,10 @@ def create_card(index):
                                 className="col-md-8",
                             ),
                         ],
-                    className="g-0 d-flex align-items-center",
+                    className="g-0 d-flex align-items-center", style={'margin-top':'-1vw'}
                     ),
 
-                    dbc.Button("See more", value=index, id=f"open_fs{index}", class_name="mt-auto",style={"width": "104.5%", "margin-left":'-0.85vw'}),
+                    dbc.Button("See more", value=index, id=f"open_fs{index}", class_name="mt-auto", style={"width": "100%"}),
                     # style={"align-self": "stretch", "width": "105%", "flex": "1 1 auto"}
                     dbc.Modal(
                         # [
@@ -124,10 +125,10 @@ def create_card(index):
                     ),
                 ]
             )
-                    
+        ])          
     ],
     className="mb-3",
-    style = {"margin": "30px", "width": "600px"}
+    style = {"margin": "1vw", "maxWidth": "40vw", "padding": "0px"}
     )
     return card 
 
@@ -208,36 +209,52 @@ def create_profile(index):
                             dbc.Col(
                                 className='col', 
                                 children=[
-                                html.H4("Type of Posts", className='text-muted'), 
-                                # pie chart 
-                                dash_echarts.DashECharts(
-                                    option = create_pie_chart(index),
-                                    # events = events,
-                                    id='echarts_pie',
-                                    style={
-                                        "width": '40vw',
-                                        "height": '30vh',
-                                    },
+                                    dbc.Card([
+                                        html.H4("Type of Posts", className='text-muted'), 
+                                        # pie chart 
+                                        dash_echarts.DashECharts(
+                                            option = create_pie_chart(index),
+                                            # events = events,
+                                            id='echarts_pie',
+                                            style={
+                                                "width": '30vw',
+                                                "height": '30vh',
+                                            },
+                                        )
+                                    ], style={"margin": "5px", "width": '30vw'}
                                 ),
+                                ],
+                                style={"box-sizing": 'border-box'}), 
+                            dbc.Col(
+                                className='col', 
+                                children=[
+                                    dbc.Card([
+                                        html.H4("Compared with Average", className='text-muted'), 
+                                        dash_echarts.DashECharts(
+                                            option = create_radial(index),
+                                            # events = events,
+                                            id='echarts_radar',
+                                            style={
+                                                "width": '30vw',
+                                                "height": '30vh',
+                                            },
+                                        ),
+                                    ], style={"margin": "3px", "width": '30vw'}), 
                             ]), 
                             dbc.Col(
                                 className='col', 
                                 children=[
-                                html.H4("Compared with Average", className='text-muted'), 
-                                dash_echarts.DashECharts(
-                                    option = create_radial(index),
-                                    # events = events,
-                                    id='echarts_radar',
-                                    style={
-                                        "width": '40vw',
-                                        "height": '30vh',
-                                    },
-                                ),
-
-                            ])
+                                    dbc.Card([
+                                        html.H4("Categories & Collaborators", className='text-muted'), 
+                                        dcc.Graph(figure=sunburst_fig, 
+                                            style={
+                                                "width": '50vw', 
+                                            },)
+                                    ], style={"margin": "5px", "width": '30vw'}), 
+                            ]), 
                         ]), 
                         dbc.Row([
-                           dcc.Graph(figure=sunburst_fig)
+                        #    emptyyyy 
                         ])
                     ]),
 

@@ -7,6 +7,7 @@ from influencer_card import create_card
 from dash import Input, Output, State, callback
 from data import dropdown_options 
 from data import *
+from data import get_data_length
 
 # home page!
 home_page = html.Div(
@@ -94,39 +95,42 @@ success_msg = html.Div(
 
 # influencer page 
 row = [] 
-for i in range(10): 
+for i in range(get_data_length()): 
     row.append(create_card(i))
 
-cards = dbc.Container(dbc.Row(row))
+cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
 
 influencers_page = cards
 
 comparison_page = html.Div(
-    className="container", 
     children=[
         html.H3("Compare Two Influencers", style={"margin-top": "30px", "text-align": "center"}), 
-        html.Div([
+        dbc.Container([
             dbc.Row([
                 dbc.Col([
                     dcc.Dropdown(
                         id="dropdown_1",
                         options=dropdown_options(),
-                        value=1
+                        value=0,
+                        style={"margin-left": "7px", "width": "97.8%"}
                         ),
                     html.Div(id="influencer-1"), 
-                    
                 ]), 
                 dbc.Col([
                     dcc.Dropdown(
                         id="dropdown_2",
                         options=dropdown_options(),
-                        value=2
+                        value=1, 
+                        style={"margin-left": "7px", "width": "97.8%"}
                         ),
                     html.Div(id="influencer-2"), 
                 ])
             ]), 
         ]), 
-        dbc.Button("Submit", id="compare_options", n_clicks=0, style={"width": "30%", "justify-content": "center", "display": "flex"}), 
+        html.Div(
+            [dbc.Button("Submit", id="compare_options", n_clicks=0, style={"width": "20%"})], 
+            style={"display": "flex", "align-items": "center", "justify-content": "center"}
+        ),  
         html.Div(id='comparison')
     ]
 )
