@@ -79,7 +79,7 @@ success_msg = html.Div(
 
 # influencer page 
 row = [] 
-for i in range(5): 
+for i in range(10): 
     row.append(create_card(i))
 
 cards = dbc.Container(dbc.Row(row))
