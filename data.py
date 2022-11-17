@@ -102,6 +102,11 @@ influencer_posts_df['video_view_count'] = influencer_posts_df['video_view_count'
     
 #     return result_dict
 
+def get_data_length(): 
+    return len(influencer_profile_df)
+
+print(get_data_length())
+
 def get_profile_data(index): 
 
     # basic data 
@@ -223,6 +228,7 @@ def get_influencer_statistics(username):
     result_dict['post_type'] = dict(current_influencer_posts['post_type'].value_counts())
     result_dict['avg_video_views'] = current_influencer_posts['video_view_count'].mean()
     all_mentions = []
+    print(len(current_influencer_posts['mentions']))
     for row in current_influencer_posts['mentions']:
         # for i in eval(row):
         for i in row:
@@ -262,11 +268,8 @@ def get_influencer_statistics(username):
         })
     
     return result_dict
-    
-# import plotly.express as px
-# influencer_stats = get_influencer_statistics('eileenmak')
-# sunburst_fig = px.sunburst(influencer_stats['username_cat_df'], path=['category', 'username'])
-# sunburst_fig.show()
+
+# print(get_influencer_statistics('parisabong').keys())
 
 def dropdown_options():
     options = []

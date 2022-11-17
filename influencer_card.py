@@ -38,7 +38,8 @@ def create_card(index):
     # name, username, biography, num_followers, dp_path = get_card_data(index)
     name, username, biography, num_followers, dp_path, recent_post, avg_comments, avg_likes, avg_video_views, post_type, mentions, hashtags, category_counts = get_profile_data(index)
 
-    card = dbc.Card(
+    card = dbc.Container([
+        dbc.Card(
         [
             html.Div(
                 [
@@ -107,7 +108,7 @@ def create_card(index):
                     className="g-0 d-flex align-items-center",
                     ),
 
-                    dbc.Button("See more", value=index, id=f"open_fs{index}", class_name="mt-auto",style={"width": "104.5%", "margin-left":'-0.85vw'}),
+                    dbc.Button("See more", value=index, id=f"open_fs{index}", class_name="mt-auto",style={"width": "100%"}),
                     # style={"align-self": "stretch", "width": "105%", "flex": "1 1 auto"}
                     dbc.Modal(
                         # [
@@ -124,10 +125,10 @@ def create_card(index):
                     ),
                 ]
             )
-                    
+        ])          
     ],
     className="mb-3",
-    style = {"margin": "30px", "width": "600px"}
+    style = {"margin": "1vw", "maxWidth": "40vw", "padding": "0px"}
     )
     return card 
 
