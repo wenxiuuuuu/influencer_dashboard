@@ -102,10 +102,10 @@ influencer_posts_df['video_view_count'] = influencer_posts_df['video_view_count'
     
 #     return result_dict
 
-def get_data_length(): 
-    return len(influencer_profile_df)
+data = influencer_profile_df
 
-print(get_data_length())
+def get_data_length(): 
+    return len(data)
 
 def get_profile_data(index): 
 
