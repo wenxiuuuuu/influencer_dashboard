@@ -1,5 +1,6 @@
 import json 
 import dash_echarts
+from data import radial_data
 
 def create_pie_chart(data): 
     option_pie = {
@@ -29,42 +30,55 @@ def create_pie_chart(data):
 
 
 # radar chart 
-def create_radar(): 
-    option_radar = {
+def create_radial(index): 
+    username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views = radial_data(index)
+    option_radial = {
+        'title': {
+            'text': 'Multiple Radar'
+        },
         'tooltip': {
-            'trigger': 'item'
+            'trigger': 'axis'
         },
         'legend': {
-            'orient': 'vertical',
-            'left': 'left',
-            'data': ['Influencer', 'Average']
-        },
-        'radar': {
-            'indicator': [
-            { 'name': 'Followers', 'max': 30000 },
-            { 'name': 'Likes', 'max': 2000 },
-            { 'name': 'Comments', 'max': 300 },
-            { 'name': 'Engagement', 'max': 100 },
-            { 'name': 'Sponsorships', 'max': 100 }
+            'left': 'center',
+            'data': [
+            'A Phone',
+            'Another Phone',
             ]
         },
+        'radar': [
+            {
+            'indicator': [
+                { 'text': 'Followers', 'max': 5 },
+                { 'text': 'Avg Likes', 'max': 5 },
+                { 'text': 'Avg Video Views', 'max': 5 },
+                { 'text': 'Avg Comments', 'max': 5 }
+            ],
+            'radius': 100,
+            #   'center': ['50%', '60%']
+            },
+        ],
         'series': [
             {
             'type': 'radar',
+            'tooltip': {
+                'trigger': 'item'
+            },
+            'areaStyle': {},
             'data': [
                 {
-                'value': [20770, 502, 89, 63, 78],
-                'name': 'Influencer'
+                'value': [total_avg_followers, total_avg_likes, total_avg_video_views, total_avg_comments],
+                'name': 'Average'
                 },
                 {
-                'value': [15800, 730, 39, 42, 59],
-                'name': 'Average'
+                'value': [influencer_followers, influencer_likes, influencer_video_views, influencer_comments],
+                'name': username
                 }
             ]
-            }
+            },
         ]
         }
-    return option_radar
+    return option_radial
 
 
 f = open('inf_graph.json')

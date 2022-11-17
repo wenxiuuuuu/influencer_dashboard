@@ -10,7 +10,7 @@ import dash_bootstrap_components as dbc
 from data import get_card_data, get_profile_data
 
 from dash import Input, Output, State, html, callback 
-from echarts import option_graph, create_pie_chart, create_radar
+from echarts import option_graph, create_pie_chart, create_radial
 
 def create_listgroup(list):
     item_list = []
@@ -105,7 +105,7 @@ def create_card(index):
                     className="g-0 d-flex align-items-center",
                     ),
 
-                    dbc.Button("See more", value=index, id="open_fs", class_name="mt-auto", style={"align-self": "stretch", "width": "100%", "flex": "1 1 auto"}),
+                    dbc.Button("See more", value=index, id=f"open_fs{index}", class_name="mt-auto", style={"align-self": "stretch", "width": "100%", "flex": "1 1 auto"}),
                     dbc.Modal(
                         # [
                         #     dbc.ModalHeader(dbc.ModalTitle("Influencer Profile")),
@@ -116,7 +116,7 @@ def create_card(index):
                         #         ]
                         #     )
                         # ],
-                        id="modal-fs",
+                        id=f"modal-fs{index}",
                         fullscreen=True,
                     ),
                 ]
@@ -214,7 +214,7 @@ def create_profile(index):
                                 children=[
                                 html.H4("Compared with Average", className='text-muted'), 
                                 dash_echarts.DashECharts(
-                                    option = create_radar(),
+                                    option = create_radial(index),
                                     # events = events,
                                     id='echarts_radar',
                                     style={
@@ -252,12 +252,9 @@ def create_profile(index):
 # in case cannot return profile 
 empty_div = html.Div("Influencer's profile cannot be found :(")
 
-@callback(
-    output=[Output("modal-fs", "is_open"), Output("modal-fs", "children")],
-    inputs=[Input("open_fs", "n_clicks"), Input("open_fs", "value")], 
-    state=[State("modal-fs", "is_open") ]
-)
-def toggle_modal(n, open_fs, is_open):
+
+def toggle_modal(n, is_open, open_fs):
+    print(n, is_open, open_fs)
     if n:
         profile = create_profile(open_fs)
         # profile = html.H3("HIII" + open_fs)
@@ -265,3 +262,9 @@ def toggle_modal(n, open_fs, is_open):
         return [(not is_open), profile]
     
     return [is_open, empty_div]
+for i in range(5):
+    callback(
+        output=[Output(f"modal-fs{i}", "is_open"), Output(f"modal-fs{i}", "children")],
+        inputs=Input(f"open_fs{i}", "n_clicks"),
+        state=[State(f"modal-fs{i}", "is_open"), State(f"open_fs{i}", "value")]
+    )(toggle_modal)
