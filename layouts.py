@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 from influencer_card import create_card
 from dash import Input, Output, State, callback
 from data import dropdown_options 
-
+from data import *
 
 # home page!
 home_page = html.Div(
@@ -32,6 +32,7 @@ home_page = html.Div(
                             {"label": "Lifestyle", "value": "lifestyle"},
                             {"label": "Food", "value": "food"},
                             ],
+                        value = 'fashion'
                         ),
                     ],
                     className="mb-3",
@@ -60,6 +61,7 @@ home_page = html.Div(
     state=[State("instagram", "value"), State("follower_range", "value"), State("category", "value")]
 )
 def save_info(n_clicks, instagram, follower_range, category): 
+
     if n_clicks > 0: 
         ig_text = html.H4("instagram is: " + str(instagram))
         followers = html.H4("follower range is: " + str(follower_range[0]) + " to " + str(follower_range[1]))
@@ -67,8 +69,21 @@ def save_info(n_clicks, instagram, follower_range, category):
         
         # INFORMATION FROM COMPANY IS AVAILABLE HERE!! USE THIS PART TO TAKE DATA FOR FILTERS 
 
+        # check if user exists in our companies db 
+        # 1. filter the df
+        filtered_df = get_filtered_influ_df(instagram, follower_range, category)
+        # print(filtered_df)
+        # 2. rank the users
         
-        # return ig_text, followers, cate
+        # 3. get the cards for each in their ranking order
+        sorted_df = rank_filtered_df(filtered_df, category)
+        sorted_indices = list(sorted_df.index)
+        print("INDICES")
+        print(sorted_indices)
+        row = []
+        for i in sorted_indices: 
+            row.append(create_card(i))
+
         return success_msg, influencers_page
 
 success_msg = html.Div(
