@@ -8,6 +8,7 @@ print(client.server_info()) # just a sanity check
 db1 = client['influencer_db']
 influencers = db1.profile_info
 posts = db1.posts
+category = db1.category
 
 doc_list = []
 for document in posts.find():
