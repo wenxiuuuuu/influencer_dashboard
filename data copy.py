@@ -12,13 +12,10 @@ from collections import Counter
 with open('data/profile_category_dict.pkl', 'rb') as f:
     company_cat = pickle.load(f)
 
-# data = pd.read_csv('data/influencers_with-profile-pic.csv')
+data = pd.read_csv('data/influencers_with-profile-pic.csv')
 # influencer_posts_df = pd.read_csv('data/influencer_post_db_temp.csv')
-# influencer_posts_df = pd.read_csv('data/influencer_posts_df_1.csv')
-data = pd.read_csv('data/influencer_db_17112022.csv')
 influencer_posts_df = pd.read_csv('data/influencer_posts_df_1.csv')
 influencer_posts_df['edge_media_to_caption'] = influencer_posts_df['edge_media_to_caption'].replace(np.nan, '')
-
 
 # get intersection of both df
 profile_user = list(data['username'])
@@ -47,60 +44,60 @@ influencer_posts_df['video_view_count'] = influencer_posts_df['video_view_count'
 
 
 # function to extract hashtags and mentions from captions
-# def parse_caption(row):
-#     mentions = [re.sub('[^0-9a-zA-Z_\.]+', '', i[1:]) for i in row.edge_media_to_caption.split() if i.startswith('@')]
-#     hashtags = [i[1:] for i in row.edge_media_to_caption.split() if i.startswith('#')]
-#     all_mentions = set(mentions + eval(row['edge_media_to_tagged_users']))
-#     all_mentions = list(all_mentions)
-#     row['mentions'] = all_mentions
-#     row['hashtags'] = hashtags
-#     return row
+def parse_caption(row):
+    mentions = [re.sub('[^0-9a-zA-Z_\.]+', '', i[1:]) for i in row.edge_media_to_caption.split() if i.startswith('@')]
+    hashtags = [i[1:] for i in row.edge_media_to_caption.split() if i.startswith('#')]
+    all_mentions = set(mentions + eval(row['edge_media_to_tagged_users']))
+    all_mentions = list(all_mentions)
+    row['mentions'] = all_mentions
+    row['hashtags'] = hashtags
+    return row
 
-# def get_influencer_statistics(df):
-#     """_summary_
-#     Args:
-#         df (pd.DataFrame): current_influencer_posts
-#         num_followers (int): number of followers for this influencer
+def get_influencer_statistics(df):
+    """_summary_
+    Args:
+        df (pd.DataFrame): current_influencer_posts
+        num_followers (int): number of followers for this influencer
 
-#     Returns:
-#         Dict: Useful information to display
-#             avg_comments: float
-#             avg_likes: float
-#             post_type: dict[type: count] GraphVideo GraphSidecar GraphImage
-#             avg_video_views: float
-#             mentions: top 10 mentions
-#             hashtags: top 10 hashtags
-#     """
-#     result_dict = {}
-#     # result_dict['num_followers'] = num_followers
-#     result_dict['avg_comments'] = df['edge_media_to_comment'].mean()
-#     result_dict['avg_likes'] = df['edge_liked_by'].mean()
-#     result_dict['post_type'] = dict(df['post_type'].value_counts())
-#     result_dict['avg_video_views'] = df['video_view_count'].mean()
-#     all_mentions = []
-#     for row in df['mentions']:
-#         for i in row:
-#             all_mentions.append(i)
-#     mention_counts = sorted(Counter(all_mentions).items(), key=lambda item: -item[1])
+    Returns:
+        Dict: Useful information to display
+            avg_comments: float
+            avg_likes: float
+            post_type: dict[type: count] GraphVideo GraphSidecar GraphImage
+            avg_video_views: float
+            mentions: top 10 mentions
+            hashtags: top 10 hashtags
+    """
+    result_dict = {}
+    # result_dict['num_followers'] = num_followers
+    result_dict['avg_comments'] = df['edge_media_to_comment'].mean()
+    result_dict['avg_likes'] = df['edge_liked_by'].mean()
+    result_dict['post_type'] = dict(df['post_type'].value_counts())
+    result_dict['avg_video_views'] = df['video_view_count'].mean()
+    all_mentions = []
+    for row in df['mentions']:
+        for i in row:
+            all_mentions.append(i)
+    mention_counts = sorted(Counter(all_mentions).items(), key=lambda item: -item[1])
 
-#     top_mentions = [i[0] for i in mention_counts][:10]
-#     result_dict['mentions'] = top_mentions
+    top_mentions = [i[0] for i in mention_counts][:10]
+    result_dict['mentions'] = top_mentions
     
-#     all_hashtags = []
-#     for row in df['hashtags']:
-#         for i in row:
-#             all_hashtags.append(i.lower())
-#     hashtag_counts = sorted(Counter(all_hashtags).items(), key=lambda item: -item[1])
+    all_hashtags = []
+    for row in df['hashtags']:
+        for i in row:
+            all_hashtags.append(i.lower())
+    hashtag_counts = sorted(Counter(all_hashtags).items(), key=lambda item: -item[1])
 
-#     top_hashtags = [i[0] for i in hashtag_counts][:10]
-#     result_dict['hashtags'] = top_hashtags
+    top_hashtags = [i[0] for i in hashtag_counts][:10]
+    result_dict['hashtags'] = top_hashtags
     
-#     mentions_category = [company_cat.get(i) for i in all_mentions if company_cat.get(i)]
-#     category_counts = Counter(mentions_category)
-#     # print(category_counts)
-#     result_dict['category_counts'] = category_counts
+    mentions_category = [company_cat.get(i) for i in all_mentions if company_cat.get(i)]
+    category_counts = Counter(mentions_category)
+    # print(category_counts)
+    result_dict['category_counts'] = category_counts
     
-#     return result_dict
+    return result_dict
 
 def get_profile_data(index): 
 
@@ -112,9 +109,9 @@ def get_profile_data(index):
     dp_path = '/assets/images/' + username[1:] + '.jpg'   
     recent_post = data['recent_pic_short'][index] # recent post url 
 
-    # current_influencer_posts = influencer_posts_df[influencer_posts_df['username'] == username[1:]]
-    # current_influencer_posts = current_influencer_posts.apply(parse_caption, axis=1)
-    influencer_stats_dict = get_influencer_statistics(username[1:])
+    current_influencer_posts = influencer_posts_df[influencer_posts_df['username'] == username[1:]]
+    current_influencer_posts = current_influencer_posts.apply(parse_caption, axis=1)
+    influencer_stats_dict = get_influencer_statistics(current_influencer_posts)
     avg_comments = int(influencer_stats_dict['avg_comments'])
     avg_likes = int(influencer_stats_dict['avg_likes'])
     avg_video_views = int(influencer_stats_dict['avg_video_views'])
@@ -184,90 +181,6 @@ def radial_data(index):
 
     return username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views
 
-
-## utilities 
-
-def parse_caption(row):
-    # print(row.edge_media_to_caption)
-    mentions = [re.sub('[^0-9a-zA-Z_\.]+', '', i[1:]) for i in row.edge_media_to_caption.split() if i.startswith('@')]
-    hashtags = [i[1:] for i in row.edge_media_to_caption.split() if i.startswith('#')]
-    all_mentions = set(mentions + eval(row['edge_media_to_tagged_users']))
-    all_mentions = list(all_mentions)
-    # print('all mentions', all_mentions)
-    row['mentions'] = all_mentions
-    row['hashtags'] = hashtags
-    return row
-
-def get_influencer_statistics(username):
-    """_summary_
-
-    Args:
-        df (pd.DataFrame): Profile dataframe
-
-    Returns:
-        Dict: Useful information to display
-            avg_comments: float
-            avg_likes: float
-            post_type: dict[type: count] GraphVideo GraphSidecar GraphImage
-            avg_video_views: float
-            mentions: top 10 mentions
-            hashtags: top 10 hashtags
-            
-    """
-    current_influencer_posts = influencer_posts_df[influencer_posts_df['username'] == username]
-    current_influencer_posts = current_influencer_posts.apply(parse_caption, axis=1)
-
-    result_dict = {}
-    result_dict['avg_comments'] = current_influencer_posts['edge_media_to_comment'].mean()
-    result_dict['avg_likes'] = current_influencer_posts['edge_liked_by'].mean()
-    result_dict['post_type'] = dict(current_influencer_posts['post_type'].value_counts())
-    result_dict['avg_video_views'] = current_influencer_posts['video_view_count'].mean()
-    all_mentions = []
-    for row in current_influencer_posts['mentions']:
-        # for i in eval(row):
-        for i in row:
-            all_mentions.append(i)
-    mention_counts = sorted(Counter(all_mentions).items(), key=lambda item: -item[1])
-    # print(mention_counts)  # debug
-    top_mentions = [i[0] for i in mention_counts][:10]
-    result_dict['mentions'] = top_mentions
-    
-    all_hashtags = []
-    for row in current_influencer_posts['hashtags']:
-        # for i in eval(row):
-        for i in row:
-            all_hashtags.append(i.lower())
-    hashtag_counts = sorted(Counter(all_hashtags).items(), key=lambda item: -item[1])
-    # print(hashtag_counts)  # debug
-    top_hashtags = [i[0] for i in hashtag_counts][:10]
-    result_dict['hashtags'] = top_hashtags
-    
-    mentions_category = [company_cat.get(i) for i in all_mentions if company_cat.get(i)]
-    category_counts = Counter(mentions_category)
-    # print(category_counts)
-    result_dict['category_counts'] = category_counts
-    
-    all_mentions_cats = [(i, company_cat.get(i))for i in all_mentions if company_cat.get(i)]
-    # print(all_mentions_cats)
-    if all_mentions_cats:
-        user, cat = zip(*all_mentions_cats)
-        result_dict['username_cat_df'] = pd.DataFrame({
-            'username': user,
-            'category': cat 
-        })
-    else:
-        result_dict['username_cat_df'] = pd.DataFrame({
-            'username': [],
-            'category': [] 
-        })
-    
-    return result_dict
-    
-# import plotly.express as px
-# influencer_stats = get_influencer_statistics('eileenmak')
-# sunburst_fig = px.sunburst(influencer_stats['username_cat_df'], path=['category', 'username'])
-# sunburst_fig.show()
-
 def dropdown_options():
     options = []
     for i in range(len(data)): 
@@ -276,4 +189,3 @@ def dropdown_options():
         dic_item["value"] = i
         options.append(dic_item)
     return options 
-

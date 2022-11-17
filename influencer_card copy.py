@@ -8,7 +8,7 @@ import plotly.express as px
 
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
-from data import get_profile_data, get_influencer_statistics
+from data import get_profile_data, pie_data, get_influencer_statistics
 
 from dash import Input, Output, State, html, callback 
 from echarts import option_graph, create_pie_chart, create_radial
@@ -150,8 +150,9 @@ def create_profile(index):
     influencer_stats = get_influencer_statistics(username[1:])
     sunburst_fig = px.sunburst(influencer_stats['username_cat_df'], path=['category', 'username'])
 
+
     profile = html.Div(
-        className='container-fluid  ', 
+        className='container-fluid', 
         children=[
             dbc.ModalHeader(dbc.ModalTitle(name + "'s Profile")),
             html.Div(
@@ -235,7 +236,7 @@ def create_profile(index):
                                 ),
 
                             ])
-                        ]), 
+                        ]),
                         dbc.Row([
                            dcc.Graph(figure=sunburst_fig)
                         ])

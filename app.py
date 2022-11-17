@@ -19,7 +19,7 @@ from dash import Input, Output, State, html
 from dash_bootstrap_components._components.Container import Container
 
 from layouts import (home_page, influencers_page, comparison_page)
-from data import get_card_data
+# from data import get_card_data
 
 app = dash.Dash(
     __name__, 

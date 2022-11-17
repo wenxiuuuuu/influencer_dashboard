@@ -1,8 +1,9 @@
 import json 
 import dash_echarts
-from data import radial_data
+from data import radial_data, pie_data
 
-def create_pie_chart(data): 
+def create_pie_chart(index): 
+    data = pie_data(index)
     option_pie = {
         'tooltip': {
             'trigger': 'item'
