@@ -209,36 +209,52 @@ def create_profile(index):
                             dbc.Col(
                                 className='col', 
                                 children=[
-                                html.H4("Type of Posts", className='text-muted'), 
-                                # pie chart 
-                                dash_echarts.DashECharts(
-                                    option = create_pie_chart(index),
-                                    # events = events,
-                                    id='echarts_pie',
-                                    style={
-                                        "width": '40vw',
-                                        "height": '30vh',
-                                    },
+                                    dbc.Card([
+                                        html.H4("Type of Posts", className='text-muted'), 
+                                        # pie chart 
+                                        dash_echarts.DashECharts(
+                                            option = create_pie_chart(index),
+                                            # events = events,
+                                            id='echarts_pie',
+                                            style={
+                                                "width": '30vw',
+                                                "height": '30vh',
+                                            },
+                                        )
+                                    ], style={"margin": "5px", "width": '30vw'}
                                 ),
+                                ],
+                                style={"box-sizing": 'border-box'}), 
+                            dbc.Col(
+                                className='col', 
+                                children=[
+                                    dbc.Card([
+                                        html.H4("Compared with Average", className='text-muted'), 
+                                        dash_echarts.DashECharts(
+                                            option = create_radial(index),
+                                            # events = events,
+                                            id='echarts_radar',
+                                            style={
+                                                "width": '30vw',
+                                                "height": '30vh',
+                                            },
+                                        ),
+                                    ], style={"margin": "3px", "width": '30vw'}), 
                             ]), 
                             dbc.Col(
                                 className='col', 
                                 children=[
-                                html.H4("Compared with Average", className='text-muted'), 
-                                dash_echarts.DashECharts(
-                                    option = create_radial(index),
-                                    # events = events,
-                                    id='echarts_radar',
-                                    style={
-                                        "width": '40vw',
-                                        "height": '30vh',
-                                    },
-                                ),
-
-                            ])
+                                    dbc.Card([
+                                        html.H4("Categories & Collaborators", className='text-muted'), 
+                                        dcc.Graph(figure=sunburst_fig, 
+                                            style={
+                                                "width": '50vw', 
+                                            },)
+                                    ], style={"margin": "5px", "width": '30vw'}), 
+                            ]), 
                         ]), 
                         dbc.Row([
-                           dcc.Graph(figure=sunburst_fig)
+                        #    emptyyyy 
                         ])
                     ]),
 
