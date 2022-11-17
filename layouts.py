@@ -96,7 +96,8 @@ comparison_page = html.Div(
                     dcc.Dropdown(
                         id="dropdown_1",
                         options=dropdown_options(),
-                        value=1
+                        value=0,
+                        style={"margin-left": "7px", "width": "97.8%"}
                         ),
                     html.Div(id="influencer-1"), 
                 ]), 
@@ -104,8 +105,8 @@ comparison_page = html.Div(
                     dcc.Dropdown(
                         id="dropdown_2",
                         options=dropdown_options(),
-                        value=2, 
-                        style={"margin-left": "10px"}
+                        value=1, 
+                        style={"margin-left": "7px", "width": "97.8%"}
                         ),
                     html.Div(id="influencer-2"), 
                 ])
