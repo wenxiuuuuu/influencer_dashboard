@@ -257,8 +257,6 @@ def toggle_modal(n, is_open, open_fs):
     print(n, is_open, open_fs)
     if n:
         profile = create_profile(open_fs)
-        # profile = html.H3("HIII" + open_fs)
-        print(n, open_fs, is_open)
         return [(not is_open), profile]
     
     return [is_open, empty_div]
