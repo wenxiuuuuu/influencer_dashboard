@@ -40,6 +40,7 @@ navbar = dbc.NavbarSimple(
         ],
     brand="Influ-Finder",
     brand_href="/",
+    sticky='top'
 )
 
 app.layout = html.Div([
@@ -53,6 +54,7 @@ app.layout = html.Div([
 def display_page(pathname):
     if pathname == '/influencers':
         return navbar, influencers_page
+        # return navbar, filter_layout
     elif pathname == '/comparison':
         return navbar, comparison_page
     else:

@@ -9,9 +9,10 @@ import plotly.express as px
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
 from data import get_profile_data, get_influencer_statistics
-
 from dash import Input, Output, State, html, callback 
 from echarts import option_graph, create_pie_chart, create_radial
+
+from mongodata import influencer_df
 
 def create_listgroup(list):
     item_list = []
@@ -27,8 +28,8 @@ def hashtag_buttons(list):
         hash_list.append(button)
     return hash_list
 
-data = {"Images": 17, "Sidecars": 13, "Videos": 20}
-datajson = json.dumps(data)
+# data = {"Images": 17, "Sidecars": 13, "Videos": 20}
+# datajson = json.dumps(data)
 
 # def pie_chart(): 
 #     option = "{ tooltip: {trigger: 'item'},legend: {top: '5%',left: 'center'},series: [{name: 'Access From',type: 'pie',radius: ['40%', '70%'],avoidLabelOverlap: false,itemStyle: {borderRadius: 10,borderColor: '#fff',borderWidth: 2},label: {show: false,position: 'center'},emphasis: {label: {show: true,fontSize: '40',fontWeight: 'bold'}},labelLine: {show: false},data: { value: 17, name: 'Images' },{ value: 13, name: 'Sidecars' },{ value: 20, name: 'Videos' }}]};"
@@ -285,13 +286,13 @@ empty_div = html.Div("Influencer's profile cannot be found :(")
 
 
 def toggle_modal(n, is_open, open_fs):
-    print(n, is_open, open_fs)
+    # print(n, is_open, open_fs)
     if n:
         profile = create_profile(open_fs)
         return [(not is_open), profile]
     
     return [is_open, empty_div]
-for i in range(5):
+for i in range(len(influencer_df)):
     callback(
         output=[Output(f"modal-fs{i}", "is_open"), Output(f"modal-fs{i}", "children")],
         inputs=Input(f"open_fs{i}", "n_clicks"),

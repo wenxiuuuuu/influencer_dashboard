@@ -8,6 +8,8 @@ from dash import Input, Output, State, callback
 from data import dropdown_options 
 from data import *
 from data import get_data_length
+from mongodata import influencer_df
+from mongodata import post_df
 
 # home page!
 home_page = html.Div(
@@ -41,8 +43,7 @@ home_page = html.Div(
                 html.Br(),
                 html.Div([
                     dbc.Label("Follower Range", html_for="range-slider"), 
-                    dcc.RangeSlider(id="follower_range", min=3000, max=50000, 
-                                value=[10000,25000])
+                    dcc.RangeSlider(id="follower_range", min=3000, max=50000, value=[10000,25000], allowCross=False, tooltip={'placement':'bottom', 'always_visible': False})
                 ], 
                 className="mb-3"), 
                 html.Br(), 

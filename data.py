@@ -1,4 +1,5 @@
 import pandas as pd 
+pd.options.mode.chained_assignment = None
 import numpy as np
 import json
 import re
@@ -211,10 +212,8 @@ def parse_caption(row):
 
 def get_influencer_statistics(username):
     """_summary_
-
     Args:
         df (pd.DataFrame): Profile dataframe
-
     Returns:
         Dict: Useful information to display
             avg_comments: float
@@ -304,5 +303,3 @@ def rank_filtered_df(filtered_df, category):
     filtered_df['total_ranking'] = filtered_df['follower_ranking'] + filtered_df['likes_ranking'] + filtered_df['comments_ranking'] + filtered_df['views_ranking']
     filtered_df = filtered_df.sort_values('total_ranking', ascending = False)
     return filtered_df
-
-
