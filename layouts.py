@@ -3,6 +3,7 @@ from dash import dcc
 from dash import html 
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
+from data import get_filtered_influ_df, rank_filtered_df
 from influencer_card import create_card
 from dash import Input, Output, State, callback
 from data import dropdown_options 
@@ -10,6 +11,15 @@ from data import *
 from data import get_data_length
 from mongodata import influencer_df
 from mongodata import post_df
+import pandas as pd
+
+# def update_filtered_sorted_df(data= None):
+#     print('updating filtered df')
+#     filtered_sorted_df = data
+#     return filtered_sorted_df
+
+# filtered_sorted_df = pd.DataFrame()
+
 
 # home page!
 home_page = html.Div(
@@ -56,7 +66,12 @@ home_page = html.Div(
         )
     ]
 )
+filtered_sorted_df = pd.DataFrame()
+row = [] 
 
+num_filtered_users = 10
+results = pd.DataFrame()
+sort_idx = []
 @callback(
     output=Output(component_id="results", component_property="children"), 
     inputs=[Input(component_id="submit", component_property="n_clicks")], 
@@ -76,16 +91,17 @@ def save_info(n_clicks, instagram, follower_range, category):
         filtered_df = get_filtered_influ_df(instagram, follower_range, category)
         # print(filtered_df)
         # 2. rank the users
-        
+        print("filtered")
         # 3. get the cards for each in their ranking order
         sorted_df = rank_filtered_df(filtered_df, category)
         sorted_indices = list(sorted_df.index)
         print("INDICES")
         print(sorted_indices)
-        row = []
+        global filtered_sorted_df
+        filtered_sorted_df = sorted_df
+        global row
         for i in sorted_indices: 
-            row.append(create_card(i))
-
+            row.append(create_card(i, filtered_sorted_df))
         return success_msg, influencers_page
 
 success_msg = html.Div(
@@ -94,10 +110,9 @@ success_msg = html.Div(
         html.H4("Successful! Influencers you are matched with: ", style={"text-align": "center"})
     ])
 
-# influencer page 
-row = [] 
-for i in range(get_data_length()): 
-    row.append(create_card(i))
+# influencer page d
+# for i in range(get_data_length(filtered_sorted_df)): 
+#     row.append(create_card(i, filtered_sorted_df))
 
 cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
 
@@ -142,7 +157,7 @@ comparison_page = html.Div(
 )
 def dropdown_one(dropdown_1): 
     influencer_one = dropdown_1
-    return create_card(influencer_one)
+    return create_card(influencer_one, False)
 
 @callback(
     output=Output(component_id="influencer-2", component_property="children"), 
@@ -150,7 +165,7 @@ def dropdown_one(dropdown_1):
 )
 def dropdown_two(dropdown_2): 
     influencer_two = dropdown_2
-    return create_card(influencer_two)
+    return create_card(influencer_two, False)
 
 @callback(
     output=Output(component_id="comparison", component_property="children"), 

@@ -8,6 +8,7 @@ from collections import Counter
 from mongodata import influencer_df
 from mongodata import post_df
 from constants import * 
+import ast
 
 ### change the influencers by changing the csv file inserted here. after every analysis can save as a new csv file then insert here!!!! 
 
@@ -19,22 +20,22 @@ with open('data/profile_category_dict.pkl', 'rb') as f:
 # data = pd.read_csv('data/influencers_with-profile-pic.csv')
 # influencer_posts_df = pd.read_csv('data/influencer_post_db_temp.csv')
 # influencer_posts_df = pd.read_csv('data/influencer_posts_df_1.csv')
-data = pd.read_csv('data/influencer_db_17112022.csv')
+csv_main_data = pd.read_csv('data/influencer_db_17112022.csv')
 influencer_posts_df = pd.read_csv('data/influencer_posts_df_1.csv')
 influencer_stats = pd.read_csv('data/influencer_stats.csv')
-data = influencer_df
+csv_main_data = influencer_df
 influencer_posts_df = post_df
 influencer_posts_df['edge_media_to_caption'] = influencer_posts_df['edge_media_to_caption'].replace(np.nan, '')
 
 
 # get intersection of both df
-profile_user = list(data['username'])
+profile_user = list(csv_main_data['username'])
 post_user = list(influencer_posts_df['username'])
 def intersection(lst1, lst2):
     lst3 = [value for value in lst1 if value in lst2]
     return lst3
 intersect_list = intersection(profile_user, post_user)
-influencer_profile_df = data[data['username'].isin(intersect_list)]
+influencer_profile_df = csv_main_data[csv_main_data['username'].isin(intersect_list)]
 influencer_posts_df = influencer_posts_df[influencer_posts_df['username'].isin(intersect_list)]
 
 influencer_profile_df['num_followers'] = influencer_profile_df['num_followers'].fillna(0)
@@ -109,12 +110,12 @@ influencer_posts_df['video_view_count'] = influencer_posts_df['video_view_count'
     
 #     return result_dict
 
-data = influencer_profile_df.sort_values('username').reset_index(drop=True)
+csv_main_data = influencer_profile_df.sort_values('username').reset_index(drop=True)
 
-def get_data_length(): 
+def get_data_length(data = csv_main_data): 
     return len(data)
 
-def get_profile_data(index): 
+def get_profile_data(index, data = csv_main_data): 
     
     # basic data 
     name = data['name'][index]
@@ -278,9 +279,9 @@ def get_influencer_statistics(username):
 
 def dropdown_options():
     options = []
-    for i in range(len(data)): 
+    for i in range(len(csv_main_data)): 
         dic_item = {"label": [], "value": []}
-        dic_item["label"] = data['username'][i]
+        dic_item["label"] = csv_main_data['username'][i]
         dic_item["value"] = i
         options.append(dic_item)
     return options 
@@ -293,13 +294,43 @@ def get_filtered_influ_df(ig_text, follower_range, cate):
     filtered_categ = filtered_follower_count[filtered_follower_count['top_category'].isin(finegrained_cate)]
     return filtered_categ
 
+def get_categ_count(row, category):
+    finegrained_cate = CATEGORY_DICT.get(category, [])
+    cur_categs = row['category_count']
+    keys  = [cur_categs.keys]
+    common = list(set(keys).intersection(set(finegrained_cate)))
+    print('common', common)
+    count = 0 
+    for c in common:
+        count += cur_categs[c]
+    try:
+        count = cur_categs['Clothing (Brand)']
+    except:
+        count = 0
+    return count
+
+def get_categ_count_df(category, filtered_df):
+    cat_dicts = list(filtered_df['category_count'])
+    finegrained_cate = CATEGORY_DICT.get(category, [])
+    counts = []
+    for c in cat_dicts:                                                     
+        c =  ast.literal_eval(c)
+        count = 0
+        for cat in list(c.keys()):
+            # print(cat)
+            if cat in finegrained_cate:
+                count += c[cat]
+        counts.append(count)    
+    filtered_df['cat_count'] = counts
+    return filtered_df
+
 def rank_filtered_df(filtered_df, category):
     influencer_stats
     filtered_df['follower_ranking'] = filtered_df['num_followers'].rank(pct=True)
     filtered_df['likes_ranking'] = filtered_df['avg_likes'].rank(pct=True)
     filtered_df['comments_ranking'] = filtered_df['avg_comments'].rank(pct=True)
     filtered_df['views_ranking'] = filtered_df['avg_video_views'].rank(pct=True)
-    # TODO: num posts for the current sponsor
-    filtered_df['total_ranking'] = filtered_df['follower_ranking'] + filtered_df['likes_ranking'] + filtered_df['comments_ranking'] + filtered_df['views_ranking']
+    filtered_df = get_categ_count_df(category, filtered_df)
+    filtered_df['total_ranking'] = filtered_df['follower_ranking'] + filtered_df['likes_ranking'] + filtered_df['comments_ranking'] + filtered_df['views_ranking'] + filtered_df['cat_count']
     filtered_df = filtered_df.sort_values('total_ranking', ascending = False)
     return filtered_df

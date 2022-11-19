@@ -4,11 +4,13 @@ import dash_echarts
 from dash.exceptions import PreventUpdate
 from os import path
 import json
+import pandas as pd
 import plotly.express as px
 
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
 from data import get_profile_data, get_influencer_statistics
+
 from dash import Input, Output, State, html, callback 
 from echarts import option_graph, create_pie_chart, create_radial
 
@@ -35,9 +37,9 @@ def hashtag_buttons(list):
 #     option = "{ tooltip: {trigger: 'item'},legend: {top: '5%',left: 'center'},series: [{name: 'Access From',type: 'pie',radius: ['40%', '70%'],avoidLabelOverlap: false,itemStyle: {borderRadius: 10,borderColor: '#fff',borderWidth: 2},label: {show: false,position: 'center'},emphasis: {label: {show: true,fontSize: '40',fontWeight: 'bold'}},labelLine: {show: false},data: { value: 17, name: 'Images' },{ value: 13, name: 'Sidecars' },{ value: 20, name: 'Videos' }}]};"
 #     return option 
 
-def create_card(index):
+def create_card(index, data):
     # name, username, biography, num_followers, dp_path = get_card_data(index)
-    name, username, biography, num_followers, dp_path, recent_post, avg_comments, avg_likes, avg_video_views, post_type, mentions, hashtags, category_counts = get_profile_data(index)
+    name, username, biography, num_followers, dp_path, recent_post, avg_comments, avg_likes, avg_video_views, post_type, mentions, hashtags, category_counts = get_profile_data(index, data)
 
     card = dbc.Container([
         dbc.Card(

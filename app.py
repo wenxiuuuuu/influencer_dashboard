@@ -21,6 +21,13 @@ from dash_bootstrap_components._components.Container import Container
 from layouts import (home_page, influencers_page, comparison_page)
 # from data import get_card_data
 
+import argparse 
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-db", "--dbtype", help="MONGO / CSV")
+args = parser.parse_args()
+database_type = args.dbtype
+
 app = dash.Dash(
     __name__, 
     meta_tags=[{"name": "viewport", "content": "width=device-width"}],
