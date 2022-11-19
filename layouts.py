@@ -7,7 +7,7 @@ from influencer_card import create_card
 from dash import Input, Output, State, callback
 from data import dropdown_options 
 from data import *
-from data import get_data_length
+# from data import get_data_length
 from mongodata import influencer_df
 from mongodata import post_df
 
@@ -64,27 +64,27 @@ home_page = html.Div(
 )
 def save_info(n_clicks, instagram, follower_range, category): 
 
-    if n_clicks > 0: 
-        ig_text = html.H4("instagram is: " + str(instagram))
-        followers = html.H4("follower range is: " + str(follower_range[0]) + " to " + str(follower_range[1]))
-        cate = html.H4("category is: " + str(category))
+    # if n_clicks > 0: 
+    #     ig_text = html.H4("instagram is: " + str(instagram))
+    #     followers = html.H4("follower range is: " + str(follower_range[0]) + " to " + str(follower_range[1]))
+    #     cate = html.H4("category is: " + str(category))
         
-        # INFORMATION FROM COMPANY IS AVAILABLE HERE!! USE THIS PART TO TAKE DATA FOR FILTERS 
+    #     # INFORMATION FROM COMPANY IS AVAILABLE HERE!! USE THIS PART TO TAKE DATA FOR FILTERS 
 
-        # check if user exists in our companies db 
-        # 1. filter the df
-        filtered_df = get_filtered_influ_df(instagram, follower_range, category)
-        # print(filtered_df)
-        # 2. rank the users
+    #     # check if user exists in our companies db 
+    #     # 1. filter the df
+    #     filtered_df = get_filtered_influ_df(instagram, follower_range, category)
+    #     # print(filtered_df)
+    #     # 2. rank the users
         
-        # 3. get the cards for each in their ranking order
-        sorted_df = rank_filtered_df(filtered_df, category)
-        sorted_indices = list(sorted_df.index)
-        print("INDICES")
-        print(sorted_indices)
-        row = []
-        for i in sorted_indices: 
-            row.append(create_card(i))
+    #     # 3. get the cards for each in their ranking order
+    #     sorted_df = rank_filtered_df(filtered_df, category)
+    #     sorted_indices = list(sorted_df.index)
+    #     print("INDICES")
+    #     print(sorted_indices)
+    #     row = []
+    #     for i in sorted_indices: 
+    #         row.append(create_card(i)) # NEED TO CHANGE TO CREATE_CARD(USERNAME) INSTEAD OF INDEX
 
         return success_msg, influencers_page
 
@@ -96,7 +96,7 @@ success_msg = html.Div(
 
 # influencer page 
 row = [] 
-for i in range(get_data_length()): 
+for i in influencer_df['username']: 
     row.append(create_card(i))
 
 cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
