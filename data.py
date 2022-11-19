@@ -134,7 +134,7 @@ def get_influencer_statistics(username):
 
 def dropdown_options():
     options = []
-    for i in range(len(csv_main_influencer_df)): 
+    for i in range(len(influencer_df)): 
         dic_item = {"label": [], "value": []}
         dic_item["label"] = influencer_df['username'][i]
         dic_item["value"] = i

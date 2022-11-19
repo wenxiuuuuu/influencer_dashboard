@@ -94,14 +94,17 @@ def save_info(n_clicks, instagram, follower_range, category):
         print("filtered")
         # 3. get the cards for each in their ranking order
         sorted_df = rank_filtered_df(filtered_df, category)
-        sorted_indices = list(sorted_df.index)
+        sorted_usernames = list(sorted_df['username'])
         print("INDICES")
-        print(sorted_indices)
+        print(sorted_usernames)
         global filtered_sorted_df
         filtered_sorted_df = sorted_df
         global search_row
-        for i in sorted_indices: 
-            row.append(create_card(i, filtered_sorted_df))
+        search_row = [] 
+        for i in sorted_usernames: 
+            search_row.append(create_card(i))
+        search_cards = dbc.Container(dbc.Row(search_row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
+        search_page = search_cards
         return success_msg, search_page
 
 success_msg = html.Div(
