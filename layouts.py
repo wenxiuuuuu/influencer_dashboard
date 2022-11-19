@@ -8,7 +8,7 @@ from influencer_card import create_card
 from dash import Input, Output, State, callback
 from data import dropdown_options 
 from data import *
-from data import get_data_length
+# from data import get_data_length
 from mongodata import influencer_df
 from mongodata import post_df
 import pandas as pd
@@ -79,12 +79,12 @@ sort_idx = []
 )
 def save_info(n_clicks, instagram, follower_range, category): 
 
-    if n_clicks > 0: 
-        ig_text = html.H4("instagram is: " + str(instagram))
-        followers = html.H4("follower range is: " + str(follower_range[0]) + " to " + str(follower_range[1]))
-        cate = html.H4("category is: " + str(category))
+    # if n_clicks > 0: 
+    #     ig_text = html.H4("instagram is: " + str(instagram))
+    #     followers = html.H4("follower range is: " + str(follower_range[0]) + " to " + str(follower_range[1]))
+    #     cate = html.H4("category is: " + str(category))
         
-        # INFORMATION FROM COMPANY IS AVAILABLE HERE!! USE THIS PART TO TAKE DATA FOR FILTERS 
+    #     # INFORMATION FROM COMPANY IS AVAILABLE HERE!! USE THIS PART TO TAKE DATA FOR FILTERS 
 
         # check if user exists in our companies db 
         # 1. filter the df
@@ -110,13 +110,10 @@ success_msg = html.Div(
         html.H4("Successful! Influencers you are matched with: ", style={"text-align": "center"})
     ])
 
-search_cards = dbc.Container(dbc.Row(search_row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
-search_page = search_cards
-
-row = []
-# influencer page
-for i in range(get_data_length(influencer_df)): 
-    row.append(create_card(i, influencer_df))
+# influencer page 
+row = [] 
+for i in influencer_df['username']: 
+    row.append(create_card(i))
 
 cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
 influencers_page = cards

@@ -2,8 +2,8 @@ import json
 import dash_echarts
 from data import radial_data, pie_data
 
-def create_pie_chart(index): 
-    data = pie_data(index)
+def create_pie_chart(username): 
+    data = pie_data(username)
     option_pie = {
         'tooltip': {
             'trigger': 'item'
@@ -31,8 +31,8 @@ def create_pie_chart(index):
 
 
 # radar chart 
-def create_radial(index): 
-    username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views = radial_data(index)
+def create_radial(username): 
+    username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views = radial_data(username)
     option_radial = {
         'title': {
             'text': 'Multiple Radar'
