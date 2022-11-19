@@ -57,7 +57,7 @@ def create_card(username):
                                     )
                                 ), 
                             dbc.Col(dbc.CardBody(
-                                    [html.H4(username, className="card-title", style={"text-align": "right"})]
+                                    [html.H4('@' + username, className="card-title", style={"text-align": "right"})]
                                 )
                             ),
                             html.Hr(style={'margin-top':'-1vw', 'margin-left': '0.8vw', 'width':'40vw'})
@@ -127,7 +127,9 @@ def create_card(username):
                         #     )
                         # ],
                         id=f"modal-fs{current_influencer_df['username_html'].values[0]}",
-                        fullscreen=True,
+                        # fullscreen=True,
+                        scrollable=True,
+                        size='xl',
                     ),
                 ]
             )
@@ -159,13 +161,14 @@ def create_profile(username):
     sunburst_fig = px.sunburst(influencer_stats['username_cat_df'], path=['category', 'username'])
 
     profile = html.Div(
-        className='container-fluid  ', 
+        className='container-fluid', 
         children=[
             dbc.ModalHeader(dbc.ModalTitle(current_influencer_df['name'] + "'s Profile")),
             html.Div(
                 [
                     html.H3("Basic Information", style={"margin-top": "15px"}),
                     dbc.Progress(value=33),
+                    html.Br(),
 
                     dbc.Row(
                         [
@@ -178,13 +181,13 @@ def create_profile(username):
 
                                     html.H4("Top Categories", className="text-muted"), 
                                     # create_listgroup(["Men Health", "Fitness", "Tech"]), 
-                                    create_listgroup(list(influencer_stats['category_counts'].keys())), 
+                                    create_listgroup(list(influencer_stats['category_counts'].keys())[:5]), 
 
                                     html.Br(), 
 
-                                    html.H4("Collaborations", className='text-muted'), 
+                                    html.H4("Top Collaborations", className='text-muted'), 
                                     # create_listgroup(["gatsbysg", "thetinselrack", "byinviteonlystore"])
-                                    create_listgroup(influencer_stats['mentions'])
+                                    create_listgroup(influencer_stats['mentions'][:5])
                                 ]
                             ), 
                             dbc.Col(
@@ -208,77 +211,78 @@ def create_profile(username):
                             )
                         ]
                     ), 
-                    html.H3("Visualisations", style={"margin-top": "15px"}),
+                    html.Br(),
+                    html.H3("Metrics", style={"margin-top": "15px"}),
                     dbc.Progress(value=70),
+                    html.Br(),
 
                     html.Div([
                         dbc.Row([
                             dbc.Col(
                                 className='col', 
                                 children=[
-                                    dbc.Card([
-                                        html.H4("Type of Posts", className='text-muted'), 
+                                    # dbc.Card([
+                                        html.H4("Type of Posts", className='text-muted', style={'text-align':'center'}), 
                                         # pie chart 
                                         dash_echarts.DashECharts(
                                             option = create_pie_chart(username),
                                             # events = events,
                                             id='echarts_pie',
                                             style={
-                                                "width": '30vw',
-                                                "height": '30vh',
+                                                "width": '35vw',
+                                                "height": '35vh',
                                             },
                                         )
-                                    ], style={"margin": "5px", "width": '30vw'}
-                                ),
+                                    # ], style={"margin": "5px", "width": '30vw'},
+                                # ),
                                 ],
                                 style={"box-sizing": 'border-box'}), 
                             dbc.Col(
                                 className='col', 
                                 children=[
-                                    dbc.Card([
-                                        html.H4("Compared with Average", className='text-muted'), 
+                                    # dbc.Card([
+                                        html.H4("Compared with Average", className='text-muted', style={'text-align':'center'}), 
                                         dash_echarts.DashECharts(
                                             option = create_radial(username),
                                             # events = events,
                                             id='echarts_radar',
                                             style={
-                                                "width": '30vw',
-                                                "height": '30vh',
+                                                "width": '35vw',
+                                                "height": '35vh',
                                             },
                                         ),
-                                    ], style={"margin": "3px", "width": '30vw'}), 
+                                    # ], style={"margin": "3px", "width": '30vw'}), 
                             ]), 
-                            dbc.Col(
-                                className='col', 
-                                children=[
-                                    dbc.Card([
-                                        html.H4("Categories & Collaborators", className='text-muted'), 
-                                        dcc.Graph(figure=sunburst_fig, 
-                                            style={
-                                                "width": '50vw', 
-                                            },)
-                                    ], style={"margin": "5px", "width": '30vw'}), 
-                            ]), 
+                            # dbc.Col(
+                            #     className='col', 
+                            #     ), 
                         ]), 
                         dbc.Row([
-                        #    emptyyyy 
-                        ])
+                                # dbc.Card([
+                                    html.H4("Categories & Collaborators", className='text-muted', style={'text-align':'center'}), 
+                                    dcc.Graph(figure=sunburst_fig, 
+                                        style={
+                                            "width": '50vw', 
+                                        },)
+                                # ], style={"margin": "5px", "width": '30vw'}), 
+                            ])
                     ]),
 
                     
-
+                    html.Br(),
                     html.H3("Connections", style={"margin-top": "15px"}),
                     dbc.Progress(value=100),
+                    html.Br(),
 
-                    dash_echarts.DashECharts(
-                        option = option_graph,
-                        # events = events,
-                        id='echarts_graph',
-                        style={
-                            "width": '100vw',
-                            "height": '90vh',
-                        },
-                    )
+                    # dash_echarts.DashECharts(
+                    #     option = option_graph,
+                    #     # events = events,
+                    #     id='echarts_graph',
+                    #     style={
+                    #         "width": '100vw',
+                    #         "height": '90vh',
+                    #     },
+                    # )
                     
                 ], 
             )

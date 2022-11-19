@@ -28,11 +28,18 @@ import ast
 def pie_data(username):
     current_influencer_profile = get_cur_infl_profile(username)
 
-    pie_data = [
-        {'value': current_influencer_profile['GraphSidecar'].values[0], 'name': 'Sliding Imgaes'},
-        {'value': current_influencer_profile['GraphVideo'].values[0], 'name': 'Video'},
-        {'value': current_influencer_profile['GraphImage'].values[0], 'name': 'Single Image'}
-    ]
+    # pie_data = [
+    #     {'value': current_influencer_profile['GraphSidecar'].values[0], 'name': 'Sliding Imgaes'},
+    #     {'value': current_influencer_profile['GraphVideo'].values[0], 'name': 'Video'},
+    #     {'value': current_influencer_profile['GraphImage'].values[0], 'name': 'Single Image'}
+    # ]
+    pie_data = []
+    if current_influencer_profile['GraphSidecar'].values[0] != 0:
+        pie_data.append({'value': current_influencer_profile['GraphSidecar'].values[0], 'name': 'Sliding Images'})
+    if current_influencer_profile['GraphVideo'].values[0] != 0:
+        pie_data.append({'value': current_influencer_profile['GraphVideo'].values[0], 'name': 'Video'})
+    if current_influencer_profile['GraphImage'].values[0] != 0:
+        pie_data.append({'value': current_influencer_profile['GraphImage'].values[0], 'name': 'Single Image'})
 
     # for k,v in post_type.items():
     #     pie_data.append( {'value': v, 'name': k} )

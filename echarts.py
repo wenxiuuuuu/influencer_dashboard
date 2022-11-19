@@ -34,9 +34,9 @@ def create_pie_chart(username):
 def create_radial(username): 
     username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views = radial_data(username)
     option_radial = {
-        'title': {
-            'text': 'Multiple Radar'
-        },
+        # 'title': {
+        #     'text': 'Multiple Radar'
+        # },
         'tooltip': {
             'trigger': 'axis'
         },
@@ -51,9 +51,9 @@ def create_radial(username):
             {
             'indicator': [
                 { 'text': 'Followers', 'max': 5 },
-                { 'text': 'Avg Likes', 'max': 5 },
-                { 'text': 'Avg Video Views', 'max': 5 },
-                { 'text': 'Avg Comments', 'max': 5 }
+                { 'text': 'Likes', 'max': 5 },
+                { 'text': 'Video Views', 'max': 5 },
+                { 'text': 'Comments', 'max': 5 }
             ],
             'radius': 100,
             #   'center': ['50%', '60%']
@@ -65,15 +65,20 @@ def create_radial(username):
             'tooltip': {
                 'trigger': 'item'
             },
-            'areaStyle': {},
             'data': [
                 {
                 'value': [total_avg_followers, total_avg_likes, total_avg_video_views, total_avg_comments],
-                'name': 'Average'
+                'name': 'Average',
+                'itemStyle': {'color':'#AEB0AA'},
+                'lineStyle': {'color':'#AEB0AA'},
+                'areaStyle': {'color': '#AEB0AA'}
                 },
                 {
                 'value': [influencer_followers, influencer_likes, influencer_video_views, influencer_comments],
-                'name': username
+                'name': username,
+                'itemStyle': {'color':'#FFC300'},
+                'lineStyle': {'color':'#FFC300'},
+                'areaStyle': {'color': '#FFC300'}
                 }
             ]
             },
