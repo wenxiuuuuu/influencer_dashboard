@@ -67,7 +67,7 @@ home_page = html.Div(
     ]
 )
 filtered_sorted_df = pd.DataFrame()
-row = [] 
+search_row = [] 
 
 num_filtered_users = 10
 results = pd.DataFrame()
@@ -99,10 +99,10 @@ def save_info(n_clicks, instagram, follower_range, category):
         print(sorted_indices)
         global filtered_sorted_df
         filtered_sorted_df = sorted_df
-        global row
+        global search_row
         for i in sorted_indices: 
             row.append(create_card(i, filtered_sorted_df))
-        return success_msg, influencers_page
+        return success_msg, search_page
 
 success_msg = html.Div(
     [
@@ -110,13 +110,17 @@ success_msg = html.Div(
         html.H4("Successful! Influencers you are matched with: ", style={"text-align": "center"})
     ])
 
-# influencer page d
-# for i in range(get_data_length(filtered_sorted_df)): 
-#     row.append(create_card(i, filtered_sorted_df))
+search_cards = dbc.Container(dbc.Row(search_row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
+search_page = search_cards
+
+row = []
+# influencer page
+for i in range(get_data_length(influencer_df)): 
+    row.append(create_card(i, influencer_df))
 
 cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
-
 influencers_page = cards
+
 
 comparison_page = html.Div(
     children=[
