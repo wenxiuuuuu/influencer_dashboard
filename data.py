@@ -137,20 +137,20 @@ def dropdown_options():
     for i in range(len(influencer_df)): 
         dic_item = {"label": [], "value": []}
         dic_item["label"] = influencer_df['username'][i]
-        dic_item["value"] = i
+        dic_item["value"] = influencer_df['username'][i]
         options.append(dic_item)
     return options 
 
 
 def get_filtered_influ_df(ig_text, follower_range, cate):
-    finegrained_cate = CATEGORY_DICT.get(cate, [])
+    finegrained_cate = category_dict.get(cate, [])
     # TODO: check if in our db
     filtered_follower_count = influencer_df[(influencer_df['num_followers']>=follower_range[0]) & (influencer_df['num_followers']<=follower_range[1])]
     filtered_categ = filtered_follower_count[filtered_follower_count['top_category'].isin(finegrained_cate)]
     return filtered_categ
 
 def get_categ_count(row, category):
-    finegrained_cate = CATEGORY_DICT.get(category, [])
+    finegrained_cate = category_dict.get(category, [])
     cur_categs = row['category_count']
     keys  = [cur_categs.keys]
     common = list(set(keys).intersection(set(finegrained_cate)))

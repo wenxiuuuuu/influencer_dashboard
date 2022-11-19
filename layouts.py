@@ -131,7 +131,7 @@ comparison_page = html.Div(
                     dcc.Dropdown(
                         id="dropdown_1",
                         options=dropdown_options(),
-                        value=0,
+                        value='_shinekoh',
                         style={"margin-left": "7px", "width": "97.8%"}
                         ),
                     html.Div(id="influencer-1"), 
@@ -140,7 +140,7 @@ comparison_page = html.Div(
                     dcc.Dropdown(
                         id="dropdown_2",
                         options=dropdown_options(),
-                        value=1, 
+                        value='aglimpseofrach', 
                         style={"margin-left": "7px", "width": "97.8%"}
                         ),
                     html.Div(id="influencer-2"), 
@@ -161,7 +161,7 @@ comparison_page = html.Div(
 )
 def dropdown_one(dropdown_1): 
     influencer_one = dropdown_1
-    return create_card(influencer_one, False)
+    return create_card(influencer_one)
 
 @callback(
     output=Output(component_id="influencer-2", component_property="children"), 
@@ -169,7 +169,7 @@ def dropdown_one(dropdown_1):
 )
 def dropdown_two(dropdown_2): 
     influencer_two = dropdown_2
-    return create_card(influencer_two, False)
+    return create_card(influencer_two)
 
 @callback(
     output=Output(component_id="comparison", component_property="children"), 
