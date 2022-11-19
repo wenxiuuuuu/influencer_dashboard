@@ -211,53 +211,51 @@ def create_profile(username):
                     html.H3("Visualisations", style={"margin-top": "15px"}),
                     dbc.Progress(value=70),
 
-                    html.Div([
+                    dbc.Container([
                         dbc.Row([
                             dbc.Col(
                                 className='col', 
                                 children=[
+                                    html.H4("Type of Posts", className='text-muted'), 
                                     dbc.Card([
-                                        html.H4("Type of Posts", className='text-muted'), 
                                         # pie chart 
                                         dash_echarts.DashECharts(
                                             option = create_pie_chart(username),
                                             # events = events,
                                             id='echarts_pie',
                                             style={
-                                                "width": '30vw',
-                                                "height": '30vh',
+                                                "width": '40vw',
+                                                "height": '40vh',
                                             },
                                         )
-                                    ], style={"margin": "5px", "width": '30vw'}
+                                    ]
+                                    # , style={"margin": "5px", "width": '40vw'}
                                 ),
-                                ],
-                                style={"box-sizing": 'border-box'}), 
-                            dbc.Col(
-                                className='col', 
-                                children=[
-                                    dbc.Card([
-                                        html.H4("Compared with Average", className='text-muted'), 
+                                html.H4("Compared with Average", className='text-muted'), 
+                                dbc.Card([
+                                        
                                         dash_echarts.DashECharts(
                                             option = create_radial(username),
                                             # events = events,
                                             id='echarts_radar',
                                             style={
-                                                "width": '30vw',
-                                                "height": '30vh',
+                                                "width": '35vw',
+                                                "height": '35vh',
                                             },
                                         ),
-                                    ], style={"margin": "3px", "width": '30vw'}), 
-                            ]), 
+                                    ],
+                                    #  style={"margin": "3px", "width": '40vw'}
+                                    )
+                                ],
+                                style={"box-sizing": 'border-box'}), 
                             dbc.Col(
                                 className='col', 
                                 children=[
-                                    dbc.Card([
-                                        html.H4("Categories & Collaborators", className='text-muted'), 
-                                        dcc.Graph(figure=sunburst_fig, 
-                                            style={
-                                                "width": '50vw', 
-                                            },)
-                                    ], style={"margin": "5px", "width": '30vw'}), 
+                                    html.H4("Categories & Collaborators", className='text-muted'), 
+                                    dbc.Card(
+                                        dcc.Graph(figure=sunburst_fig), 
+                                    # style={"margin": "3px"}
+                                    ), 
                             ]), 
                         ]), 
                         dbc.Row([

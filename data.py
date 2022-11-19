@@ -29,7 +29,7 @@ def pie_data(username):
     current_influencer_profile = get_cur_infl_profile(username)
 
     pie_data = [
-        {'value': current_influencer_profile['GraphSidecar'].values[0], 'name': 'Sliding Imgaes'},
+        {'value': current_influencer_profile['GraphSidecar'].values[0], 'name': 'Sliding Images'},
         {'value': current_influencer_profile['GraphVideo'].values[0], 'name': 'Video'},
         {'value': current_influencer_profile['GraphImage'].values[0], 'name': 'Single Image'}
     ]
