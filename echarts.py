@@ -34,18 +34,12 @@ def create_pie_chart(username):
 def create_radial(username): 
     username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views = radial_data(username)
     option_radial = {
-        # 'title': {
-        #     'text': 'Multiple Radar'
-        # },
         'tooltip': {
-            'trigger': 'axis'
+            'trigger': 'item'
         },
         'legend': {
-            'left': 'center',
-            'data': [
-            'A Phone',
-            'Another Phone',
-            ]
+            'orient': 'vertical',
+            'left': 'left'
         },
         'radar': [
             {
@@ -62,9 +56,9 @@ def create_radial(username):
         'series': [
             {
             'type': 'radar',
-            'tooltip': {
-                'trigger': 'item'
-            },
+            # 'tooltip': {
+            #     'trigger': 'item'
+            # },
             'data': [
                 {
                 'value': [total_avg_followers, total_avg_likes, total_avg_video_views, total_avg_comments],
@@ -80,7 +74,14 @@ def create_radial(username):
                 'lineStyle': {'color':'#FFC300'},
                 'areaStyle': {'color': '#FFC300'}
                 }
-            ]
+            ], 
+            'emphasis': {
+                'itemStyle': {
+                'shadowBlur': 10,
+                'shadowOffsetX': 0,
+                'shadowColor': 'rgba(0, 0, 0, 0.5)'
+                }
+            }
             },
         ]
         }

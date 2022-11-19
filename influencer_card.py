@@ -216,7 +216,7 @@ def create_profile(username):
                     dbc.Progress(value=70),
                     html.Br(),
 
-                    html.Div([
+                    dbc.Container([
                         dbc.Row([
                             dbc.Col(
                                 className='col', 
@@ -262,7 +262,10 @@ def create_profile(username):
                                     html.H4("Categories & Collaborators", className='text-muted', style={'text-align':'center'}), 
                                     dcc.Graph(figure=sunburst_fig, 
                                         style={
-                                            "width": '50vw', 
+                                            "width": '100vw', 
+                                            'justifyContent':'center',
+                                            'align-items':'center',
+                                            'display': 'flex', 
                                         },)
                                 # ], style={"margin": "5px", "width": '30vw'}), 
                             ])
