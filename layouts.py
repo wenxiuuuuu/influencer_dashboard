@@ -27,7 +27,7 @@ home_page = html.Div(
         html.Div(
             className="container",
             children=[
-                html.H3("Welcome! Please input your company details for us to find your influencer matches :)", 
+                html.H3("Welcome! Please input your company details below:", 
                     style={"margin-top": "30px", "text-align": "center"}),
                 html.Br(),
                 html.Div([
@@ -41,9 +41,11 @@ home_page = html.Div(
                         id="category",
                         options=[
                             {"label": "Fashion", "value": "fashion"},
-                            {"label": "Fitness", "value": "fitness"},
-                            {"label": "Lifestyle", "value": "lifestyle"},
-                            {"label": "Food", "value": "food"},
+                            {"label": "Health", "value": "health"},
+                            # {"label": "Clothing (Brand)", "value": "Clothing (Brand)"},
+                            # {"label": "Actor", "value": "Actor"},
+                            # {"label": "Jewelry/watches", "value": "Jewelry/watches"},
+                            # {"label": "Food & beverage", "value": "Food & beverage"},
                             ],
                         value = 'fashion'
                         ),
@@ -52,7 +54,7 @@ home_page = html.Div(
                     ), 
                 html.Br(),
                 html.Div([
-                    dbc.Label("Follower Range", html_for="range-slider"), 
+                    dbc.Label("Preferred Follower Range for Influencer", html_for="range-slider"), 
                     dcc.RangeSlider(id="follower_range", min=3000, max=50000, value=[10000,25000], allowCross=False, tooltip={'placement':'bottom', 'always_visible': False})
                 ], 
                 className="mb-3"), 
@@ -74,22 +76,23 @@ results = pd.DataFrame()
 sort_idx = []
 @callback(
     output=Output(component_id="results", component_property="children"), 
-    inputs=[Input(component_id="submit", component_property="n_clicks")], 
-    state=[State("instagram", "value"), State("follower_range", "value"), State("category", "value")]
+    inputs=[Input(component_id="submit", component_property="n_clicks"), Input("instagram", "value"), Input("follower_range", "value"), Input("category", "value")], 
+    # state=[State("instagram", "value"), State("follower_range", "value"), State("category", "value")]
 )
 def save_info(n_clicks, instagram, follower_range, category): 
+    print(n_clicks, instagram, follower_range, category)
 
-    # if n_clicks > 0: 
+    if n_clicks > 0: 
     #     ig_text = html.H4("instagram is: " + str(instagram))
     #     followers = html.H4("follower range is: " + str(follower_range[0]) + " to " + str(follower_range[1]))
     #     cate = html.H4("category is: " + str(category))
         
     #     # INFORMATION FROM COMPANY IS AVAILABLE HERE!! USE THIS PART TO TAKE DATA FOR FILTERS 
 
-        # check if user exists in our companies db 
-        # 1. filter the df
+    # check if user exists in our companies db 
+    # 1. filter the df
         filtered_df = get_filtered_influ_df(instagram, follower_range, category)
-        # print(filtered_df)
+        # print('filtered_df', filtered_df)
         # 2. rank the users
         print("filtered")
         # 3. get the cards for each in their ranking order
@@ -105,13 +108,23 @@ def save_info(n_clicks, instagram, follower_range, category):
             search_row.append(create_card(i))
         search_cards = dbc.Container(dbc.Row(search_row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
         search_page = search_cards
-        return success_msg, search_page
+        if sorted_usernames:
+            success_msg = html.Div(
+            [
+                html.Br(), 
+                html.H4(f"Successful! You are matched with {len(sorted_usernames)} influencers!", style={"text-align": "center"})
+            ])
+        else: 
+            success_msg = html.Div(
+            [
+                html.Br(), 
+                html.H4("Sorry... No influencers is matched with your company...", style={"text-align": "center"}),
+                html.H6("Try adjusting your preferred follower range.", style={"text-align": "center"})
+            ])
 
-success_msg = html.Div(
-    [
-        html.Br(), 
-        html.H4("Successful! Influencers you are matched with: ", style={"text-align": "center"})
-    ])
+        return success_msg, search_page
+    return html.Div()
+
 
 # influencer page 
 row = [] 

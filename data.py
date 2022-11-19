@@ -143,14 +143,14 @@ def dropdown_options():
 
 
 def get_filtered_influ_df(ig_text, follower_range, cate):
-    finegrained_cate = category_dict.get(cate, [])
+    finegrained_cate = CATEGORY_DICT.get(cate, [])
     # TODO: check if in our db
-    filtered_follower_count = influencer_df[(influencer_df['num_followers']>=follower_range[0]) & (influencer_df['num_followers']<=follower_range[1])]
-    filtered_categ = filtered_follower_count[filtered_follower_count['top_category'].isin(finegrained_cate)]
-    return filtered_categ
+    filtered_df = influencer_df[(influencer_df['num_followers']>=follower_range[0]) & (influencer_df['num_followers']<=follower_range[1])]
+    filtered_df = filtered_df[filtered_df['top_category'].isin(finegrained_cate)]
+    return filtered_df
 
 def get_categ_count(row, category):
-    finegrained_cate = category_dict.get(category, [])
+    finegrained_cate = CATEGORY_DICT.get(category, [])
     cur_categs = row['category_count']
     keys  = [cur_categs.keys]
     common = list(set(keys).intersection(set(finegrained_cate)))
@@ -166,7 +166,7 @@ def get_categ_count(row, category):
 
 def get_categ_count_df(category, filtered_df):
     cat_dicts = list(filtered_df['category_count'])
-    finegrained_cate = CATEGORY_DICT.get(category, [])
+    finegrained_cate = category_dict.get(category, [])
     counts = []
     for c in cat_dicts:                                                     
         c =  ast.literal_eval(c)

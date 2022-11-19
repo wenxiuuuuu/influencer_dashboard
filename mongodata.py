@@ -78,4 +78,5 @@ def get_influencer_top_category(username):
 
 if __name__ == '__main__':
     print('helo')
-    print(influencer_df.loc[influencer_df['username']=='ianjeevan_']['username_html'].values[0])
+    # print(influencer_df.loc[influencer_df['username']=='ianjeevan_']['username_html'].values[0])
+    print(influencer_df['top_category'].unique())
