@@ -229,7 +229,7 @@ def create_profile(username):
                                             # events = events,
                                             id='echarts_pie',
                                             style={
-                                                "width": '35vw',
+                                                # "width": '35vw',
                                                 "height": '35vh',
                                             },
                                         )
@@ -247,7 +247,7 @@ def create_profile(username):
                                             # events = events,
                                             id='echarts_radar',
                                             style={
-                                                "width": '35vw',
+                                                # "width": '35vw',
                                                 "height": '35vh',
                                             },
                                         ),
@@ -256,7 +256,7 @@ def create_profile(username):
                             # dbc.Col(
                             #     className='col', 
                             #     ), 
-                        ]), 
+                        ], style={'height':'35vh'}), 
                         dbc.Row([
                                 # dbc.Card([
                                     html.H4("Categories & Collaborators", className='text-muted', style={'text-align':'center'}), 

@@ -18,7 +18,7 @@ import dash_bootstrap_components as dbc
 from dash import Input, Output, State, html
 from dash_bootstrap_components._components.Container import Container
 
-from layouts import (home_page, influencers_page, comparison_page)
+from layouts import (home_page, influencers_page, comparison_page, influencer_network_page)
 # from data import get_card_data
 
 import argparse 
@@ -42,11 +42,21 @@ app.title = "Influ-Finder"
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Home", href="home")),
-        dbc.NavItem(dbc.NavLink("Influencers", href="influencers")),
-        dbc.NavItem(dbc.NavLink("Comparison", href="comparison"))
+        dbc.NavItem(dbc.NavLink("Comparison", href="comparison")),
+        # dbc.NavItem(dbc.NavLink("Influencers", href="influencers")),
+        dbc.DropdownMenu(
+            children=[
+                # dbc.DropdownMenuItem("Influencers", header=True),
+                dbc.DropdownMenuItem("Show All", href="influencer_show"),
+                dbc.DropdownMenuItem("Network", href="influencer_network"),
+            ],
+            nav=True,
+            in_navbar=True,
+            label="Influencers",
+        )
         ],
     brand="Influ-Finder",
-    brand_href="/",
+    brand_href="/home",
     sticky='top'
 )
 
@@ -59,13 +69,15 @@ app.layout = html.Div([
 @callback(Output('page-content', 'children'),
          [Input('url', 'pathname')])
 def display_page(pathname):
-    if pathname == '/influencers':
+    if pathname == '/influencer_show':
         return navbar, influencers_page
         # return navbar, filter_layout
     elif pathname == '/comparison':
         return navbar, comparison_page
-    else:
+    elif pathname == '/home':
         return navbar, home_page
+    elif pathname == '/influencer_network':
+        return navbar, influencer_network_page
 
 if __name__ == '__main__':
     app.run_server(debug=True)

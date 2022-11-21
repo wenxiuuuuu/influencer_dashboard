@@ -12,6 +12,8 @@ from data import *
 from mongodata import influencer_df
 from mongodata import post_df
 import pandas as pd
+import dash_echarts
+from echarts import option_graph
 
 # def update_filtered_sorted_df(data= None):
 #     print('updating filtered df')
@@ -134,10 +136,22 @@ for i in influencer_df['username']:
 cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
 influencers_page = cards
 
+influencer_network_page = html.Div([
+    dash_echarts.DashECharts(
+                        option = option_graph,
+                        # events = events,
+                        id='echarts_graph',
+                        style={
+                            "width": '100vw',
+                            "height": '90vh',
+                        },
+                    )
+])
 
 comparison_page = html.Div(
     children=[
         html.H3("Compare Two Influencers", style={"margin-top": "30px", "text-align": "center"}), 
+        html.Br(),
         dbc.Container([
             dbc.Row([
                 dbc.Col([
@@ -190,7 +204,7 @@ def dropdown_two(dropdown_2):
     Input(component_id='dropdown_1', component_property="value"), Input(component_id='dropdown_2', component_property="value")]
 )
 def show_comparison(compare_options, dropdown_1, dropdown_2): 
-    if compare_options>0: 
+    if compare_options > 0: 
         result = html.H3("choice 1 is " + str(dropdown_1) + " choice2 is " + str(dropdown_2))
     # result = html.H3("Please make your choice!")
         return result
