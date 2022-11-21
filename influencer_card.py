@@ -12,7 +12,7 @@ import re
 import dash_bootstrap_components as dbc
 from data import get_influencer_statistics
 from dash import Input, Output, State, html, callback 
-from echarts import option_graph, create_pie_chart, create_radial
+from echarts import option_graph, create_pie_chart, create_radial, create_gauge
 
 from mongodata import influencer_df, get_cur_infl_profile
 
@@ -138,18 +138,8 @@ def create_card(username):
     className="mb-3",
     style = {"margin": "1vw", "maxWidth": "40vw", "padding": "0px"}
     )
-    return card 
+    return card
 
-def create_stats_table(current_influencer_df):
-    row1 = html.Tr([html.Td("Followers"), html.Td(str(int(current_influencer_df['num_followers'].values)))])
-    row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(current_influencer_df['avg_likes']))])
-    row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(current_influencer_df['avg_comments']))])
-    row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(current_influencer_df['avg_video_views']))])
-    row5 = html.Tr([html.Td("Engagement Rate"), html.Td("63%")])
-    table_body = [html.Tbody([row1, row2, row3, row4, row5])]
-    table = dbc.Table(table_body, bordered=True, hover=True, responsive=True)
-    return table
-    
 
 def create_profile(username): 
     # index = int(index)
@@ -159,15 +149,13 @@ def create_profile(username):
 
     # creating table 
     # table_header = [html.Thead(html.Tr([html.Th("Followers"), html.Th(str(num_followers))]))]
-    # row1 = html.Tr([html.Td("Followers"), html.Td(str(int(current_influencer_df['num_followers'].values)))])
-    # row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(current_influencer_df['avg_likes']))])
-    # row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(current_influencer_df['avg_comments']))])
-    # row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(current_influencer_df['avg_video_views']))])
+    row1 = html.Tr([html.Td("Followers"), html.Td(str(int(current_influencer_df['num_followers'].values)))])
+    row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(current_influencer_df['avg_likes']))])
+    row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(current_influencer_df['avg_comments']))])
+    row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(current_influencer_df['avg_video_views']))])
     # row5 = html.Tr([html.Td("Engagement Rate"), html.Td("63%")])
-    # table_body = [html.Tbody([row1, row2, row3, row4, row5])]
-    # table = dbc.Table(table_body, bordered=True, hover=True, responsive=True)
-
-    table = create_stats_table(current_influencer_df)
+    table_body = [html.Tbody([row1, row2, row3, row4])]
+    table = dbc.Table(table_body, bordered=True, hover=True, responsive=True)
 
     # create sunburst 
     influencer_stats = get_influencer_statistics(username)
@@ -189,9 +177,6 @@ def create_profile(username):
                                 className='col', 
                                 children = [
 
-                                    html.H4("Biography", className='text-muted'), 
-                                    html.P(current_influencer_df['biography']), 
-
                                     html.H4("Top Categories", className="text-muted"), 
                                     # create_listgroup(["Men Health", "Fitness", "Tech"]), 
                                     create_listgroup(list(influencer_stats['category_counts'].keys())[:5]), 
@@ -200,19 +185,36 @@ def create_profile(username):
 
                                     html.H4("Top Collaborations", className='text-muted'), 
                                     # create_listgroup(["gatsbysg", "thetinselrack", "byinviteonlystore"])
-                                    create_listgroup(influencer_stats['mentions'][:5])
+                                    create_listgroup(influencer_stats['mentions'][:5]),
+
+                                    html.Br(), 
+
+                                    html.H4("Hashtags", className='text-muted'), 
+                                    # html.Div(hashtag_buttons(["movingrubber", "groomingtips", "hairstyling", "TrustBankSG", "RicolaSG"]))
+                                    html.Div(hashtag_buttons(influencer_stats['hashtags']))
                                 ]
                             ), 
                             dbc.Col(
                                 className='col', 
 
                                 children = [
-                                    html.H4("Statistics", className='text-muted'), 
-                                    table, 
 
-                                    html.H4("Hashtags", className='text-muted'), 
-                                    # html.Div(hashtag_buttons(["movingrubber", "groomingtips", "hairstyling", "TrustBankSG", "RicolaSG"]))
-                                    html.Div(hashtag_buttons(influencer_stats['hashtags']))
+                                    html.H4("Biography", className='text-muted'), 
+                                    html.P(current_influencer_df['biography']), 
+
+                                    html.H4("Engagement Rate", className='text-muted'), 
+                                    html.Div(dash_echarts.DashECharts(
+                                            option = create_gauge('63'),  # engagement rate?
+                                            # events = events,
+                                            id='echarts_pie',
+                                            style={
+                                                # "width": '25vw',
+                                                "height": '35vh',
+                                            },
+                                        ), style={'margin-top':'-2vh'}),
+
+                                    html.H4("Statistics", className='text-muted', style={'margin-top':'-13vh'}), 
+                                    table, 
                                 ]
                             ),
                             dbc.Col(

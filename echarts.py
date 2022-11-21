@@ -192,3 +192,71 @@ def create_bar(user1, user2):
         ]
     }
     return option_bar
+
+def create_gauge(eng_rate):
+    option_gauge = {
+        'series': [
+            {
+            'type': 'gauge',
+            'startAngle': 180,
+            'endAngle': 0,
+            'min': 0,
+            'max': 100,
+            'splitNumber': 10,
+            'itemStyle': {
+                'color': '#FFC300',
+            },
+            'progress': {
+                'show': True,
+                'roundCap': True,
+                'width': 12
+            },
+            'pointer': {        # no pointer
+                'icon': '',
+                'length': '75%',
+                'width': 0,
+                'offsetCenter': [0, '5%']
+            },
+            'axisLine': {
+                'roundCap': True,
+                'lineStyle': {
+                'width': 12
+                }
+            },
+            'axisTick': {
+                'splitNumber': 2,
+                'lineStyle': {
+                'width': 1,
+                'color': '#999'
+                }
+            },
+            'splitLine': {
+                'length': 6,
+                'lineStyle': {
+                'width': 2,
+                'color': '#999'
+                }
+            },
+            'axisLabel': {
+                'distance': 15,
+                'color': '#999',
+                'fontSize': 10
+            },
+            'title': {
+                'show': False
+            },
+            'detail': {
+                'formatter': '{value}%',
+                'offsetCenter': [0, '-20%'],
+                'valueAnimation': True,
+                'fontSize': 20
+            },
+            'data': [
+                {
+                'value': eng_rate
+                }
+            ]
+            }
+        ]
+    }
+    return option_gauge

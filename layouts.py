@@ -3,7 +3,7 @@ from dash import html, dcc, Input, Output, State, callback
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
 # from data import get_filtered_influ_df, rank_filtered_df
-from influencer_card import create_card, create_stats_table
+from influencer_card import create_card
 # from data import dropdown_options 
 from data import *
 from mongodata import influencer_df, post_df
@@ -243,6 +243,18 @@ comparison_page = html.Div(
     ]
 )
 
+def create_table(inf_df_1, inf_df_2):
+    table_header = [html.Thead(html.Tr([html.Th("Metrics"), html.Th(inf_df_1['username']), html.Th(inf_df_2['username'])]))]
+    row1 = html.Tr([html.Td("Followers"), html.Td(str(int(inf_df_1['num_followers'].values))), html.Td(str(int(inf_df_2['num_followers'].values)))])
+    row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(inf_df_1['avg_likes'])), html.Td(int(inf_df_2['avg_likes']))])
+    row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(inf_df_1['avg_comments'])), html.Td(int(inf_df_2['avg_comments']))])
+    row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(inf_df_1['avg_video_views'])), html.Td(int(inf_df_2['avg_video_views']))])
+    row5 = html.Tr([html.Td("Engagement Rate"), html.Td("63%"), html.Td("63%")])
+    table_body = [html.Tbody([row1, row2, row3, row4, row5])]
+    table = dbc.Table(table_header + table_body, bordered=True, hover=True, responsive=True, style={'text-align':'center', 'justifyContent':'center', 'align-items':'center'})
+
+    return table
+
 @callback(
     output=Output(component_id="influencer-1", component_property="children"), 
     inputs=[Input(component_id="dropdown_1", component_property="value")]
@@ -270,8 +282,6 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
 
         inf_df_1 = get_cur_infl_profile(dropdown_1)
         inf_df_2 = get_cur_infl_profile(dropdown_2)
-        table1 = create_stats_table(inf_df_1)
-        table2 = create_stats_table(inf_df_2)
 
         radial_layout = html.Div([
             
@@ -282,10 +292,7 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
             html.H4("Results:", style={"margin-top": "30px", "text-align": "center"}), 
             html.Br(),
             dbc.Container([
-                dbc.Row([
-                    dbc.Col([table1]),
-                    dbc.Col([table2]),
-                ]),
+                dbc.Row([create_table(inf_df_1, inf_df_2)]),
                 dbc.Row([
                     dbc.Col([dash_echarts.DashECharts(
                                 option = compare_radial(dropdown_1, dropdown_2),
