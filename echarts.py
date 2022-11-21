@@ -1,6 +1,8 @@
 import json 
 import dash_echarts
 from data import radial_data, pie_data
+from mongodata import post_df
+from collections import Counter
 
 def create_pie_chart(username): 
     data = pie_data(username)
@@ -125,3 +127,68 @@ option_graph = {
       }
     ]
 }
+
+def create_bar(user1, user2):
+    user1_dict = Counter(post_df.loc[post_df['username']==user1]['post_type'])
+    user2_dict =  Counter(post_df.loc[post_df['username']==user2]['post_type'])
+    option_bar = {
+        'tooltip': {
+            'trigger': 'axis',
+            'axisPointer': {
+                'type': 'shadow'
+                }
+        },
+        'legend': {},
+        'grid': {
+            'left': '5%',
+            'right': '4%',
+            'bottom': '3%',
+            'containLabel': True
+        },
+        'xAxis': {
+            'type': 'value'
+        },
+        'yAxis': {
+            'type': 'category',
+            'data': [user2, user1]
+        },
+        'series': [
+            {
+                'name': 'Sliding Images      ', # need space or else legend will overlap
+                'type': 'bar',
+                'stack': 'total',
+                'label': {
+                    'show': True
+                },
+                'emphasis': {
+                    'focus': 'series'
+                },
+                'data': [user2_dict['GraphSidecar'], user1_dict['GraphSidecar']]
+            },
+            {
+                'name': 'Single Image     ',
+                'type': 'bar',
+                'stack': 'total',
+                'label': {
+                    'show': True
+                },
+                'emphasis': {
+                    'focus': 'series'
+                },
+                'data': [user2_dict['GraphImage'], user1_dict['GraphImage']]
+            },
+            {
+                'name': 'Video',
+                'type': 'bar',
+                'stack': 'total',
+                'label': {
+                    'show': True
+                },
+                'emphasis': {
+                    'focus': 'series'
+                },
+                'data': [user2_dict['GraphVideo'], user1_dict['GraphVideo']]
+            },
+        ]
+    }
+    return option_bar

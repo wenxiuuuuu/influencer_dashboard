@@ -1,19 +1,15 @@
 # Dash components, html, and dash tables
-from dash import dcc 
-from dash import html 
+from dash import html, dcc, Input, Output, State, callback
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
-from data import get_filtered_influ_df, rank_filtered_df
-from influencer_card import create_card
-from dash import Input, Output, State, callback
-from data import dropdown_options 
+# from data import get_filtered_influ_df, rank_filtered_df
+from influencer_card import create_card, create_stats_table
+# from data import dropdown_options 
 from data import *
-# from data import get_data_length
-from mongodata import influencer_df
-from mongodata import post_df
+from mongodata import influencer_df, post_df
 import pandas as pd
 import dash_echarts
-from echarts import option_graph
+from echarts import option_graph, create_bar
 
 # def update_filtered_sorted_df(data= None):
 #     print('updating filtered df')
@@ -148,6 +144,71 @@ influencer_network_page = html.Div([
                     )
 ])
 
+def compare_radial(user1, user2):
+    username1, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes1, influencer_comments1, influencer_followers1, influencer_video_views1 = radial_data(user1)
+    username2, _, _, _, _, influencer_likes2, influencer_comments2, influencer_followers2, influencer_video_views2 = radial_data(user2)
+
+    option_radial = {
+        'tooltip': {
+            'trigger': 'item'
+        },
+        'legend': {
+            'orient': 'vertical',
+            'left': 'left'
+        },
+        'radar': [
+            {
+            'indicator': [
+                { 'text': 'Followers', 'max': 5 },
+                { 'text': 'Likes', 'max': 5 },
+                { 'text': 'Video Views', 'max': 5 },
+                { 'text': 'Comments', 'max': 5 }
+            ],
+            'radius': 100,
+            #   'center': ['50%', '60%']
+            },
+        ],
+        'series': [
+            {
+            'type': 'radar',
+            # 'tooltip': {
+            #     'trigger': 'item'
+            # },
+            'data': [
+                {
+                'value': [total_avg_followers, total_avg_likes, total_avg_video_views, total_avg_comments],
+                'name': 'Average',
+                'itemStyle': {'color':'#AEB0AA'},
+                'lineStyle': {'color':'#AEB0AA', 'type': 'dashed'},
+                # 'areaStyle': {'color': '#AEB0AA'}
+                },
+                {
+                'value': [influencer_followers1, influencer_likes1, influencer_video_views1, influencer_comments1],
+                'name': username1,
+                'itemStyle': {'color':'#FFC300'},
+                'lineStyle': {'color':'#FFC300'},
+                'areaStyle': {'color': '#FFC300'}
+                },
+                {
+                'value': [influencer_followers2, influencer_likes2, influencer_video_views2, influencer_comments2],
+                'name': username2,
+                'itemStyle': {'color':'#ADD8E6'},
+                'lineStyle': {'color':'#ADD8E6'},
+                'areaStyle': {'color': '#ADD8E6'}
+                }
+            ], 
+            'emphasis': {
+                'itemStyle': {
+                'shadowBlur': 10,
+                'shadowOffsetX': 0,
+                'shadowColor': 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+            },
+        ]
+        }
+    return option_radial
+
 comparison_page = html.Div(
     children=[
         html.H3("Compare Two Influencers", style={"margin-top": "30px", "text-align": "center"}), 
@@ -206,5 +267,49 @@ def dropdown_two(dropdown_2):
 def show_comparison(compare_options, dropdown_1, dropdown_2): 
     if compare_options > 0: 
         result = html.H3("choice 1 is " + str(dropdown_1) + " choice2 is " + str(dropdown_2))
-    # result = html.H3("Please make your choice!")
-        return result
+
+        inf_df_1 = get_cur_infl_profile(dropdown_1)
+        inf_df_2 = get_cur_infl_profile(dropdown_2)
+        table1 = create_stats_table(inf_df_1)
+        table2 = create_stats_table(inf_df_2)
+
+        radial_layout = html.Div([
+            
+        ])
+
+        comparison_layout = html.Div([
+            html.Br(),
+            html.H4("Results:", style={"margin-top": "30px", "text-align": "center"}), 
+            html.Br(),
+            dbc.Container([
+                dbc.Row([
+                    dbc.Col([table1]),
+                    dbc.Col([table2]),
+                ]),
+                dbc.Row([
+                    dbc.Col([dash_echarts.DashECharts(
+                                option = compare_radial(dropdown_1, dropdown_2),
+                                # events = events,
+                                id='echarts_radar_compare',
+                                style={
+                                    "width": '35vw',
+                                    "height": '35vh',
+                                },)
+                    ]),
+                    dbc.Col([dash_echarts.DashECharts(
+                                option = create_bar(dropdown_1, dropdown_2),
+                                # events = events,
+                                id='echarts_bar_compare',
+                                style={
+                                    "width": '50vw',
+                                    "height": '35vh',
+                                },)
+                    ])
+                ]),
+                # 
+            ])
+        ])
+
+
+
+        return comparison_layout

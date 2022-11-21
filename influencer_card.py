@@ -140,6 +140,17 @@ def create_card(username):
     )
     return card 
 
+def create_stats_table(current_influencer_df):
+    row1 = html.Tr([html.Td("Followers"), html.Td(str(int(current_influencer_df['num_followers'].values)))])
+    row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(current_influencer_df['avg_likes']))])
+    row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(current_influencer_df['avg_comments']))])
+    row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(current_influencer_df['avg_video_views']))])
+    row5 = html.Tr([html.Td("Engagement Rate"), html.Td("63%")])
+    table_body = [html.Tbody([row1, row2, row3, row4, row5])]
+    table = dbc.Table(table_body, bordered=True, hover=True, responsive=True)
+    return table
+    
+
 def create_profile(username): 
     # index = int(index)
     # name, username, biography, num_followers, dp_path, recent_post, avg_comments, avg_likes, avg_video_views, post_type, mentions, hashtags, category_counts = get_profile_data(index)
@@ -148,13 +159,15 @@ def create_profile(username):
 
     # creating table 
     # table_header = [html.Thead(html.Tr([html.Th("Followers"), html.Th(str(num_followers))]))]
-    row1 = html.Tr([html.Td("Followers"), html.Td(str(int(current_influencer_df['num_followers'].values)))])
-    row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(current_influencer_df['avg_likes']))])
-    row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(current_influencer_df['avg_comments']))])
-    row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(current_influencer_df['avg_video_views']))])
-    row5 = html.Tr([html.Td("Engagement Rate"), html.Td("63%")])
-    table_body = [html.Tbody([row1, row2, row3, row4, row5])]
-    table = dbc.Table(table_body, bordered=True, hover=True, responsive=True)
+    # row1 = html.Tr([html.Td("Followers"), html.Td(str(int(current_influencer_df['num_followers'].values)))])
+    # row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(current_influencer_df['avg_likes']))])
+    # row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(current_influencer_df['avg_comments']))])
+    # row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(current_influencer_df['avg_video_views']))])
+    # row5 = html.Tr([html.Td("Engagement Rate"), html.Td("63%")])
+    # table_body = [html.Tbody([row1, row2, row3, row4, row5])]
+    # table = dbc.Table(table_body, bordered=True, hover=True, responsive=True)
+
+    table = create_stats_table(current_influencer_df)
 
     # create sunburst 
     influencer_stats = get_influencer_statistics(username)
