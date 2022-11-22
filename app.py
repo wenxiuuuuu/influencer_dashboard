@@ -18,7 +18,7 @@ import dash_bootstrap_components as dbc
 from dash import Input, Output, State, html
 from dash_bootstrap_components._components.Container import Container
 
-from layouts import (home_page, influencers_page, comparison_page, influencer_network_page)
+from layouts import (home_page, influencers_page, comparison_page, influencer_network_page, cluster_page)
 # from data import get_card_data
 
 import argparse 
@@ -49,6 +49,7 @@ navbar = dbc.NavbarSimple(
                 # dbc.DropdownMenuItem("Influencers", header=True),
                 dbc.DropdownMenuItem("Show All", href="influencer_show"),
                 dbc.DropdownMenuItem("Network", href="influencer_network"),
+                dbc.DropdownMenuItem("Image Cluster", href="influencer_cluster"),
             ],
             nav=True,
             in_navbar=True,
@@ -78,6 +79,8 @@ def display_page(pathname):
         return navbar, home_page
     elif pathname == '/influencer_network':
         return navbar, influencer_network_page
+    elif pathname == '/influencer_cluster':
+        return navbar, cluster_page
 
 if __name__ == '__main__':
     app.run_server(debug=True)
