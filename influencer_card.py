@@ -221,7 +221,9 @@ def create_profile(username):
                                 className='col', 
                                 children =[
                                     html.H4("Recent Post", className='text-muted'),
-                                    html.Iframe(src="https://www.instagram.com/p/" + current_influencer_df['recent_pic_short'].values[0] + "/embed")
+                                    html.Iframe(src="https://www.instagram.com/p/" + current_influencer_df['recent_pic_short'].values[0] + "/embed",
+                                        style={'height':'780px'}),
+            
                                 ]
                             )
                         ]
