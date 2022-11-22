@@ -343,42 +343,58 @@ imgcluster_fig.update_layout(
     )
 imgcluster_fig.update_traces(marker_size=10)
 
-print(imgcluster_fig) ###############
-
 cluster_page = html.Div(
    [
-      html.Div(
-        children = [
-            html.Img(
-                id='centroid_1_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==0)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-            html.Img(
-                id='centroid_2_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==1)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-            html.Img(
-                id='centroid_3_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==2)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-            html.Img(
-                id='centroid_4_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==3)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-            html.Img(
-                id='centroid_5_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==4)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-        ]
-      ),
-      dcc.Graph(
-         id="graph_interaction",
-         figure=imgcluster_fig,
-         style={"border":"1px black solid",
-         "margin-left": "15px", "margin-right": "15px",
-         "margin-top": "15px", "margin-bottom": "15px"}
-      ),
-      html.Div(id='hover_cluster_name'),
+        html.H3("Which posts are similar?", style={"margin-top": "30px", "text-align": "center"}), 
+        html.Br(),
+        html.P('These images below are the central images of 5 clusters:', style={"text-align": "center"}),
+        html.Br(),
+        dbc.Container([
+            dbc.Row([
+                html.Img(
+                    id='centroid_1_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==0)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+                    # style={'height':'20%', 'width':'20%'}),
+                html.Img(
+                    id='centroid_2_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==1)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+                html.Img(
+                    id='centroid_3_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==2)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+                html.Img(
+                    id='centroid_4_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==3)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+                html.Img(
+                    id='centroid_5_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==4)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+            ]),
+
+            html.Br(),
+            html.Br(),
+            html.P('The cluster plot in 2D:', style={"text-align": "center"}),
+            # html.Br(),
+            dbc.Row([
+                dbc.Col([
+                    html.I('Click on any points below to see the image and its 5 most similar images.', style={"text-align": "center"}),
+                    dcc.Graph(
+                        id="graph_interaction",
+                        figure=imgcluster_fig,
+                        style={"border":"1px black solid",}
+                        # "margin-left": "15px", "margin-right": "15px",
+                        # "margin-top": "15px", "margin-bottom": "15px"}
+                    ),
+                ]),
+                
+                dbc.Col([html.Div(id='hover_cluster_name'),]),
+            ])
+            
+        ]),
+
     #   html.Img(id='hover_image', src='', style={'height':'40%', 'width':'40%',}),
     #   html.Div("Other Neighbouring Images"),
     #   html.Img(id='neighbour_img_1', src='', style={'height':'20%', 'width':'20%'}),
@@ -482,13 +498,29 @@ def display_hover_data(clickData, figure):
         img5 = img_df[(img_df['1d']==closest_points[4][0]) & (img_df['2d']==closest_points[4][1])]['img_url'].iloc[0]
 
         click_layout = html.Div([
-            html.Img(id='hover_image', src=selected_img, style={'height':'40%', 'width':'40%',}),
-            html.Div("Other Neighbouring Images"),
-            html.Img(id='neighbour_img_1', src=img1, style={'height':'20%', 'width':'20%'}),
-            html.Img(id='neighbour_img_2', src=img2, style={'height':'20%', 'width':'20%'}),
-            html.Img(id='neighbour_img_3', src=img3, style={'height':'20%', 'width':'20%'}),
-            html.Img(id='neighbour_img_4', src=img4, style={'height':'20%', 'width':'20%'}),
-            html.Img(id='neighbour_img_5', src=img5, style={'height':'20%', 'width':'20%'}),
+            dbc.Container([
+                dbc.Row([
+                    dbc.Col([
+                        html.P('Selected Image:', style={"text-align":'center', "align-items": "center", "justify-content": "center"}),
+                        html.Img(id='hover_image', src=selected_img, style={'height':'280px', 'width':'260px','margin-left':'1vw',}),
+                    ]),
+                    dbc.Col([
+                        html.P("Other Neighbouring Images:", style={"text-align":'center', "align-items": "center", "justify-content": "center"}),
+                        dbc.Carousel(
+                            items=[
+                                {"key": "1", "src": img1, "img_style":{'height':'280px', 'width':'260px'}},
+                                {"key": "2", "src": img2, "img_style":{'height':'280px', 'width':'260px'}},
+                                {"key": "3", "src": img3, "img_style":{'height':'280px', 'width':'260px'}},
+                                {"key": "4", "src": img4, "img_style":{'height':'280px', 'width':'260px'}},
+                                {"key": "5", "src": img5, "img_style":{'height':'280px', 'width':'260px'}}
+                            ],
+                            controls=True,
+                            indicators=True,
+                            style={'height':'80%', 'width':'80%', 'margin-left':'2vw'}
+                        )
+                    ]),
+                ],)
+            ])
         ])
         # return figure, img1, img2, img3, img4, img5
         return figure, click_layout
