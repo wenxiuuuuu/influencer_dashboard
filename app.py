@@ -18,7 +18,7 @@ import dash_bootstrap_components as dbc
 from dash import Input, Output, State, html
 from dash_bootstrap_components._components.Container import Container
 
-from layouts import (home_page, influencers_page, comparison_page, influencer_network_page, cluster_page)
+from layouts import (home_page, sort_layout, comparison_page, influencer_network_page, cluster_page)
 # from data import get_card_data
 
 import argparse 
@@ -31,7 +31,7 @@ database_type = args.dbtype
 app = dash.Dash(
     __name__, 
     meta_tags=[{"name": "viewport", "content": "width=device-width"}],
-    external_stylesheets=[dbc.themes.LUX],
+    external_stylesheets=[dbc.themes.LUX, 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'],
     suppress_callback_exceptions=True
 )
 
@@ -71,7 +71,7 @@ app.layout = html.Div([
          [Input('url', 'pathname')])
 def display_page(pathname):
     if pathname == '/influencer_show':
-        return navbar, influencers_page
+        return navbar, sort_layout
         # return navbar, filter_layout
     elif pathname == '/comparison':
         return navbar, comparison_page

@@ -126,13 +126,69 @@ def save_info(n_clicks, instagram, follower_range, category):
     return html.Div()
 
 
-# influencer page 
-row = [] 
-for i in influencer_df['username']: 
-    row.append(create_card(i))
+unique_categories = influencer_df['top_category'].unique()
+sort_layout = dbc.Container([
+        dbc.Row([dbc.Col(dbc.InputGroup(
+                        [   dbc.InputGroupText(html.I(className="fa fa-unsorted")),
+                            dbc.InputGroupText("Sort by:"),
+                            dbc.Select(options=[
+                                {"label": "Username", "value": "username"},
+                                {"label": 'Name', "value": 'name'},
+                                {"label": "Followers", "value": 'num_followers'},
+                                {"label": 'Avg Likes', "value": 'avg_likes'},
+                            ], id='sort-dropdown', value='username')
+                        ]), style={'margin-top':'0.28vw', "margin-left": "1vw"}),
+                dbc.Col(dbc.Checklist(options=[{"label":'Ascending', "value":1}], value=[1], switch=True, id='sort-asc',style={"margin-left":"2vw", "margin-top":'1vw', 'border-radius': '50%'})),
+                dbc.Col(html.Div([dbc.Input(id="input", placeholder="Search Influencers by Username...", type="text")], style={'width': "20vw", "margin-left":"5vw", "margin-top":"0.5vw"}),)
+                ], style={'width':'90vw'}),
 
-cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
-influencers_page = cards
+            # filter by category
+        dbc.Row(dbc.InputGroup([
+                dbc.InputGroupText(html.I(className="fa fa-filter"), style={'height':'36px'}),
+                dbc.InputGroupText("Category:", style={'height':'36px'}),
+                dcc.Dropdown(
+                    unique_categories, 
+                    id="interest-input",
+                    # multi=True,
+                    style={'border-top-left-radius':'0px', 'border-bottom-left-radius':'0px', 'width':'30vw'}
+                ),
+            ],style={"margin-left":"1vw", "margin-top":'0.7vw'})),
+        # className="g-0",
+        html.Br(),
+        html.Div(id='page-1-content')
+    ],style={"margin-top":"2vw"})
+
+@callback(Output('page-1-content', 'children'),
+              [Input('input', 'value'), Input('sort-dropdown', 'value'), Input('sort-asc', 'value'), Input('interest-input', 'value')])
+def page_1_dropdown(input, sortby, sort_asc, interest_input, ):
+    temp = influencer_df.copy()
+    if interest_input:
+        temp = influencer_df[influencer_df['top_category'].isin([interest_input])].reset_index(drop=True)
+    if len(sort_asc) == 1:
+        asc = True
+    else:
+        asc = False
+    temp = temp.sort_values(sortby, ascending=asc).reset_index(drop=True)
+    if input:
+        temp = temp.loc[temp['username'].str.contains(f"(?i){input}")].reset_index(drop=True)
+    # return dash_table.DataTable(temp.to_dict('records'), [{"name": i, "id": i} for i in temp.columns])
+    # return f"{df['Full Name'][0]}, {temp['Full Name'][0]}"
+    row = []
+    for i in temp['username']: 
+        row.append(create_card(i))
+    
+    influencers_page = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
+
+    num_results = html.P([html.Strong(f'{len(temp)}'), html.Span(' results returned.')], style={'text-align':'right','margin-right':'1.3vw'})
+    return num_results, influencers_page
+
+# # influencer page 
+# row = [] 
+# for i in influencer_df['username']: 
+#     row.append(create_card(i))
+
+# cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
+# influencers_page = cards
 
 influencer_network_page = html.Div([
     dash_echarts.DashECharts(

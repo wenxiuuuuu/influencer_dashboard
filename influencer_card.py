@@ -103,6 +103,16 @@ def create_card(username):
                                                         html.H5(str(int(current_influencer_df['avg_likes'])), style={"text-align": "right"})
                                                     ) 
                                                 ]
+                                            ),
+                                            dbc.Row(
+                                                [
+                                                    dbc.Col(
+                                                        html.H5("Category"), width=5
+                                                    ),
+                                                    dbc.Col(
+                                                        html.H5(str(current_influencer_df['top_category'].values[0]), style={"text-align": "right"}), width=7
+                                                    ) 
+                                                ]
                                             )
                                         ]
                                         )

@@ -80,3 +80,5 @@ if __name__ == '__main__':
     print('helo')
     # print(influencer_df.loc[influencer_df['username']=='ianjeevan_']['username_html'].values[0])
     print(list(post_df.columns))
+    print()
+    print(list(influencer_df.columns))
