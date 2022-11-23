@@ -14,7 +14,7 @@ from data import get_influencer_statistics
 from dash import Input, Output, State, html, callback 
 from echarts import option_graph, create_pie_chart, create_radial, create_gauge
 
-from mongodata import influencer_df, get_cur_infl_profile
+from mongodata import influencer_df, get_cur_infl_profile, comments_df, subset_df, comments_user
 
 # hyperlink for category
 def create_listgroup(list):
@@ -150,6 +150,47 @@ def create_card(username):
     )
     return card
 
+def show_comments(username):
+    if username in comments_user:
+        # print(subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='POSITIVE')]['url'].values[0] + "embed")
+        comments_layout = html.Div([
+                html.H4("Comment Sentiment", className='text-muted', style={'text-align':'center'}), 
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Card(
+                            dbc.CardBody(
+                                [
+
+                                    html.H5("Most Positive Comment", className="card-title"),
+                                    html.Iframe(src=subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='POSITIVE')]['url'].values[0] + "embed",
+                                        style={'maxHeight':'440px', 'maxWidth':'300px',}),
+                                    # html.Br(),
+                                    # html.Br(),
+                                    html.P('"' + subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='POSITIVE')]['comments'] + '"', style={'text-align':'center'}),
+                                ], style={'text-align':'center'}
+                            ),
+                        ),
+                    ]),
+                    dbc.Col([
+                        dbc.Card(
+                            dbc.CardBody(
+                                [
+                                    html.H5("Least Positive Comment", className="card-title"),
+                                    html.Iframe(src=subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='NEGATIVE')]['url'].values[0] + "embed",
+                                        style={'maxHeight':'440px','maxWidth':'300px'}),
+                                    html.P('"' + subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='NEGATIVE')]['comments'] + '"', style={'text-align':'center',}),
+                                    # dbc.CardLink("Card link", href="#"),
+                                    # dbc.CardLink("External link", href="https://google.com"),
+                                ], style={'text-align':'center'}
+                            ),
+                        ),
+                    ])
+                ])
+        ])
+        return comments_layout
+    else:
+        return html.Div()
+
 
 def create_profile(username): 
     # index = int(index)
@@ -284,18 +325,32 @@ def create_profile(username):
                             #     className='col', 
                             #     ), 
                         ], style={'height':'35vh'}), 
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
                         dbc.Row([
-                                # dbc.Card([
-                                    html.H4("Categories & Collaborators", className='text-muted', style={'text-align':'center'}), 
+                            dbc.Col([
+                                    html.H4("All Categories & Collaborators", className='text-muted', style={'text-align':'center'}), 
                                     dcc.Graph(figure=sunburst_fig, 
                                         style={
-                                            "width": '100vw', 
+                                            # "width": '100vw', 
                                             'justifyContent':'center',
                                             'align-items':'center',
                                             'display': 'flex', 
                                         },)
-                                # ], style={"margin": "5px", "width": '30vw'}), 
+                            ]),
+
+                            dbc.Col([
+                                html.Br(),
+                                html.Br(),
+                                html.Br(),
+                                html.Br(),
+                                html.Br(),
+                                html.H5('add another graph here..?')
                             ])
+                        ]),
+
+                        dbc.Row([show_comments(username)])
                     ]),
 
                     
