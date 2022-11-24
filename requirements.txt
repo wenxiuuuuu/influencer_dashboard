@@ -4,3 +4,5 @@ dash
 dash-echarts
 heroku
 gunicorn
+pandas 
+pymongo
