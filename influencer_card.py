@@ -31,6 +31,16 @@ def hashtag_buttons(list):
         hash_list.append(button)
     return hash_list
 
+def engagement_rate(current_influencer_df, influencer_stats): 
+    num_followers = int(current_influencer_df['num_followers'].values)
+    avg_likes = int(current_influencer_df['avg_likes'])
+    avg_comments = int(current_influencer_df['avg_comments'])
+    avg_video_views = int(current_influencer_df['avg_video_views'])
+    no_collaborations = len(influencer_stats['mentions'])
+    engagement = ((avg_likes*5 + avg_comments*6 + avg_video_views*2 + no_collaborations*10)/num_followers)*100
+    return round(engagement)
+
+
 # data = {"Images": 17, "Sidecars": 13, "Videos": 20}
 # datajson = json.dumps(data)
 
@@ -255,7 +265,8 @@ def create_profile(username):
 
                                     html.H4("Engagement Rate", className='text-muted'), 
                                     html.Div(dash_echarts.DashECharts(
-                                            option = create_gauge('63'),  # engagement rate?
+                                            option = create_gauge(engagement_rate(current_influencer_df, influencer_stats)),
+                                            # option = create_gauge('63'),  # engagement rate?
                                             # events = events,
                                             id='echarts_pie',
                                             style={
