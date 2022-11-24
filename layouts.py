@@ -126,13 +126,69 @@ def save_info(n_clicks, instagram, follower_range, category):
     return html.Div()
 
 
-# influencer page 
-row = [] 
-for i in influencer_df['username']: 
-    row.append(create_card(i))
+unique_categories = influencer_df['top_category'].unique()
+sort_layout = dbc.Container([
+        dbc.Row([dbc.Col(dbc.InputGroup(
+                        [   dbc.InputGroupText(html.I(className="fa fa-unsorted")),
+                            dbc.InputGroupText("Sort by:"),
+                            dbc.Select(options=[
+                                {"label": "Username", "value": "username"},
+                                {"label": 'Name', "value": 'name'},
+                                {"label": "Followers", "value": 'num_followers'},
+                                {"label": 'Avg Likes', "value": 'avg_likes'},
+                            ], id='sort-dropdown', value='username')
+                        ]), style={'margin-top':'0.28vw', "margin-left": "1vw"}),
+                dbc.Col(dbc.Checklist(options=[{"label":'Ascending', "value":1}], value=[1], switch=True, id='sort-asc',style={"margin-left":"2vw", "margin-top":'1vw', 'border-radius': '50%'})),
+                dbc.Col(html.Div([dbc.Input(id="input", placeholder="Search Influencers by Username...", type="text")], style={'width': "20vw", "margin-left":"5vw", "margin-top":"0.5vw"}),)
+                ], style={'width':'90vw'}),
 
-cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
-influencers_page = cards
+            # filter by category
+        dbc.Row(dbc.InputGroup([
+                dbc.InputGroupText(html.I(className="fa fa-filter"), style={'height':'36px'}),
+                dbc.InputGroupText("Category:", style={'height':'36px'}),
+                dcc.Dropdown(
+                    unique_categories, 
+                    id="interest-input",
+                    # multi=True,
+                    style={'border-top-left-radius':'0px', 'border-bottom-left-radius':'0px', 'width':'30vw'}
+                ),
+            ],style={"margin-left":"1vw", "margin-top":'0.7vw'})),
+        # className="g-0",
+        html.Br(),
+        html.Div(id='page-1-content')
+    ],style={"margin-top":"2vw"})
+
+@callback(Output('page-1-content', 'children'),
+              [Input('input', 'value'), Input('sort-dropdown', 'value'), Input('sort-asc', 'value'), Input('interest-input', 'value')])
+def page_1_dropdown(input, sortby, sort_asc, interest_input, ):
+    temp = influencer_df.copy()
+    if interest_input:
+        temp = influencer_df[influencer_df['top_category'].isin([interest_input])].reset_index(drop=True)
+    if len(sort_asc) == 1:
+        asc = True
+    else:
+        asc = False
+    temp = temp.sort_values(sortby, ascending=asc).reset_index(drop=True)
+    if input:
+        temp = temp.loc[temp['username'].str.contains(f"(?i){input}")].reset_index(drop=True)
+    # return dash_table.DataTable(temp.to_dict('records'), [{"name": i, "id": i} for i in temp.columns])
+    # return f"{df['Full Name'][0]}, {temp['Full Name'][0]}"
+    row = []
+    for i in temp['username']: 
+        row.append(create_card(i))
+    
+    influencers_page = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
+
+    num_results = html.P([html.Strong(f'{len(temp)}'), html.Span(' results returned.')], style={'text-align':'right','margin-right':'1.3vw'})
+    return num_results, influencers_page
+
+# # influencer page 
+# row = [] 
+# for i in influencer_df['username']: 
+#     row.append(create_card(i))
+
+# cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
+# influencers_page = cards
 
 influencer_network_page = html.Div([
     dash_echarts.DashECharts(
@@ -343,42 +399,58 @@ imgcluster_fig.update_layout(
     )
 imgcluster_fig.update_traces(marker_size=10)
 
-print(imgcluster_fig) ###############
-
 cluster_page = html.Div(
    [
-      html.Div(
-        children = [
-            html.Img(
-                id='centroid_1_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==0)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-            html.Img(
-                id='centroid_2_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==1)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-            html.Img(
-                id='centroid_3_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==2)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-            html.Img(
-                id='centroid_4_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==3)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-            html.Img(
-                id='centroid_5_img', 
-                src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==4)]['img_url'].iloc[0], 
-                style={'height':'20%', 'width':'20%'}),
-        ]
-      ),
-      dcc.Graph(
-         id="graph_interaction",
-         figure=imgcluster_fig,
-         style={"border":"1px black solid",
-         "margin-left": "15px", "margin-right": "15px",
-         "margin-top": "15px", "margin-bottom": "15px"}
-      ),
-      html.Div(id='hover_cluster_name'),
+        html.H3("Which posts are similar?", style={"margin-top": "30px", "text-align": "center"}), 
+        html.Br(),
+        html.P('These images below are the central images of 5 clusters:', style={"text-align": "center"}),
+        html.Br(),
+        dbc.Container([
+            dbc.Row([
+                html.Img(
+                    id='centroid_1_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==0)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+                    # style={'height':'20%', 'width':'20%'}),
+                html.Img(
+                    id='centroid_2_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==1)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+                html.Img(
+                    id='centroid_3_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==2)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+                html.Img(
+                    id='centroid_4_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==3)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+                html.Img(
+                    id='centroid_5_img', 
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==4)]['img_url'].iloc[0], 
+                    style={'height':'280px', 'width':'260px'}),
+            ]),
+
+            html.Br(),
+            html.Br(),
+            html.P('The cluster plot in 2D:', style={"text-align": "center"}),
+            # html.Br(),
+            dbc.Row([
+                dbc.Col([
+                    html.I('Click on any points below to see the image and its 5 most similar images.', style={"text-align": "center"}),
+                    dcc.Graph(
+                        id="graph_interaction",
+                        figure=imgcluster_fig,
+                        style={"border":"1px black solid",}
+                        # "margin-left": "15px", "margin-right": "15px",
+                        # "margin-top": "15px", "margin-bottom": "15px"}
+                    ),
+                ]),
+                
+                dbc.Col([html.Div(id='hover_cluster_name'),]),
+            ])
+            
+        ]),
+
     #   html.Img(id='hover_image', src='', style={'height':'40%', 'width':'40%',}),
     #   html.Div("Other Neighbouring Images"),
     #   html.Img(id='neighbour_img_1', src='', style={'height':'20%', 'width':'20%'}),
@@ -482,13 +554,29 @@ def display_hover_data(clickData, figure):
         img5 = img_df[(img_df['1d']==closest_points[4][0]) & (img_df['2d']==closest_points[4][1])]['img_url'].iloc[0]
 
         click_layout = html.Div([
-            html.Img(id='hover_image', src=selected_img, style={'height':'40%', 'width':'40%',}),
-            html.Div("Other Neighbouring Images"),
-            html.Img(id='neighbour_img_1', src=img1, style={'height':'20%', 'width':'20%'}),
-            html.Img(id='neighbour_img_2', src=img2, style={'height':'20%', 'width':'20%'}),
-            html.Img(id='neighbour_img_3', src=img3, style={'height':'20%', 'width':'20%'}),
-            html.Img(id='neighbour_img_4', src=img4, style={'height':'20%', 'width':'20%'}),
-            html.Img(id='neighbour_img_5', src=img5, style={'height':'20%', 'width':'20%'}),
+            dbc.Container([
+                dbc.Row([
+                    dbc.Col([
+                        html.P('Selected Image:', style={"text-align":'center', "align-items": "center", "justify-content": "center"}),
+                        html.Img(id='hover_image', src=selected_img, style={'height':'280px', 'width':'260px','margin-left':'1vw',}),
+                    ]),
+                    dbc.Col([
+                        html.P("Other Neighbouring Images:", style={"text-align":'center', "align-items": "center", "justify-content": "center"}),
+                        dbc.Carousel(
+                            items=[
+                                {"key": "1", "src": img1, "img_style":{'height':'280px', 'width':'260px'}},
+                                {"key": "2", "src": img2, "img_style":{'height':'280px', 'width':'260px'}},
+                                {"key": "3", "src": img3, "img_style":{'height':'280px', 'width':'260px'}},
+                                {"key": "4", "src": img4, "img_style":{'height':'280px', 'width':'260px'}},
+                                {"key": "5", "src": img5, "img_style":{'height':'280px', 'width':'260px'}}
+                            ],
+                            controls=True,
+                            indicators=True,
+                            style={'height':'80%', 'width':'80%', 'margin-left':'2vw'}
+                        )
+                    ]),
+                ],)
+            ])
         ])
         # return figure, img1, img2, img3, img4, img5
         return figure, click_layout

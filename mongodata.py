@@ -25,7 +25,7 @@ for document in influencers.find():
     doc_list.append(document)
 influencer_df = pd.DataFrame(doc_list)
 
-# category_dict
+# 1. final category_dict
 category_dict = {}
 for document in category.find():
     category_dict[document['username']] = document['category']
@@ -48,8 +48,8 @@ post_df['edge_media_to_comment'] = post_df['edge_media_to_comment'].fillna(0)
 post_df['edge_liked_by'] = post_df['edge_liked_by'].fillna(0)
 post_df['video_view_count'] = post_df['video_view_count'].fillna(0)
 
+# 2. final influencer_df
 influencer_df = influencer_df.sort_values('username').reset_index(drop=True)
-
 pattern = re.compile('[\W_]+')
 influencer_df['username_html'] = influencer_df['username'].apply(lambda x: pattern.sub('', x))
 
@@ -65,6 +65,8 @@ def parse_caption(row):
     row['hashtags'] = hashtags
     return row
 
+
+# 3. final post_df
 post_df = post_df.apply(parse_caption, axis=1)
 
 def get_cur_infl_profile(username):
@@ -76,7 +78,19 @@ def get_influencer_category_counts(username):
 def get_influencer_top_category(username):
     return get_cur_infl_profile(username)['top_category'].iloc[0]
 
+# 4. final comments_df
+comments_df = pd.read_csv('data/influencer_comments_sentiments.csv')
+# get the influencer username
+comments_user = comments_df['username'].unique()
+idx = comments_df.groupby(['username','binary_class'])['binary_score'].transform(max) == comments_df['binary_score']
+## get most neg&pos comment for each influencer
+subset_df = comments_df[idx].reset_index(drop=True).drop_duplicates(subset=['comments'], keep='first').drop(index=15).reset_index(drop=True)
+
+
+
 if __name__ == '__main__':
     print('helo')
     # print(influencer_df.loc[influencer_df['username']=='ianjeevan_']['username_html'].values[0])
-    print(list(post_df.columns))
+    # print(list(post_df.columns))
+    # print()
+    print(list(influencer_df['top_category'].unique()))

@@ -90,7 +90,7 @@ def create_radial(username):
     return option_radial
 
 
-f = open('inf_graph.json')
+f = open('data/inf_graph.json')
 graph = json.load(f)
 
 option_graph = {

@@ -14,7 +14,7 @@ from data import get_influencer_statistics
 from dash import Input, Output, State, html, callback 
 from echarts import option_graph, create_pie_chart, create_radial, create_gauge
 
-from mongodata import influencer_df, get_cur_infl_profile
+from mongodata import influencer_df, get_cur_infl_profile, comments_df, subset_df, comments_user
 
 # hyperlink for category
 def create_listgroup(list):
@@ -30,6 +30,16 @@ def hashtag_buttons(list):
         button = dbc.Button("#"+item, className="btn-hash", href="https://www.instagram.com/explore/tags/" + item)
         hash_list.append(button)
     return hash_list
+
+def engagement_rate(current_influencer_df, influencer_stats): 
+    num_followers = int(current_influencer_df['num_followers'].values)
+    avg_likes = int(current_influencer_df['avg_likes'])
+    avg_comments = int(current_influencer_df['avg_comments'])
+    avg_video_views = int(current_influencer_df['avg_video_views'])
+    no_collaborations = len(influencer_stats['mentions'])
+    engagement = ((avg_likes*5 + avg_comments*6 + avg_video_views*2 + no_collaborations*10)/num_followers)*100
+    return round(engagement)
+
 
 # data = {"Images": 17, "Sidecars": 13, "Videos": 20}
 # datajson = json.dumps(data)
@@ -103,6 +113,16 @@ def create_card(username):
                                                         html.H5(str(int(current_influencer_df['avg_likes'])), style={"text-align": "right"})
                                                     ) 
                                                 ]
+                                            ),
+                                            dbc.Row(
+                                                [
+                                                    dbc.Col(
+                                                        html.H5("Category"), width=5
+                                                    ),
+                                                    dbc.Col(
+                                                        html.H5(str(current_influencer_df['top_category'].values[0]), style={"text-align": "right"}), width=7
+                                                    ) 
+                                                ]
                                             )
                                         ]
                                         )
@@ -139,6 +159,47 @@ def create_card(username):
     style = {"margin": "1vw", "maxWidth": "40vw", "padding": "0px"}
     )
     return card
+
+def show_comments(username):
+    if username in comments_user:
+        # print(subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='POSITIVE')]['url'].values[0] + "embed")
+        comments_layout = html.Div([
+                html.H4("Comment Sentiment", className='text-muted', style={'text-align':'center'}), 
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Card(
+                            dbc.CardBody(
+                                [
+
+                                    html.H5("Most Positive Comment", className="card-title"),
+                                    html.Iframe(src=subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='POSITIVE')]['url'].values[0] + "embed",
+                                        style={'maxHeight':'440px', 'maxWidth':'300px',}),
+                                    # html.Br(),
+                                    # html.Br(),
+                                    html.P('"' + subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='POSITIVE')]['comments'] + '"', style={'text-align':'center'}),
+                                ], style={'text-align':'center'}
+                            ),
+                        ),
+                    ]),
+                    dbc.Col([
+                        dbc.Card(
+                            dbc.CardBody(
+                                [
+                                    html.H5("Least Positive Comment", className="card-title"),
+                                    html.Iframe(src=subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='NEGATIVE')]['url'].values[0] + "embed",
+                                        style={'maxHeight':'440px','maxWidth':'300px'}),
+                                    html.P('"' + subset_df.loc[(subset_df['username']==username) & (subset_df['binary_class']=='NEGATIVE')]['comments'] + '"', style={'text-align':'center',}),
+                                    # dbc.CardLink("Card link", href="#"),
+                                    # dbc.CardLink("External link", href="https://google.com"),
+                                ], style={'text-align':'center'}
+                            ),
+                        ),
+                    ])
+                ])
+        ])
+        return comments_layout
+    else:
+        return html.Div()
 
 
 def create_profile(username): 
@@ -204,7 +265,8 @@ def create_profile(username):
 
                                     html.H4("Engagement Rate", className='text-muted'), 
                                     html.Div(dash_echarts.DashECharts(
-                                            option = create_gauge('63'),  # engagement rate?
+                                            option = create_gauge(engagement_rate(current_influencer_df, influencer_stats)),
+                                            # option = create_gauge('63'),  # engagement rate?
                                             # events = events,
                                             id='echarts_pie',
                                             style={
@@ -221,7 +283,9 @@ def create_profile(username):
                                 className='col', 
                                 children =[
                                     html.H4("Recent Post", className='text-muted'),
-                                    html.Iframe(src="https://www.instagram.com/p/" + current_influencer_df['recent_pic_short'].values[0] + "/embed")
+                                    html.Iframe(src="https://www.instagram.com/p/" + current_influencer_df['recent_pic_short'].values[0] + "/embed",
+                                        style={'height':'780px'}),
+            
                                 ]
                             )
                         ]
@@ -272,18 +336,32 @@ def create_profile(username):
                             #     className='col', 
                             #     ), 
                         ], style={'height':'35vh'}), 
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
                         dbc.Row([
-                                # dbc.Card([
-                                    html.H4("Categories & Collaborators", className='text-muted', style={'text-align':'center'}), 
+                            dbc.Col([
+                                    html.H4("All Categories & Collaborators", className='text-muted', style={'text-align':'center'}), 
                                     dcc.Graph(figure=sunburst_fig, 
                                         style={
-                                            "width": '100vw', 
+                                            # "width": '100vw', 
                                             'justifyContent':'center',
                                             'align-items':'center',
                                             'display': 'flex', 
                                         },)
-                                # ], style={"margin": "5px", "width": '30vw'}), 
+                            ]),
+
+                            dbc.Col([
+                                html.Br(),
+                                html.Br(),
+                                html.Br(),
+                                html.Br(),
+                                html.Br(),
+                                html.H5('add another graph here..?')
                             ])
+                        ]),
+
+                        dbc.Row([show_comments(username)])
                     ]),
 
                     
