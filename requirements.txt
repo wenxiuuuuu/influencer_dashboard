@@ -3,3 +3,4 @@ chart-studio
 dash
 dash-echarts
 heroku
+gunicorn
