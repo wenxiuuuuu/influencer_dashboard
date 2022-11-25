@@ -4,7 +4,7 @@ from dash.exceptions import PreventUpdate
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
 # from data import get_filtered_influ_df, rank_filtered_df
-from influencer_card import create_card
+from influencer_card import create_card, engagement_rate
 # from data import dropdown_options
 from data import *
 from mongodata import influencer_df, post_df
@@ -314,9 +314,10 @@ def create_table(inf_df_1, inf_df_2):
     row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(inf_df_1['avg_likes'])), html.Td(int(inf_df_2['avg_likes']))])
     row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(inf_df_1['avg_comments'])), html.Td(int(inf_df_2['avg_comments']))])
     row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(inf_df_1['avg_video_views'])), html.Td(int(inf_df_2['avg_video_views']))])
-    row5 = html.Tr([html.Td("Engagement Rate"), html.Td("63%"), html.Td("63%")])
+    row5 = html.Tr([html.Td("Engagement Rate"), html.Td(int(engagement_rate(inf_df_1))), html.Td(int(engagement_rate(inf_df_1)))])
     table_body = [html.Tbody([row1, row2, row3, row4, row5])]
-    table = dbc.Table(table_header + table_body, bordered=True, hover=True, responsive=True, style={'text-align':'center', 'justifyContent':'center', 'align-items':'center'})
+    table = dbc.Table(table_header + table_body, bordered=True, hover=True, responsive=True, size='md', 
+                        style={'text-align':'center', 'justifyContent':'center', 'align-items':'center'})
 
     return table
 
@@ -358,8 +359,12 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
             html.Br(),
             dbc.Container([
                 dbc.Row([create_table(inf_df_1, inf_df_2)]),
+                html.Br(), 
                 dbc.Row([
-                    dbc.Col([dash_echarts.DashECharts(
+                    dbc.Col(
+                        [
+                            html.H4("Radial Charts Comparison", style={'text-align': 'center'}), 
+                            dash_echarts.DashECharts(
                                 option = compare_radial(dropdown_1, dropdown_2),
                                 # events = events,
                                 id='echarts_radar_compare',
@@ -368,7 +373,10 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
                                     "height": '35vh',
                                 },)
                     ]),
-                    dbc.Col([dash_echarts.DashECharts(
+                    dbc.Col(
+                        [
+                            html.H4("Type of Posts Comparison", style={'text-align': 'center'}), 
+                            dash_echarts.DashECharts(
                                 option = create_bar(dropdown_1, dropdown_2),
                                 # events = events,
                                 id='echarts_bar_compare',
