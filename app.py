@@ -34,6 +34,7 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.LUX, 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'],
     suppress_callback_exceptions=True
 )
+server = app.server
 
 app.title = "Influ-Finder"
 

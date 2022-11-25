@@ -10,9 +10,9 @@ import re
 
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
-from data import get_influencer_statistics
+from data import get_influencer_statistics, get_post_infos
 from dash import Input, Output, State, html, callback 
-from echarts import option_graph, create_pie_chart, create_radial, create_gauge
+from echarts import option_graph, create_pie_chart, create_radial, create_gauge, line_graph
 
 from mongodata import influencer_df, get_cur_infl_profile, comments_df, subset_df, comments_user
 
@@ -31,13 +31,15 @@ def hashtag_buttons(list):
         hash_list.append(button)
     return hash_list
 
-def engagement_rate(current_influencer_df, influencer_stats): 
+def engagement_rate(current_influencer_df, influencer_stats, username): 
+    num_posts = int(get_post_infos(username)['num_posts'])
     num_followers = int(current_influencer_df['num_followers'].values)
-    avg_likes = int(current_influencer_df['avg_likes'])
-    avg_comments = int(current_influencer_df['avg_comments'])
-    avg_video_views = int(current_influencer_df['avg_video_views'])
-    no_collaborations = len(influencer_stats['mentions'])
-    engagement = ((avg_likes*5 + avg_comments*6 + avg_video_views*2 + no_collaborations*10)/num_followers)*100
+    total_likes = int(current_influencer_df['avg_likes']) * num_posts
+    total_comments = int(current_influencer_df['avg_comments']) * num_posts
+    # avg_video_views = int(current_influencer_df['avg_video_views'])
+    # no_collaborations = len(influencer_stats['mentions'])
+    engagement = ((total_likes+total_comments)/num_followers)*100
+    # engagement = ((avg_likes*5 + avg_comments*6 + avg_video_views*2 + no_collaborations*10)/num_followers)*100
     return round(engagement)
 
 
@@ -265,7 +267,7 @@ def create_profile(username):
 
                                     html.H4("Engagement Rate", className='text-muted'), 
                                     html.Div(dash_echarts.DashECharts(
-                                            option = create_gauge(engagement_rate(current_influencer_df, influencer_stats)),
+                                            option = create_gauge(engagement_rate(current_influencer_df, influencer_stats, username)),
                                             # option = create_gauge('63'),  # engagement rate?
                                             # events = events,
                                             id='echarts_pie',
@@ -352,12 +354,17 @@ def create_profile(username):
                             ]),
 
                             dbc.Col([
-                                html.Br(),
-                                html.Br(),
-                                html.Br(),
-                                html.Br(),
-                                html.Br(),
-                                html.H5('add another graph here..?')
+                                html.H4("Likes & Comments over Time", className='text-muted', style={'text-align':'center'}), 
+                                # html.H5('add another graph here..?'), 
+                                dash_echarts.DashECharts(
+                                            option = line_graph(username),
+                                            # events = events,
+                                            id='likes_comments',
+                                            style={
+                                                # "width": '35vw',
+                                                "height": '40vh',
+                                            },
+                                        ),
                             ])
                         ]),
 

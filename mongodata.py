@@ -94,3 +94,4 @@ if __name__ == '__main__':
     # print(list(post_df.columns))
     # print()
     print(list(influencer_df['top_category'].unique()))
+    influencer_df.to_csv("influencer.csv")

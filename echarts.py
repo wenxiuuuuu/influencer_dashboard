@@ -1,8 +1,9 @@
 import json
 import dash_echarts
-from data import radial_data, pie_data
+from data import radial_data, pie_data, get_post_infos
 from mongodata import post_df
 from collections import Counter
+from datetime import datetime
 
 def create_pie_chart(username):
     data = pie_data(username)
@@ -260,3 +261,51 @@ def create_gauge(eng_rate):
         ]
     }
     return option_gauge
+
+
+def line_graph(username):
+    comments = list(get_post_infos(username)['comments_over_time'])
+    likes = list(get_post_infos(username)['likes_over_time'])
+    timestamp = [datetime.fromtimestamp(i).strftime("%m-%y") for i in list(get_post_infos(username)['timestamp'])]
+    option = {
+        'tooltip': {
+            'trigger': 'axis'
+        },
+        'legend': {
+            'data': ['Likes', 'Comments']
+        },
+        'grid': {
+            'left': '3%',
+            'right': '4%',
+            'bottom': '3%',
+            'containLabel': True
+        },
+        'toolbox': {
+            'feature': {
+            'saveAsImage': {}
+            }
+        },
+        'xAxis': {
+            'type': 'category',
+            'boundaryGap': False,
+            'data': timestamp
+        },
+        'yAxis': {
+            'type': 'value'
+        },
+        'series': [
+            {
+            'name': 'Likes',
+            'type': 'line',
+            # 'stack': 'Total',
+            'data': likes
+            },
+            {
+            'name': 'Comments',
+            'type': 'line',
+            'stack': 'Total',
+            'data': comments
+            }
+        ]
+        }
+    return option
