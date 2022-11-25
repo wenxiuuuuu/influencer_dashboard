@@ -1,11 +1,11 @@
-import json 
+import json
 import dash_echarts
 from data import radial_data, pie_data, get_post_infos
 from mongodata import post_df
 from collections import Counter
 from datetime import datetime
 
-def create_pie_chart(username): 
+def create_pie_chart(username):
     data = pie_data(username)
     option_pie = {
         'tooltip': {
@@ -19,7 +19,7 @@ def create_pie_chart(username):
             {
             'type': 'pie',
             'radius': '50%',
-            'data': data, 
+            'data': data,
             'emphasis': {
                 'itemStyle': {
                 'shadowBlur': 10,
@@ -33,8 +33,8 @@ def create_pie_chart(username):
     return option_pie
 
 
-# radar chart 
-def create_radial(username): 
+# radar chart
+def create_radial(username):
     username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views = radial_data(username)
     option_radial = {
         'tooltip': {
@@ -77,7 +77,7 @@ def create_radial(username):
                 'lineStyle': {'color':'#FFC300'},
                 'areaStyle': {'color': '#FFC300'}
                 }
-            ], 
+            ],
             'emphasis': {
                 'itemStyle': {
                 'shadowBlur': 10,
@@ -262,7 +262,8 @@ def create_gauge(eng_rate):
     }
     return option_gauge
 
-def line_graph(username): 
+
+def line_graph(username):
     comments = list(get_post_infos(username)['comments_over_time'])
     likes = list(get_post_infos(username)['likes_over_time'])
     timestamp = [datetime.fromtimestamp(i).strftime("%m-%y") for i in list(get_post_infos(username)['timestamp'])]
