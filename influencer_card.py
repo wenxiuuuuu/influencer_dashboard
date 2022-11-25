@@ -12,7 +12,7 @@ import re
 import dash_bootstrap_components as dbc
 from data import get_influencer_statistics, get_post_infos
 from dash import Input, Output, State, html, callback 
-from echarts import option_graph, create_pie_chart, create_radial, create_gauge, line_graph
+from echarts import option_graph, create_pie_chart, create_radial, create_gauge, line_graph, indiv_network
 
 from mongodata import influencer_df, get_cur_infl_profile, comments_df, subset_df, comments_user
 
@@ -380,19 +380,19 @@ def create_profile(username):
 
                     
                     html.Br(),
-                    html.H3("Connections", style={"margin-top": "15px"}),
+                    html.H3("First and Second Degree Connections", style={"margin-top": "15px"}),
                     dbc.Progress(value=100),
                     html.Br(),
 
-                    # dash_echarts.DashECharts(
-                    #     option = option_graph,
-                    #     # events = events,
-                    #     id='echarts_graph',
-                    #     style={
-                    #         "width": '100vw',
-                    #         "height": '90vh',
-                    #     },
-                    # )
+                    dash_echarts.DashECharts(
+                        option = indiv_network(username),
+                        # events = events,
+                        # id='echarts_graph_small',
+                        style={
+                            "width": '73vw',
+                            "height": '70vh',
+                        },
+                    )
                     
                 ], 
             )
