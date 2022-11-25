@@ -38,19 +38,6 @@ def engagement_rate(current_influencer_df):
     engagement = ((total_likes+total_comments)/num_followers)*100
     return round(engagement)
 
-# def engagement_rate(current_influencer_df, influencer_stats, username): 
-#     # num_posts = int(get_post_infos(username)['num_posts'])
-#     num_followers = int(current_influencer_df['num_followers'].values)
-#     # total_likes = int(current_influencer_df['avg_likes']) * num_posts
-#     # total_comments = int(current_influencer_df['avg_comments']) * num_posts
-#     total_likes = int(current_influencer_df['avg_likes']) * 10
-#     total_comments = int(current_influencer_df['avg_comments']) * 10
-#     # avg_video_views = int(current_influencer_df['avg_video_views'])
-#     # no_collaborations = len(influencer_stats['mentions'])
-#     engagement = ((total_likes+total_comments)/num_followers)*100
-#     # engagement = ((avg_likes*5 + avg_comments*6 + avg_video_views*2 + no_collaborations*10)/num_followers)*100
-#     return round(engagement)
-
 # data = {"Images": 17, "Sidecars": 13, "Videos": 20}
 # datajson = json.dumps(data)
 
@@ -59,8 +46,6 @@ def engagement_rate(current_influencer_df):
 #     return option 
 
 def create_card(username):
-    # name, username, biography, num_followers, dp_path = get_card_data(index)
-    # name, username, biography, num_followers, dp_path, recent_post, avg_comments, avg_likes, avg_video_views, post_type, mentions, hashtags, category_counts = get_profile_data(username)
     current_influencer_df = get_cur_infl_profile(username)
     dp_path = '/assets/images/' + username + '.jpg'   
 
@@ -145,17 +130,7 @@ def create_card(username):
                     ),
 
                     dbc.Button("See more", value=current_influencer_df['username_html'].values[0], id=f"open_fs{current_influencer_df['username_html'].values[0]}", class_name="mt-auto", style={"width": "100%"}),
-                    # style={"align-self": "stretch", "width": "105%", "flex": "1 1 auto"}
                     dbc.Modal(
-                        # [
-                        #     dbc.ModalHeader(dbc.ModalTitle("Influencer Profile")),
-                        #     html.Div(
-                        #         [
-                        #             html.H4(name),
-                        #             html.Iframe(src="https://www.instagram.com/p/CkqAwI-hWJu/embed")
-                        #         ]
-                        #     )
-                        # ],
                         id=f"modal-fs{current_influencer_df['username_html'].values[0]}",
                         # fullscreen=True,
                         scrollable=True,
@@ -213,18 +188,13 @@ def show_comments(username):
 
 
 def create_profile(username): 
-    # index = int(index)
-    # name, username, biography, num_followers, dp_path, recent_post, avg_comments, avg_likes, avg_video_views, post_type, mentions, hashtags, category_counts = get_profile_data(index)
     current_influencer_df = get_cur_infl_profile(username)
-    # data_pie = pie_data()
 
     # creating table 
-    # table_header = [html.Thead(html.Tr([html.Th("Followers"), html.Th(str(num_followers))]))]
     row1 = html.Tr([html.Td("Followers"), html.Td(str(int(current_influencer_df['num_followers'].values)))])
     row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(current_influencer_df['avg_likes']))])
     row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(current_influencer_df['avg_comments']))])
     row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(current_influencer_df['avg_video_views']))])
-    # row5 = html.Tr([html.Td("Engagement Rate"), html.Td("63%")])
     table_body = [html.Tbody([row1, row2, row3, row4])]
     table = dbc.Table(table_body, bordered=True, hover=True, responsive=True)
 
@@ -249,20 +219,17 @@ def create_profile(username):
                                 children = [
 
                                     html.H4("Top Categories of Brands Worked With", className="text-muted"), 
-                                    # create_listgroup(["Men Health", "Fitness", "Tech"]), 
                                     # create_listgroup(list(influencer_stats['category_counts'].keys())[:5]), 
                                     create_listgroup(list({k: v for k, v in sorted(influencer_stats['category_counts'].items(), reverse=True, key=lambda item: item[1])}.keys())[:5]),
 
                                     html.Br(), 
 
                                     html.H4("Top Collaborations", className='text-muted'), 
-                                    # create_listgroup(["gatsbysg", "thetinselrack", "byinviteonlystore"])
                                     create_listgroup(['@' + x for x in influencer_stats['mentions'][:5]]),
 
                                     html.Br(), 
 
                                     html.H4("Hashtags", className='text-muted'), 
-                                    # html.Div(hashtag_buttons(["movingrubber", "groomingtips", "hairstyling", "TrustBankSG", "RicolaSG"]))
                                     html.Div(hashtag_buttons(influencer_stats['hashtags']))
                                 ]
                             ), 
@@ -280,8 +247,6 @@ def create_profile(username):
                                     html.H4("Engagement Rate", className='text-muted'), 
                                     html.Div(dash_echarts.DashECharts(
                                             option = create_gauge(engagement_rate(current_influencer_df)),
-                                            # option = create_gauge('63'),  # engagement rate?
-                                            # events = events,
                                             id='echarts_pie',
                                             style={
                                                 # "width": '25vw',
@@ -314,26 +279,6 @@ def create_profile(username):
                             dbc.Col(
                                 className='col', 
                                 children=[
-                                    # dbc.Card([
-                                        html.H4("Type of Posts", className='text-muted', style={'text-align':'center'}), 
-                                        # pie chart 
-                                        dash_echarts.DashECharts(
-                                            option = create_pie_chart(username),
-                                            # events = events,
-                                            id='echarts_pie',
-                                            style={
-                                                # "width": '35vw',
-                                                "height": '35vh',
-                                            },
-                                        )
-                                    # ], style={"margin": "5px", "width": '30vw'},
-                                # ),
-                                ],
-                                style={"box-sizing": 'border-box'}), 
-                            dbc.Col(
-                                className='col', 
-                                children=[
-                                    # dbc.Card([
                                         html.H4("Compared with Average", className='text-muted', style={'text-align':'center'}), 
                                         dash_echarts.DashECharts(
                                             option = create_radial(username),
@@ -344,8 +289,23 @@ def create_profile(username):
                                                 "height": '35vh',
                                             },
                                         ),
-                                    # ], style={"margin": "3px", "width": '30vw'}), 
-                            ]), 
+                                ]
+                                ,
+                                style={"box-sizing": 'border-box'}), 
+                            dbc.Col(
+                                className='col', 
+                                children=[
+                                        html.H4("Type of Posts", className='text-muted', style={'text-align':'center'}), 
+                                        dash_echarts.DashECharts(
+                                            option = create_pie_chart(username),
+                                            id='echarts_pie',
+                                            style={
+                                                # "width": '35vw',
+                                                "height": '35vh',
+                                            },
+                                        )
+                                ]
+                                ), 
                             # dbc.Col(
                             #     className='col', 
                             #     ), 
@@ -368,7 +328,6 @@ def create_profile(username):
                             dbc.Col([
                                 html.H4("Likes & Comments", className='text-muted', style={'text-align':'center'}), 
                                 html.P("For recent posts", style={'text-align':'center'}),
-                                # html.H5('add another graph here..?'), 
                                 dash_echarts.DashECharts(
                                             option = line_graph(username),
                                             # events = events,
@@ -383,23 +342,10 @@ def create_profile(username):
 
                         dbc.Row([show_comments(username)])
                     ]),
-
-                    
                     html.Br(),
                     html.H3("Connections", style={"margin-top": "15px"}),
                     dbc.Progress(value=100),
-                    html.Br(),
-
-                    # dash_echarts.DashECharts(
-                    #     option = option_graph,
-                    #     # events = events,
-                    #     id='echarts_graph',
-                    #     style={
-                    #         "width": '100vw',
-                    #         "height": '90vh',
-                    #     },
-                    # )
-                    
+                    html.Br()
                 ], 
             )
         ], 

@@ -290,7 +290,7 @@ comparison_page = html.Div(
                         id="dropdown_1",
                         options=dropdown_options(),
                         value='_shinekoh',
-                        style={"margin-left": "7px", "width": "97.8%"}
+                        style={"margin-left": "7px", "width": "96%"}
                         ),
                     html.Div(id="influencer-1"),
                 ]),
@@ -299,7 +299,7 @@ comparison_page = html.Div(
                         id="dropdown_2",
                         options=dropdown_options(),
                         value='aglimpseofrach',
-                        style={"margin-left": "7px", "width": "97.8%"}
+                        style={"margin-left": "7px", "width": "96%"}
                         ),
                     html.Div(id="influencer-2"),
                 ])
@@ -319,9 +319,9 @@ def create_table(inf_df_1, inf_df_2):
     row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(inf_df_1['avg_likes'])), html.Td(int(inf_df_2['avg_likes']))])
     row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(inf_df_1['avg_comments'])), html.Td(int(inf_df_2['avg_comments']))])
     row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(inf_df_1['avg_video_views'])), html.Td(int(inf_df_2['avg_video_views']))])
-    row5 = html.Tr([html.Td("Engagement Rate"), html.Td(int(engagement_rate(inf_df_1))), html.Td(int(engagement_rate(inf_df_1)))])
+    row5 = html.Tr([html.Td("Engagement Rate"), html.Td(int(engagement_rate(inf_df_1))), html.Td(int(engagement_rate(inf_df_2)))])
     table_body = [html.Tbody([row1, row2, row3, row4, row5])]
-    table = dbc.Table(table_header + table_body, bordered=True, hover=True, responsive=True, size='md', 
+    table = dbc.Table(table_header + table_body, bordered=True, hover=True, responsive=True, size='sm', 
                         style={'text-align':'center', 'justifyContent':'center', 'align-items':'center'})
 
     return table
@@ -363,7 +363,7 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
             html.H4("Results:", style={"margin-top": "30px", "text-align": "center"}),
             html.Br(),
             dbc.Container([
-                dbc.Row([create_table(inf_df_1, inf_df_2)]),
+                dbc.Row([create_table(inf_df_1, inf_df_2)], style={'width':'60vw', 'margin-left':'auto', 'margin-right':'auto'}),
                 html.Br(), 
                 dbc.Row([
                     dbc.Col(
@@ -391,6 +391,9 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
                                 },)
                     ])
                 ]),
+                html.Br(), 
+                html.Br(), 
+                html.Br()
                 #
             ])
         ])

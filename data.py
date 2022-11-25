@@ -80,9 +80,7 @@ def get_post_infos(username):
     post_infos = {} 
     post_infos['num_posts'] = len(current_influencer_posts)
 
-    # post_infos['likes_over_time'] = dict(zip(current_influencer_posts.taken_at_timestamp, current_influencer_posts.edge_liked_by))
-    # post_infos['comments_over_time'] = dict(zip(current_influencer_posts.taken_at_timestamp, current_influencer_posts.edge_media_to_comment))
-
+    post_infos['post_type'] = current_influencer_posts['post_type']
     post_infos['likes_over_time'] = current_influencer_posts['edge_liked_by']
     post_infos['comments_over_time'] = current_influencer_posts['edge_media_to_comment']
     post_infos['timestamp'] = current_influencer_posts['taken_at_timestamp']
