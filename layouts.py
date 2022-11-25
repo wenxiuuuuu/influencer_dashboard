@@ -133,7 +133,7 @@ def save_info(n_clicks, instagram, follower_range, category):
     return html.Div()
 
 
-unique_categories = list(influencer_df['category_name'].unique()).remove('')
+unique_categories = influencer_df['category_name'].unique()
 sort_layout = dbc.Container([
         dbc.Row([dbc.Col(dbc.InputGroup(
                         [   dbc.InputGroupText(html.I(className="fa fa-unsorted")),
