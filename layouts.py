@@ -17,13 +17,6 @@ from sklearn.neighbors import NearestNeighbors
 from constants import color_map
 
 
-# def update_filtered_sorted_df(data= None):
-#     print('updating filtered df')
-#     filtered_sorted_df = data
-#     return filtered_sorted_df
-
-# filtered_sorted_df = pd.DataFrame()
-
 # home page!
 home_page = html.Div(
     [
@@ -93,11 +86,6 @@ def save_info(n_clicks, instagram, follower_range, category):
     print(n_clicks, instagram, follower_range, category)
 
     if n_clicks > 0:
-    #     ig_text = html.H4("instagram is: " + str(instagram))
-    #     followers = html.H4("follower range is: " + str(follower_range[0]) + " to " + str(follower_range[1]))
-    #     cate = html.H4("category is: " + str(category))
-
-    #     # INFORMATION FROM COMPANY IS AVAILABLE HERE!! USE THIS PART TO TAKE DATA FOR FILTERS
 
     # check if user exists in our companies db
     # 1. filter the df
@@ -163,7 +151,6 @@ sort_layout = dbc.Container([
                     style={'border-top-left-radius':'0px', 'border-bottom-left-radius':'0px', 'width':'30vw'}
                 ),
             ],style={"margin-left":"1vw", "margin-top":'0.7vw'})),
-        # className="g-0",
         html.Br(),
         html.Div(id='page-1-content')
     ],style={"margin-top":"2vw"})
@@ -181,8 +168,6 @@ def page_1_dropdown(input, sortby, sort_asc, interest_input, ):
     temp = temp.sort_values(sortby, ascending=asc).reset_index(drop=True)
     if input:
         temp = temp.loc[temp['username'].str.contains(f"(?i){input}")].reset_index(drop=True)
-    # return dash_table.DataTable(temp.to_dict('records'), [{"name": i, "id": i} for i in temp.columns])
-    # return f"{df['Full Name'][0]}, {temp['Full Name'][0]}"
     row = []
     for i in temp['username']:
         row.append(create_card(i))
@@ -241,16 +226,12 @@ def compare_radial(user1, user2):
         'series': [
             {
             'type': 'radar',
-            # 'tooltip': {
-            #     'trigger': 'item'
-            # },
             'data': [
                 {
                 'value': [total_avg_followers, total_avg_likes, total_avg_video_views, total_avg_comments],
                 'name': 'Average',
                 'itemStyle': {'color':'#AEB0AA'},
                 'lineStyle': {'color':'#AEB0AA', 'type': 'dashed'},
-                # 'areaStyle': {'color': '#AEB0AA'}
                 },
                 {
                 'value': [influencer_followers1, influencer_likes1, influencer_video_views1, influencer_comments1],
@@ -394,7 +375,6 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
                 html.Br(), 
                 html.Br(), 
                 html.Br()
-                #
             ])
         ])
 

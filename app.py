@@ -1,22 +1,9 @@
-import json
-import base64
-import datetime
-import requests
-import pathlib
-import math
-import pandas as pd
-import flask
 import dash
 from dash import Dash, callback
 from dash import dcc
 from dash import html
-from chart_studio import plotly as py
-import plotly.graph_objs as go
-
-from plotly import subplots
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, html
-from dash_bootstrap_components._components.Container import Container
 
 from layouts import (home_page, sort_layout, comparison_page, influencer_network_page, cluster_page)
 # from data import get_card_data
@@ -37,8 +24,6 @@ app = dash.Dash(
 server = app.server
 
 app.title = "Influ-Finder"
-
-# app = Dash(name, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.BOOTSTRAP, 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'])
 
 navbar = dbc.NavbarSimple(
     children=[

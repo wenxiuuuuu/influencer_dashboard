@@ -1,9 +1,7 @@
 import json
-import dash_echarts
 from data import radial_data, pie_data, get_post_infos
 from mongodata import post_df, influencer_df
 from collections import Counter
-from datetime import datetime
 
 def create_pie_chart(username):
     data = pie_data(username)
@@ -33,7 +31,7 @@ def create_pie_chart(username):
     return option_pie
 
 
-# radar chart
+# radial chart
 def create_radial(username):
     username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views = radial_data(username)
     option_radial = {
@@ -59,9 +57,6 @@ def create_radial(username):
         'series': [
             {
             'type': 'radar',
-            # 'tooltip': {
-            #     'trigger': 'item'
-            # },
             'data': [
                 {
                 'value': [total_avg_followers, total_avg_likes, total_avg_video_views, total_avg_comments],
@@ -117,7 +112,6 @@ option_graph = {
         'label': {
           'show': True,
           'position': 'right',
-        #   'formatter': '{b}'
         },
         'labelLayout': {
           'hideOverlap': True
@@ -131,9 +125,6 @@ option_graph = {
           'color': 'source',
           'curveness': 0.1
         },
-        # 'force': {
-        #   'repulsion': 10
-        # }
       }
     ]
 }
@@ -240,11 +231,6 @@ def create_gauge(eng_rate):
                 },
                 'axisTick': {
                     'show': False
-                    # 'splitNumber': 2,
-                    # 'lineStyle': {
-                    # 'width': 1,
-                    # 'color': '#999'
-                    # }
                 },
                 'splitLine': {
                     'show': False,
@@ -345,9 +331,7 @@ def create_gauge(eng_rate):
 def line_graph(username):
     comments = list(get_post_infos(username)['comments_over_time'])
     likes = list(get_post_infos(username)['likes_over_time'])
-    # timestamp = [datetime.fromtimestamp(i).strftime("%m-%y") for i in list(get_post_infos(username)['timestamp'])]
     post_no = list(range(1,get_post_infos(username)['num_posts']+1))
-    post_type = list(get_post_infos(username)['post_type'])
     option = {
         'tooltip': {
             'trigger': 'axis'
@@ -430,9 +414,6 @@ for k in list(influencer_df['username']):
         present_author_dict[k] = unique_authors_dict[k]
     except:
         continue
-
-# present_author_dict = dict((k, unique_authors_dict[k]) for k in list(influencer_df['username']))
-# print('present_aithor_dict!!!!!!!!!1', unique_authors_dict)
 
 def convert(node, link, username):
     id_mapper = {}
@@ -534,9 +515,6 @@ def indiv_network(username):
           'color': 'source',
           'curveness': 0.1
         },
-        # 'force': {
-        #   'repulsion': 10
-        # }
       }
     ]
 }

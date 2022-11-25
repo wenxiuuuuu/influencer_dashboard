@@ -1,12 +1,8 @@
 # Dash components, html, and dash tables
 from dash import dcc
 import dash_echarts
-from dash.exceptions import PreventUpdate
 from os import path
-import json
-import pandas as pd
 import plotly.express as px
-import re
 
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
@@ -37,13 +33,6 @@ def engagement_rate(current_influencer_df):
     total_comments = int(current_influencer_df['avg_comments']) * 10
     engagement = ((total_likes+total_comments)/num_followers)*100
     return round(engagement)
-
-# data = {"Images": 17, "Sidecars": 13, "Videos": 20}
-# datajson = json.dumps(data)
-
-# def pie_chart():
-#     option = "{ tooltip: {trigger: 'item'},legend: {top: '5%',left: 'center'},series: [{name: 'Access From',type: 'pie',radius: ['40%', '70%'],avoidLabelOverlap: false,itemStyle: {borderRadius: 10,borderColor: '#fff',borderWidth: 2},label: {show: false,position: 'center'},emphasis: {label: {show: true,fontSize: '40',fontWeight: 'bold'}},labelLine: {show: false},data: { value: 17, name: 'Images' },{ value: 13, name: 'Sidecars' },{ value: 20, name: 'Videos' }}]};"
-#     return option
 
 def create_card(username):
     current_influencer_df = get_cur_infl_profile(username)
@@ -330,7 +319,6 @@ def create_profile(username):
                                 html.P("For recent posts", style={'text-align':'center'}),
                                 dash_echarts.DashECharts(
                                             option = line_graph(username),
-                                            # events = events,
                                             id='likes_comments',
                                             style={
                                                 # "width": '35vw',
@@ -349,8 +337,6 @@ def create_profile(username):
 
                     dash_echarts.DashECharts(
                         option = indiv_network(username),
-                        # events = events,
-                        # id='echarts_graph_small',
                         style={
                             "width": '73vw',
                             "height": '70vh',
