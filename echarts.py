@@ -204,6 +204,16 @@ def create_bar(user1, user2):
     }
     return option_bar
 
+def color_range(eng_rate): 
+    if 0<=eng_rate<25: 
+        return '#FF6E76'
+    elif 25<=eng_rate<50: 
+        return '#FDDD60'
+    elif 50<=eng_rate<75: 
+        return '#58D9F9'
+    else:
+        return '#7CFFB2'
+        
 def create_gauge(eng_rate):
     option_gauge = {
         'series': [
@@ -215,7 +225,8 @@ def create_gauge(eng_rate):
             'max': 100,
             'splitNumber': 10,
             'itemStyle': {
-                'color': '#FFC300',
+                # 'color': '#FFC300',
+                'color': color_range(eng_rate), 
             },
             'progress': {
                 'show': True,
@@ -272,11 +283,12 @@ def create_gauge(eng_rate):
     }
     return option_gauge
 
-
 def line_graph(username):
     comments = list(get_post_infos(username)['comments_over_time'])
     likes = list(get_post_infos(username)['likes_over_time'])
-    timestamp = [datetime.fromtimestamp(i).strftime("%m-%y") for i in list(get_post_infos(username)['timestamp'])]
+    # timestamp = [datetime.fromtimestamp(i).strftime("%m-%y") for i in list(get_post_infos(username)['timestamp'])]
+    post_no = list(range(1,get_post_infos(username)['num_posts']+1))
+    post_type = list(get_post_infos(username)['post_type'])
     option = {
         'tooltip': {
             'trigger': 'axis'
@@ -299,36 +311,57 @@ def line_graph(username):
         'xAxis': {
             'type': 'category',
             'boundaryGap': False,
-            'data': timestamp
+            'data': post_no, 
+            'axisTick': {
+                'alignWithLabel': True
+            }
         },
         'yAxis': [
             {
                 'name': 'Likes',
                 'type': 'value', 
+                'axisAutoAlign': True,
+                'axisLine': {
+                    'lineStyle': {
+                        'color': 'blue'
+                    }
+                }
             },
                 {
                 'name': 'Comments',
-                'alignTicks': True,
-                'type': 'value',
+                'position': 'right',
+                'type': 'value', 
+                'axisAutoAlign': True,
+                'axisLine': {
+                    'lineStyle': {
+                        'color': 'green'
+                    }
+                }, 
+                'splitLine': {
+                    'show': False
+                }
             }
         ],
         'series': [
             {
-            'name': 'Likes',
-            'type': 'line',
-            # 'stack': 'Total',
-            'data': likes
+                'name': 'Likes',
+                'type': 'line',
+                'data': likes, 
+                'lineStyle': {
+                    'color': 'blue'
+                }
             },
             {
-            'name': 'Comments',
-            'type': 'line',
-            'stack': 'Total',
-            'data': comments, 
-            'yAxisIndex': 1
+                'name': 'Comments',
+                'type': 'line',
+                'stack': 'Total',
+                'data': comments, 
+                'yAxisIndex': 1
             }
         ]
         }
     return option
+
 
 # def indiv_network(username):
 #     small_dict = get_data_indiv_network(username)

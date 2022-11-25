@@ -21,3 +21,9 @@ CATEGORY_DICT = {
 #        'Government organization', 'Health/beauty', 'Education',
 #        'Performing Arts', 'Public figure', 'Photography Videography',
 #        'Apparel & clothing', 'Gamer', 'Restaurant', 'Not a business'],
+
+
+
+color_map = {
+    0:'#636EFA', 1:'#EF553B', 2:'#00CC96', 3:'#AB63FA', 4:'#FFA15A', 5: '#19D3F3',
+}
