@@ -27,3 +27,34 @@ CATEGORY_DICT = {
 color_map = {
     0:'#636EFA', 1:'#EF553B', 2:'#00CC96', 3:'#AB63FA', 4:'#FFA15A', 5: '#19D3F3',
 }
+
+
+counts = ['1', '2', '3', '4']
+words = ['standing',
+ 'indoor',
+ 'outdoor',
+ 'flower',
+ 'footwear',
+ 'sitting',
+ 'tree',
+ 'brick',
+ 'wall',
+ 'food',
+ 'nature',
+ 'dog',
+ 'sky',
+ 'child',
+ 'beach',
+ 'ocean',
+ 'pool',
+ 'cake',
+ 'palm',
+ 'trees',
+ 'twilight',
+ 'cosmetics',
+ 'playing',
+ 'coast',
+ 'work',
+ 'book',
+ 'cloud',
+ 'screen']

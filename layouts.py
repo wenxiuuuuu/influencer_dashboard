@@ -583,11 +583,11 @@ def display_hover_data(clickData, figure):
         from features import loaded_pickle_object
         print("PICKLEEEEE")
         print(type(loaded_pickle_object))
-        neigh = NearestNeighbors(n_neighbors=5)
+        neigh = NearestNeighbors(n_neighbors=6)
         # print(loaded_pickle_object[selected_idx])
         neigh.fit(loaded_pickle_object)
         res = neigh.kneighbors(loaded_pickle_object[selected_idx])
-        closest_idx = res[1][0].tolist()
+        closest_idx = res[1][0].tolist()[1:]
         closest_points = img_df.iloc[closest_idx][["1d","2d", "clusterid"]].values
         # pred = neigh.kneighbors()
 
