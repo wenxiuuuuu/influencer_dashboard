@@ -101,3 +101,11 @@ if __name__ == '__main__':
     # print()
     print(list(influencer_df['top_category'].unique()))
     influencer_df.to_csv("influencer.csv")
+
+    # print(list(influencer_df['top_category'].unique()))
+    uniquelist = []
+    for v in category_dict.values():
+        uniquelist.append(v)
+    print(set(uniquelist))
+    print()
+    influencer_df.to_csv('influencer_df.csv', index=False)
