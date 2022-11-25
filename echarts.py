@@ -1,10 +1,9 @@
 import json
 import dash_echarts
 from data import radial_data, pie_data, get_post_infos
-from mongodata import post_df
+from mongodata import post_df, influencer_df
 from collections import Counter
 from datetime import datetime
-from network_graph import get_data_indiv_network
 
 def create_pie_chart(username):
     data = pie_data(username)
@@ -206,78 +205,138 @@ def create_bar(user1, user2):
 
 def color_range(eng_rate): 
     if 0<=eng_rate<25: 
-        return '#FF6E76'
+        return '#CC6155'
     elif 25<=eng_rate<50: 
-        return '#FDDD60'
+        return '#ED820E'
     elif 50<=eng_rate<75: 
-        return '#58D9F9'
+        return '#F5CB62'
     else:
-        return '#7CFFB2'
-        
+        return '#7BCABB'
 def create_gauge(eng_rate):
     option_gauge = {
         'series': [
             {
-            'type': 'gauge',
-            'startAngle': 180,
-            'endAngle': 0,
-            'min': 0,
-            'max': 100,
-            'splitNumber': 10,
-            'itemStyle': {
-                # 'color': '#FFC300',
-                'color': color_range(eng_rate), 
-            },
-            'progress': {
-                'show': True,
-                'roundCap': True,
-                'width': 12
-            },
-            'pointer': {        # no pointer
-                'icon': '',
-                'length': '75%',
-                'width': 0,
-                'offsetCenter': [0, '5%']
-            },
-            'axisLine': {
-                'roundCap': True,
-                'lineStyle': {
-                'width': 12
-                }
-            },
-            'axisTick': {
-                'splitNumber': 2,
-                'lineStyle': {
-                'width': 1,
-                'color': '#999'
-                }
-            },
-            'splitLine': {
-                'length': 6,
-                'lineStyle': {
-                'width': 2,
-                'color': '#999'
-                }
-            },
-            'axisLabel': {
-                'distance': 15,
-                'color': '#999',
-                'fontSize': 10
-            },
-            'title': {
-                'show': False
-            },
-            'detail': {
-                'formatter': '{value}%',
-                'offsetCenter': [0, '-20%'],
-                'valueAnimation': True,
-                'fontSize': 20
-            },
-            'data': [
-                {
-                'value': eng_rate
-                }
-            ]
+                'type': 'gauge',
+                'startAngle': 180,
+                'endAngle': 0,
+                'min': 0,
+                'max': 100,
+                'splitNumber': 10,
+                'itemStyle': {
+                    # 'color': '#FFC300',
+                    'color': color_range(eng_rate), 
+                },
+                'progress': {
+                    'show': True,
+                    'roundCap': True,
+                    'width': 12
+                },
+                'axisLine': {
+                    'show': True,
+                    'roundCap': True,
+                    'lineStyle': {
+                    'width': 12
+                    }
+                },
+                'axisTick': {
+                    'show': False
+                    # 'splitNumber': 2,
+                    # 'lineStyle': {
+                    # 'width': 1,
+                    # 'color': '#999'
+                    # }
+                },
+                'splitLine': {
+                    'show': False,
+                    'length': 6,
+                    'lineStyle': {
+                    'width': 2,
+                    'color': '#999'
+                    }
+                },
+                'axisLabel': {
+                    'show': False,
+                    'distance': 15,
+                    'color': '#999',
+                    'fontSize': 10
+                },
+                'pointer': {
+                    'show': False
+                },
+                'title': {
+                    'show': False
+                },
+                'detail': {
+                    'formatter': '{value}%',
+                    'offsetCenter': [0, '-20%'],
+                    'valueAnimation': True,
+                    'fontSize': 20, 
+                    'color': '#999'
+                },
+                'data': [
+                    {
+                    'value': eng_rate
+                    }
+                ]
+            }, 
+            {
+                'type': 'gauge',
+                'startAngle': 180,
+                'endAngle': 0,
+                'min': 0,
+                'max': 100,
+                'itemStyle': {
+                    'color': color_range(eng_rate), 
+                },
+                'progress': {
+                    'show': True,
+                    'width': 0, 
+                },
+                'pointer': {
+                    'show': False
+                },
+                'axisLine': {
+                    'show': False, 
+                    'lineStyle': {
+                    'width': 6,
+                    'color': [
+                        [0.25, '#CC6155'],
+                        [0.5, '#ED820E'],
+                        [0.75, '#F5CB62'],
+                        [1, '#7BCABB']
+                    ]
+        }
+                },
+                'axisTick': {
+                    'show': True, 
+                    'splitNumber': 2,
+                    'lineStyle': {
+                    'width': 1,
+                    'color': 'auto'
+                    }
+                },
+                'splitLine': {
+                    'show': True, 
+                    'length': 8,
+                    'lineStyle': {
+                    'width': 2,
+                    'color': 'auto'
+                    }
+                },
+                'axisLabel': {
+
+                    'distance': 15,
+                    'color': '#999',
+                    'fontSize': 10
+                },
+                'detail': {
+                    'show': False
+                },
+                'data': [
+                    {
+                    'value': eng_rate
+                    }
+                ]
             }
         ]
     }
@@ -362,38 +421,123 @@ def line_graph(username):
         }
     return option
 
+f = open('data/unique_authors_dict_saved.json')
+unique_authors_dict = json.load(f)
 
-# def indiv_network(username):
-#     small_dict = get_data_indiv_network(username)
-#     option_graph = {
-#         'tooltip': {},
-#         'series': [
-#             {
-#                 'name': f"{username}'s Network",
-#                 'type': 'graph',
-#                 'layout': 'force',
-#                 'data': small_dict['nodes'],
-#                 'links': small_dict['links'],
-#                 'categories': small_dict['categories'],
-#                 'roam': True,
-#                 'label': {
-#                     'show': True,
-#                     'position': 'right',
-#                     'formatter': '{b}'
-#                 },
-#                 'labelLayout': {
-#                 '   hideOverlap': True
-#                 },
-#                 'scaleLimit': {
-#                     'min': 0.4,
-#                     'max': 100,
-#                     'nodeScaleRatio': 0.2
-#                 },
-#                 'lineStyle': {
-#                     'color': 'source',
-#                     'curveness': 0.1
-#                 },
-#             }
-#         ]
-#     }
-#     return
+present_author_dict ={}
+for k in list(influencer_df['username']):
+    try:
+        present_author_dict[k] = unique_authors_dict[k]
+    except:
+        continue
+
+# present_author_dict = dict((k, unique_authors_dict[k]) for k in list(influencer_df['username']))
+# print('present_aithor_dict!!!!!!!!!1', unique_authors_dict)
+
+def convert(node, link, username):
+    id_mapper = {}
+    new_nodes = []
+    new_links = []
+
+    for idx, n in enumerate(node):
+        cur_id = n['id']
+        id_mapper[cur_id] = idx
+        new_n = n.copy()
+        new_n['id'] = idx
+        # if n['name']==username:
+        #     n['symbolSize']=20
+        new_nodes.append(new_n)
+
+    for e in link:
+        new_source = id_mapper[e['source']]
+        new_target = id_mapper[e['target']]
+        new_e = e.copy()
+        new_e['source'] = new_source
+        new_e['target'] = new_target
+        new_links.append(new_e)
+    return new_nodes, new_links
+
+def indiv_network(username):
+    username_id = graph['nodes'][present_author_dict[username]]['id']
+
+    # get first degree connections
+    subset_links = []
+    for i in graph['links']:
+        if (i['target']==username_id) or (i['source']==username_id):
+            subset_links.append(i)
+
+    # get first degree nodes
+    total = [username_id]
+    for j in subset_links:
+        if j['source'] not in total:
+            total.append(j['source'])
+        if j['target'] not in total:
+            total.append(j['target'])
+
+    # get all links
+    final_links = []
+    for i in graph['links']:
+        if (i['target'] in total) or (i['source'] in total):
+            final_links.append(i)
+
+    # get all nodes
+    all_nodes = set()
+    for i in final_links:
+        all_nodes.add(i['source'])
+        all_nodes.add(i['target'])
+    
+    small_dict = {'categories':[{'name': "Fashion"}, {'name': "Health/Wellness"}, {'name': "Media"},{'name': "Food"},{'name': "Electronics"},{'name': "Education"},{'name': "Other"},{'name': "Business"},{'name': "For Good"},{'name': "External Related Influencer"}]}
+
+    # small_dict['links'] = final_links
+    # small_dict['nodes'] = [big_dict['nodes'][i] for i in all_nodes]
+
+    small_dict['links'] = final_links
+    small_dict['nodes'] = [graph['nodes'][i] for i in all_nodes]
+    new_node, new_link = convert(small_dict['nodes'], small_dict['links'], username)
+
+    option_graph = {
+    'tooltip': {},
+    'legend': [
+      {
+        'data': ['Fashion','Health/Wellness','Media','Food','Electronics','Education','Other','Business','For Good', 'External Related Influencer'],
+        'padding': [5,10],
+        'itemGap': 25,
+        'backgroundColor': 'white'
+      }
+    ],
+    'color': ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#adadad'],
+    'series': [
+      {
+        'name': f"{username}'s network",
+        'type': 'graph',
+        'layout': 'force',
+        'data': new_node,
+        'links': new_link,
+        # 'data': [{'id': 10, 'name': 'aglimpseofrach', 'draggable': True, 'category': 2}, {'id': 100, 'name': 'xianwenpoops', 'draggable': True, 'category': 2}],
+        # 'links': [{'source': 10, 'target': 100, 'lineStyle': {'color': '#D3D3D3'}},],
+        'categories': small_dict['categories'],
+        'roam': True,
+        'label': {
+          'show': True,
+          'position': 'right',
+        #   'formatter': '{b}'
+        },
+        'labelLayout': {
+          'hideOverlap': True
+        },
+        'scaleLimit': {
+          'min': 0.3,
+          'max': 100,
+          'nodeScaleRatio': 0.2
+        },
+        'lineStyle': {
+          'color': 'source',
+          'curveness': 0.1
+        },
+        # 'force': {
+        #   'repulsion': 10
+        # }
+      }
+    ]
+}
+    return option_graph
