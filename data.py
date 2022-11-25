@@ -73,6 +73,22 @@ def radial_data(username):
     return username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views
 
 
+def get_post_infos(username): 
+    current_influencer_posts = post_df[post_df['username'] == username]
+    current_influencer_posts.drop_duplicates(subset="taken_at_timestamp", keep="first", inplace=True)
+    current_influencer_posts = current_influencer_posts.sort_values(by=['taken_at_timestamp'])
+    post_infos = {} 
+    post_infos['num_posts'] = len(current_influencer_posts)
+
+    # post_infos['likes_over_time'] = dict(zip(current_influencer_posts.taken_at_timestamp, current_influencer_posts.edge_liked_by))
+    # post_infos['comments_over_time'] = dict(zip(current_influencer_posts.taken_at_timestamp, current_influencer_posts.edge_media_to_comment))
+
+    post_infos['likes_over_time'] = current_influencer_posts['edge_liked_by']
+    post_infos['comments_over_time'] = current_influencer_posts['edge_media_to_comment']
+    post_infos['timestamp'] = current_influencer_posts['taken_at_timestamp']
+
+    return post_infos
+
 ## utilities 
 def get_influencer_statistics(username):
     """_summary_
@@ -199,4 +215,5 @@ def rank_filtered_df(filtered_df, category):
 
 
 if __name__ == '__main__':
-    print(get_influencer_statistics('parisabong'))
+    # print(get_influencer_statistics('parisabong'))
+    print(get_post_infos('parisabong'))
