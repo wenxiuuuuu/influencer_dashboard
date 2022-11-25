@@ -448,6 +448,14 @@ cluster_page = html.Div(
         html.Br(),
         dbc.Container([
             dbc.Row([
+                dbc.Col(
+                    id='centroid0', 
+                    children= [
+                        html.H5('Cluster 0'), 
+                        html.Img(src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==0)]['img_url'].iloc[0],
+                            style={'height':'280px', 'width':'260px'})
+                    ]
+                ),
                 html.Img(
                     id='centroid_1_img',
                     src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==0)]['img_url'].iloc[0],
