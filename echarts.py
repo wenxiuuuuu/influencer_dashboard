@@ -91,30 +91,39 @@ def create_radial(username):
     return option_radial
 
 
-f = open('data/inf_graph.json')
+f = open('data/inf_graph_colour.json')
 graph = json.load(f)
 
 option_graph = {
     'tooltip': {},
+    'legend': [
+      {
+        'data': ['Fashion','Health/Wellness','Media','Food','Electronics','Education','Other','Business','For Good', 'External Related Influencer'],
+        'padding': [5,10],
+        'itemGap': 25,
+        'backgroundColor': 'white'
+      }
+    ],
+    'color': ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#adadad'],
     'series': [
       {
-        'name': 'Coauthor Network',
+        'name': 'Influencer Network',
         'type': 'graph',
         'layout': 'force',
         'data': graph['nodes'],
         'links': graph['links'],
-        # 'categories': graph['categories'],
+        'categories': graph['categories'],
         'roam': True,
         'label': {
           'show': True,
           'position': 'right',
-          'formatter': '{b}'
+        #   'formatter': '{b}'
         },
         'labelLayout': {
           'hideOverlap': True
         },
         'scaleLimit': {
-          'min': 0.4,
+          'min': 0.3,
           'max': 100,
           'nodeScaleRatio': 0.2
         },
@@ -319,3 +328,40 @@ def line_graph(username):
         ]
         }
     return option
+
+# def indiv_network(username):
+#     option_graph = {
+#         'tooltip': {},
+#         'series': [
+#             {
+#             'name': 'Coauthor Network',
+#             'type': 'graph',
+#             'layout': 'force',
+#             'data': graph['nodes'],
+#             'links': graph['links'],
+#             # 'categories': graph['categories'],
+#             'roam': True,
+#             'label': {
+#             'show': True,
+#             'position': 'right',
+#             'formatter': '{b}'
+#             },
+#             'labelLayout': {
+#             'hideOverlap': True
+#             },
+#             'scaleLimit': {
+#             'min': 0.4,
+#             'max': 100,
+#             'nodeScaleRatio': 0.2
+#             },
+#             'lineStyle': {
+#             'color': 'source',
+#             'curveness': 0.1
+#             },
+#             # 'force': {
+#             #   'repulsion': 10
+#             # }
+#         }
+#         ]
+#     }
+#     return

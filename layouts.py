@@ -198,6 +198,8 @@ def page_1_dropdown(input, sortby, sort_asc, interest_input, ):
 # influencers_page = cards
 
 influencer_network_page = html.Div([
+    html.H4("Influencer Network Graph", style={"margin-top": "30px", "text-align": "center"}),
+    html.P('Click on the legend to mute the selected category.',style={"margin-top": "10px", "text-align": "center"}),
     dash_echarts.DashECharts(
                         option = option_graph,
                         # events = events,
