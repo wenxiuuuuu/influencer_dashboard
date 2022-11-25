@@ -206,78 +206,138 @@ def create_bar(user1, user2):
 
 def color_range(eng_rate): 
     if 0<=eng_rate<25: 
-        return '#FF6E76'
+        return '#CC6155'
     elif 25<=eng_rate<50: 
-        return '#FDDD60'
+        return '#ED820E'
     elif 50<=eng_rate<75: 
-        return '#58D9F9'
+        return '#F5CB62'
     else:
-        return '#7CFFB2'
-        
+        return '#7BCABB'
 def create_gauge(eng_rate):
     option_gauge = {
         'series': [
             {
-            'type': 'gauge',
-            'startAngle': 180,
-            'endAngle': 0,
-            'min': 0,
-            'max': 100,
-            'splitNumber': 10,
-            'itemStyle': {
-                # 'color': '#FFC300',
-                'color': color_range(eng_rate), 
-            },
-            'progress': {
-                'show': True,
-                'roundCap': True,
-                'width': 12
-            },
-            'pointer': {        # no pointer
-                'icon': '',
-                'length': '75%',
-                'width': 0,
-                'offsetCenter': [0, '5%']
-            },
-            'axisLine': {
-                'roundCap': True,
-                'lineStyle': {
-                'width': 12
-                }
-            },
-            'axisTick': {
-                'splitNumber': 2,
-                'lineStyle': {
-                'width': 1,
-                'color': '#999'
-                }
-            },
-            'splitLine': {
-                'length': 6,
-                'lineStyle': {
-                'width': 2,
-                'color': '#999'
-                }
-            },
-            'axisLabel': {
-                'distance': 15,
-                'color': '#999',
-                'fontSize': 10
-            },
-            'title': {
-                'show': False
-            },
-            'detail': {
-                'formatter': '{value}%',
-                'offsetCenter': [0, '-20%'],
-                'valueAnimation': True,
-                'fontSize': 20
-            },
-            'data': [
-                {
-                'value': eng_rate
-                }
-            ]
+                'type': 'gauge',
+                'startAngle': 180,
+                'endAngle': 0,
+                'min': 0,
+                'max': 100,
+                'splitNumber': 10,
+                'itemStyle': {
+                    # 'color': '#FFC300',
+                    'color': color_range(eng_rate), 
+                },
+                'progress': {
+                    'show': True,
+                    'roundCap': True,
+                    'width': 12
+                },
+                'axisLine': {
+                    'show': True,
+                    'roundCap': True,
+                    'lineStyle': {
+                    'width': 12
+                    }
+                },
+                'axisTick': {
+                    'show': False
+                    # 'splitNumber': 2,
+                    # 'lineStyle': {
+                    # 'width': 1,
+                    # 'color': '#999'
+                    # }
+                },
+                'splitLine': {
+                    'show': False,
+                    'length': 6,
+                    'lineStyle': {
+                    'width': 2,
+                    'color': '#999'
+                    }
+                },
+                'axisLabel': {
+                    'show': False,
+                    'distance': 15,
+                    'color': '#999',
+                    'fontSize': 10
+                },
+                'pointer': {
+                    'show': False
+                },
+                'title': {
+                    'show': False
+                },
+                'detail': {
+                    'formatter': '{value}%',
+                    'offsetCenter': [0, '-20%'],
+                    'valueAnimation': True,
+                    'fontSize': 20, 
+                    'color': '#999'
+                },
+                'data': [
+                    {
+                    'value': eng_rate
+                    }
+                ]
+            }, 
+            {
+                'type': 'gauge',
+                'startAngle': 180,
+                'endAngle': 0,
+                'min': 0,
+                'max': 100,
+                'itemStyle': {
+                    'color': color_range(eng_rate), 
+                },
+                'progress': {
+                    'show': True,
+                    'width': 0, 
+                },
+                'pointer': {
+                    'show': False
+                },
+                'axisLine': {
+                    'show': False, 
+                    'lineStyle': {
+                    'width': 6,
+                    'color': [
+                        [0.25, '#CC6155'],
+                        [0.5, '#ED820E'],
+                        [0.75, '#F5CB62'],
+                        [1, '#7BCABB']
+                    ]
+        }
+                },
+                'axisTick': {
+                    'show': True, 
+                    'splitNumber': 2,
+                    'lineStyle': {
+                    'width': 1,
+                    'color': 'auto'
+                    }
+                },
+                'splitLine': {
+                    'show': True, 
+                    'length': 8,
+                    'lineStyle': {
+                    'width': 2,
+                    'color': 'auto'
+                    }
+                },
+                'axisLabel': {
+
+                    'distance': 15,
+                    'color': '#999',
+                    'fontSize': 10
+                },
+                'detail': {
+                    'show': False
+                },
+                'data': [
+                    {
+                    'value': eng_rate
+                    }
+                ]
             }
         ]
     }
