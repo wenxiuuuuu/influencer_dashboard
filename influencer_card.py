@@ -366,8 +366,8 @@ def create_profile(username):
                             ]),
 
                             dbc.Col([
-                                html.H4("Likes & Comments over Time", className='text-muted', style={'text-align':'center'}), 
-                                html.P("For each post", style={'text-align':'center'}),
+                                html.H4("Likes & Comments", className='text-muted', style={'text-align':'center'}), 
+                                html.P("For recent posts", style={'text-align':'center'}),
                                 # html.H5('add another graph here..?'), 
                                 dash_echarts.DashECharts(
                                             option = line_graph(username),
