@@ -403,12 +403,12 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
         return comparison_layout
 
 
-img_df = pd.read_csv('data/image_cluster_urls.csv')
+img_df = pd.read_csv('data/full_img_descriptions.csv')
 img_df['clusterid'] = img_df['clusterid'].astype('category')
 
 # Create scatter plot with x and y coordinates
 imgcluster_fig = px.scatter(
-    img_df.sort_values('clusterid', ascending = False), x='1d', y='2d',
+    img_df.sort_values('clusterid', ascending = True), x='1d', y='2d',
     custom_data=['img_url'],
     color='clusterid',
     color_discrete_map = color_map
@@ -427,24 +427,30 @@ imgcluster_fig.update_traces(marker_size=10)
 cluster_page = html.Div(
    [
         html.H3("Which posts are similar?", style={"margin-top": "30px", "text-align": "center"}),
-        html.H4("Choose category"),
-        html.Div([
-        dcc.Dropdown(
-                        id="category_image",
+        dbc.Container([
+            html.H4("Choose category"),
+            dcc.Dropdown(
+                        id="category",
                         options=[
-                            {"label": "Fashion", "value": "fashion"},
-                            {"label": "Health", "value": "health"},
+                            {"label": "Fashion", "value": "Fashion"},
+                            {"label": "Health/Wellness", "value": "Health/Wellness"},
+                            {"label": "Media", "value": "Media"},
+                            {"label": "Food", "value": "Food"},
+                            {"label": "Electronics", "value": "Electronics"},
+                            {"label": "Education", "value": "Education"},
+                            {"label": "Other", "value": "Other"},
+                            {"label": "Business", "value": "Business"},
+                            {"label": "For Good", "value": "For Good"},
                             # {"label": "Clothing (Brand)", "value": "Clothing (Brand)"},
                             # {"label": "Actor", "value": "Actor"},
                             # {"label": "Jewelry/watches", "value": "Jewelry/watches"},
                             # {"label": "Food & beverage", "value": "Food & beverage"},
                             ],
-                        value = 'fashion',
-
+                        value = 'Fashion'
                         ),
-        ],style={'width': '20%', 'text-align': 'center'}),
+            ],style={'width': '40%', 'text-align': 'center'}),
         html.Br(),
-        html.P('These images below are the central images of 5 clusters:', style={"text-align": "center"}),
+        html.P('These images below are representative of each of the 6 image types posted by the Fashion influencers:', style={"text-align": "center"}),
         html.Br(),
         dbc.Container([
             dbc.Row([
@@ -456,27 +462,48 @@ cluster_page = html.Div(
                             style={'height':'280px', 'width':'260px'})
                     ]
                 ),
-                html.Img(
-                    id='centroid_1_img',
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==0)]['img_url'].iloc[0],
-                    style={'height':'280px', 'width':'260px'}),
-                    # style={'height':'20%', 'width':'20%'}),
-                html.Img(
-                    id='centroid_2_img',
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==1)]['img_url'].iloc[0],
-                    style={'height':'280px', 'width':'260px'}),
-                html.Img(
-                    id='centroid_3_img',
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==2)]['img_url'].iloc[0],
-                    style={'height':'280px', 'width':'260px'}),
-                html.Img(
-                    id='centroid_4_img',
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==3)]['img_url'].iloc[0],
-                    style={'height':'280px', 'width':'260px'}),
-                html.Img(
-                    id='centroid_5_img',
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==4)]['img_url'].iloc[0],
-                    style={'height':'280px', 'width':'260px'}),
+                dbc.Col(
+                    id='centroid1', 
+                    children= [
+                        html.H5('Cluster 1'), 
+                        html.Img(src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==1)]['img_url'].iloc[0],
+                            style={'height':'280px', 'width':'260px'})
+                    ]
+                ),
+                dbc.Col(
+                    id='centroid2', 
+                    children= [
+                        html.H5('Cluster 2'), 
+                        html.Img(src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==2)]['img_url'].iloc[0],
+                            style={'height':'280px', 'width':'260px'})
+                    ]
+                ), 
+            ]),
+            dbc.Row([
+                dbc.Col(
+                    id='centroid3', 
+                    children= [
+                        html.H5('Cluster 3'), 
+                        html.Img(src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==3)]['img_url'].iloc[0],
+                            style={'height':'280px', 'width':'260px'})
+                    ]
+                ),
+                dbc.Col(
+                    id='centroid4', 
+                    children= [
+                        html.H5('Cluster 4'), 
+                        html.Img(src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==4)]['img_url'].iloc[0],
+                            style={'height':'280px', 'width':'260px'})
+                    ]
+                ),
+                dbc.Col(
+                    id='centroid5', 
+                    children= [
+                        html.H5('Cluster 5'), 
+                        html.Img(src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==5)]['img_url'].iloc[0],
+                            style={'height':'280px', 'width':'260px'})
+                    ]
+                ), 
             ]),
 
             html.Br(),
@@ -497,28 +524,6 @@ cluster_page = html.Div(
 
                 dbc.Col([html.Div(id='hover_cluster_name'),]),
             ]), 
-
-            dcc.Upload(
-                id='upload-data',
-                children=html.Div([
-                    'Drag and Drop or ',
-                    html.A('Select Files')
-                ]),
-                style={
-                    'width': '100%',
-                    'height': '60px',
-                    'lineHeight': '60px',
-                    'borderWidth': '1px',
-                    'borderStyle': 'dashed',
-                    'borderRadius': '5px',
-                    'textAlign': 'center',
-                    'margin': '10px'
-                },
-                # Allow multiple files to be uploaded
-                multiple=True
-            ),
-            html.Div(id='output-data-upload'),
-
             
 
         ]),
@@ -632,6 +637,13 @@ def display_hover_data(clickData, figure):
         img3 = img_df[(img_df['1d']==closest_points[2][0]) & (img_df['2d']==closest_points[2][1])]['img_url'].iloc[0]
         img4 = img_df[(img_df['1d']==closest_points[3][0]) & (img_df['2d']==closest_points[3][1])]['img_url'].iloc[0]
         img5 = img_df[(img_df['1d']==closest_points[4][0]) & (img_df['2d']==closest_points[4][1])]['img_url'].iloc[0]
+        mention1 = img_df[(img_df['1d']==closest_points[0][0]) & (img_df['2d']==closest_points[0][1])]['mentions_str'].iloc[0]
+        if type(mention1)!= str: 
+            mention1 = "Not recorded!"
+
+        descriptions1 = img_df[(img_df['1d']==closest_points[0][0]) & (img_df['2d']==closest_points[0][1])]['descriptions'].iloc[0]
+        if type(descriptions1)!= str: 
+            descriptions1 = "Not recorded!"
 
         click_layout = html.Div([
             dbc.Container([
@@ -639,9 +651,12 @@ def display_hover_data(clickData, figure):
                     dbc.Col([
                         html.P('Selected Image:', style={"text-align":'center', "align-items": "center", "justify-content": "center"}),
                         html.Img(id='hover_image', src=selected_img, style={'height':'280px', 'width':'260px','margin-left':'1vw',}),
+                        html.Br(), 
+                        html.P("Mentions: "+ mention1),
+                        html.P("Descriptions: "+ descriptions1)
                     ]),
                     dbc.Col([
-                        html.P("Other Neighbouring Images:", style={"text-align":'center', "align-items": "center", "justify-content": "center"}),
+                        html.P("Other Similar Images:", style={"text-align":'center', "align-items": "center", "justify-content": "center"}),
                         dbc.Carousel(
                             items=[
                                 {"key": "1", "src": img1, "img_style":{'height':'280px', 'width':'260px'}},
@@ -655,8 +670,13 @@ def display_hover_data(clickData, figure):
                             style={'height':'80%', 'width':'80%', 'margin-left':'2vw'}
                         )
                     ]),
-                ],)
-            ])
+                    
+                ]), 
+            ]), 
+            html.Br(), 
+            html.Br(), 
+            html.Br(),
+            
         ])
 
         
