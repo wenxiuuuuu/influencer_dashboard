@@ -4,7 +4,7 @@ Influ-Finder is a influencer analytics tool to help small local business owners 
 
 CZ4125 Developing Data Products - Capstone Project
 Done by: Cammy Mun, Chua Zi Heng, Pooja Srinivas Nag, Tan Wen Xiu
-
+Deployed via Heroku at https://influ-finder.herokuapp.com/
 
 ### Setting up
 
