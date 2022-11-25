@@ -1,15 +1,16 @@
 CATEGORY_DICT = {
         'Fashion': ['Clothing (Brand)', 'Design & fashion', 'Jewelry/watches', 'Apparel & clothing',
-                'Sunglasses & Eyewear Store', 'Hair Salon', 'Accessories', 'Shopping & retail', 'Retail company', 'Fashion Model'], 
+                'Sunglasses & Eyewear Store', 'Hair Salon', 'Accessories', 'Shopping & retail', 'Retail company', 'Fashion Model','Bags/Luggage',
+                'Footwear Store'],
         'Media': ['Actor', 'Digital creator', 'Musician', 'Artist', 'Designer', 'Art', 'Arts & entertainment', 'Performing Arts',
-                'Photography Videography', 'DJ', 'Photographer', 'Video creator', 'Blogger', 'Comedian', 'Personal blog', 'Producer', 'Writer'], 
-        'Health/Wellness': ['Health/beauty', 'Cycling Studio', 'Athlete', 'Vitamins/supplements', 'Medical & health', 'Coach', 'Fitness Model'], 
-        'Food':['Restaurant'],
-        'Electronics':['Electronics', 'Gamer'], 
+                'Photography Videography', 'DJ', 'Photographer', 'Video creator', 'Blogger', 'Comedian', 'Personal blog', 'Producer', 'Writer'],
+        'Health/Wellness': ['Health/beauty', 'Cycling Studio', 'Athlete', 'Vitamins/supplements', 'Medical & health', 'Coach', 'Fitness Model', 'Sportswear Store'],
+        'Food':['Restaurant', 'Food & Beverage Company'],
+        'Electronics':['Electronics', 'Gamer', 'Information Technology Company'],
         'Education': ['School', 'Education'],
-        'Other': ['Home Improvement', 'Community', 'Just for fun', 'Scientist', 'Circus', 'Gardener', 'Pet Service', 'Government organization', 'Public figure', 'Not a business'], 
+        'Other': ['Travel Service', 'Home Decor', 'Home Improvement', 'Community', 'Just for fun', 'Scientist', 'Circus', 'Gardener', 'Pet Service', 'Government organization', 'Public figure', 'Not a business'],
         'Business': ['Product/service', 'Local business', 'Entrepreneur'],
-        'For Good':['Nonprofit organization', 'Youth Organization'], 
+        'For Good':['Nonprofit organization', 'Youth Organization'],
     }
 
 # ['', 'Blogger', 'Video creator', 'Digital creator', 'Comedian',
