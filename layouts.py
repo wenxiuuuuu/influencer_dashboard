@@ -40,14 +40,21 @@ home_page = html.Div(
                     dcc.Dropdown(
                         id="category",
                         options=[
-                            {"label": "Fashion", "value": "fashion"},
-                            {"label": "Health", "value": "health"},
+                            {"label": "Fashion", "value": "Fashion"},
+                            {"label": "Health/Wellness", "value": "Health/Wellness"},
+                            {"label": "Media", "value": "Media"},
+                            {"label": "Food", "value": "Food"},
+                            {"label": "Electronics", "value": "Electronics"},
+                            {"label": "Education", "value": "Education"},
+                            {"label": "Business", "value": "Business"},
+                            {"label": "For Good", "value": "For Good"},
+                            {"label": "Others", "value": "Other"},
                             # {"label": "Clothing (Brand)", "value": "Clothing (Brand)"},
                             # {"label": "Actor", "value": "Actor"},
                             # {"label": "Jewelry/watches", "value": "Jewelry/watches"},
                             # {"label": "Food & beverage", "value": "Food & beverage"},
                             ],
-                        value = 'fashion'
+                        value = 'Fashion'
                         ),
                     ],
                     className="mb-3",
