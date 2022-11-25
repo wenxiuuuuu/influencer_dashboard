@@ -34,8 +34,10 @@ def hashtag_buttons(list):
 def engagement_rate(current_influencer_df, influencer_stats, username): 
     num_posts = int(get_post_infos(username)['num_posts'])
     num_followers = int(current_influencer_df['num_followers'].values)
-    total_likes = int(current_influencer_df['avg_likes']) * num_posts
-    total_comments = int(current_influencer_df['avg_comments']) * num_posts
+    # total_likes = int(current_influencer_df['avg_likes']) * num_posts
+    # total_comments = int(current_influencer_df['avg_comments']) * num_posts
+    total_likes = int(current_influencer_df['avg_likes']) * 10
+    total_comments = int(current_influencer_df['avg_comments']) * 10
     # avg_video_views = int(current_influencer_df['avg_video_views'])
     # no_collaborations = len(influencer_stats['mentions'])
     engagement = ((total_likes+total_comments)/num_followers)*100
@@ -122,7 +124,7 @@ def create_card(username):
                                                         html.H5("Category"), width=5
                                                     ),
                                                     dbc.Col(
-                                                        html.H5(str(current_influencer_df['top_category'].values[0]), style={"text-align": "right"}), width=7
+                                                        html.H5(str(current_influencer_df['category_name'].values[0]), style={"text-align": "right"}), width=7
                                                     ) 
                                                 ]
                                             )
@@ -240,15 +242,16 @@ def create_profile(username):
                                 className='col', 
                                 children = [
 
-                                    html.H4("Top Categories", className="text-muted"), 
+                                    html.H4("Top Categories of Brands Worked With", className="text-muted"), 
                                     # create_listgroup(["Men Health", "Fitness", "Tech"]), 
-                                    create_listgroup(list(influencer_stats['category_counts'].keys())[:5]), 
+                                    # create_listgroup(list(influencer_stats['category_counts'].keys())[:5]), 
+                                    create_listgroup(list({k: v for k, v in sorted(influencer_stats['category_counts'].items(), reverse=True, key=lambda item: item[1])}.keys())[:5]),
 
                                     html.Br(), 
 
                                     html.H4("Top Collaborations", className='text-muted'), 
                                     # create_listgroup(["gatsbysg", "thetinselrack", "byinviteonlystore"])
-                                    create_listgroup(influencer_stats['mentions'][:5]),
+                                    create_listgroup(['@' + x for x in influencer_stats['mentions'][:5]]),
 
                                     html.Br(), 
 
@@ -264,6 +267,9 @@ def create_profile(username):
 
                                     html.H4("Biography", className='text-muted'), 
                                     html.P(current_influencer_df['biography']), 
+
+                                    html.H4("Influencer's Category", className='text-muted'), 
+                                    html.P(current_influencer_df['category_name']), 
 
                                     html.H4("Engagement Rate", className='text-muted'), 
                                     html.Div(dash_echarts.DashECharts(
@@ -343,7 +349,7 @@ def create_profile(username):
                         html.Br(),
                         dbc.Row([
                             dbc.Col([
-                                    html.H4("All Categories & Collaborators", className='text-muted', style={'text-align':'center'}), 
+                                    html.H4("All Brand Categories & Collaborators worked with", className='text-muted', style={'text-align':'center'}), 
                                     dcc.Graph(figure=sunburst_fig, 
                                         style={
                                             # "width": '100vw', 
@@ -355,6 +361,7 @@ def create_profile(username):
 
                             dbc.Col([
                                 html.H4("Likes & Comments over Time", className='text-muted', style={'text-align':'center'}), 
+                                html.P("For each post", style={'text-align':'center'}),
                                 # html.H5('add another graph here..?'), 
                                 dash_echarts.DashECharts(
                                             option = line_graph(username),

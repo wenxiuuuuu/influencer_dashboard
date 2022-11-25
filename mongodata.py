@@ -8,27 +8,40 @@ conn_str = "mongodb+srv://keiwuai30off:CZ4125keiwuaiupgrade@cluster0.aqgyhxf.mon
 client = pymongo.MongoClient(conn_str, serverSelectionTimeoutMS=5000)
 print(client.server_info()) # just a sanity check
 
-db1 = client['influencer_db']
-influencers = db1.profile_info
-posts = db1.posts
-category = db1.category
+use_mongo = False  # manually change flag
 
-# post_df
-doc_list = []
-for document in posts.find():
-    doc_list.append(document)
-post_df = pd.DataFrame(doc_list)
-
-# influencer_df
-doc_list = []
-for document in influencers.find():
-    doc_list.append(document)
-influencer_df = pd.DataFrame(doc_list)
-
-# 1. final category_dict
 category_dict = {}
-for document in category.find():
-    category_dict[document['username']] = document['category']
+
+if use_mongo:
+    print('using data from mongo...')
+    db1 = client['influencer_db']
+    influencers = db1.profile_info
+    posts = db1.posts
+    category = db1.category
+
+    # post_df
+    doc_list = []
+    for document in posts.find():
+        doc_list.append(document)
+    post_df = pd.DataFrame(doc_list)
+
+    # influencer_df
+    doc_list = []
+    for document in influencers.find():
+        doc_list.append(document)
+    influencer_df = pd.DataFrame(doc_list)
+
+    # 1. final category_dict
+
+    for document in category.find():
+        category_dict[document['username']] = document['category']
+else:
+    print('using data from downloaded csv...')
+    post_df = pd.read_csv('data/posts.csv')
+    influencer_df = pd.read_csv('data/influencers.csv')
+    category_df = pd.read_csv('data/categories.csv')
+    for document in category_df.itertuples():
+        category_dict[document.username] = document.category
 
 post_df['edge_media_to_caption'] = post_df['edge_media_to_caption'].replace(np.nan, '')
 
@@ -95,3 +108,11 @@ if __name__ == '__main__':
     # print()
     print(list(influencer_df['top_category'].unique()))
     influencer_df.to_csv("influencer.csv")
+
+    # print(list(influencer_df['top_category'].unique()))
+    uniquelist = []
+    for v in category_dict.values():
+        uniquelist.append(v)
+    print(set(uniquelist))
+    print()
+    influencer_df.to_csv('influencer_df.csv', index=False)
