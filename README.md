@@ -1,5 +1,10 @@
 ## Influencer Dashboard
 
+Influ-Finder is a influencer analytics tool to help small local business owners to explore and compare the profiles of various influencers in Singapore.
+
+CZ4125 Developing Data Products - Capstone Project
+Done by: Cammy Mun, Chua Zi Heng, Pooja Srinivas Nag, Tan Wen Xiu
+
 
 ### Setting up
 
@@ -7,7 +12,32 @@
 pip install -r requirements.txt
 ```
 
-### Updating MongoDB database
+### Run Dash
+```
+python app.py
+```
+
+### Directory
+
+`assets/`: Images and styles
+
+`data/`: Data in the form of pickle and csv (alternative to MongoDB)
+
+`data_extraction/`: Scraping instagram notebooks (might require login to run)
+
+`img_cluster/`: Image clustering layout
+
+`models/`: ML pickled models
+
+`update_db/`: Database update scripts
+
+
+
+
+
+
+
+### Database update job
 
 Will find new posts for the current influencers in the database.
 
