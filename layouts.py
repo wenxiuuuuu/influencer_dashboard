@@ -639,11 +639,11 @@ def display_hover_data(clickData, figure):
         img5 = img_df[(img_df['1d']==closest_points[4][0]) & (img_df['2d']==closest_points[4][1])]['img_url'].iloc[0]
         mention1 = img_df[(img_df['1d']==closest_points[0][0]) & (img_df['2d']==closest_points[0][1])]['mentions_str'].iloc[0]
         if type(mention1)!= str: 
-            mention1 = "Not recorded!"
+            mention1 = "No tags!"
 
         descriptions1 = img_df[(img_df['1d']==closest_points[0][0]) & (img_df['2d']==closest_points[0][1])]['descriptions'].iloc[0]
         if type(descriptions1)!= str: 
-            descriptions1 = "Not recorded!"
+            descriptions1 = "No description generated!"
 
         click_layout = html.Div([
             dbc.Container([
