@@ -272,7 +272,8 @@ def line_graph(username):
             'trigger': 'axis'
         },
         'legend': {
-            'data': ['Likes', 'Comments']
+            'data': ['Likes', 'Comments'], 
+            'left': '10'
         },
         'grid': {
             'left': '3%',
@@ -290,9 +291,17 @@ def line_graph(username):
             'boundaryGap': False,
             'data': timestamp
         },
-        'yAxis': {
-            'type': 'value'
-        },
+        'yAxis': [
+            {
+                'name': 'Likes',
+                'type': 'value', 
+            },
+                {
+                'name': 'Comments',
+                'alignTicks': True,
+                'type': 'value',
+            }
+        ],
         'series': [
             {
             'name': 'Likes',
@@ -304,7 +313,8 @@ def line_graph(username):
             'name': 'Comments',
             'type': 'line',
             'stack': 'Total',
-            'data': comments
+            'data': comments, 
+            'yAxisIndex': 1
             }
         ]
         }

@@ -34,8 +34,10 @@ def hashtag_buttons(list):
 def engagement_rate(current_influencer_df, influencer_stats, username): 
     num_posts = int(get_post_infos(username)['num_posts'])
     num_followers = int(current_influencer_df['num_followers'].values)
-    total_likes = int(current_influencer_df['avg_likes']) * num_posts
-    total_comments = int(current_influencer_df['avg_comments']) * num_posts
+    # total_likes = int(current_influencer_df['avg_likes']) * num_posts
+    # total_comments = int(current_influencer_df['avg_comments']) * num_posts
+    total_likes = int(current_influencer_df['avg_likes']) * 10
+    total_comments = int(current_influencer_df['avg_comments']) * 10
     # avg_video_views = int(current_influencer_df['avg_video_views'])
     # no_collaborations = len(influencer_stats['mentions'])
     engagement = ((total_likes+total_comments)/num_followers)*100
@@ -359,6 +361,7 @@ def create_profile(username):
 
                             dbc.Col([
                                 html.H4("Likes & Comments over Time", className='text-muted', style={'text-align':'center'}), 
+                                html.P("For each post", style={'text-align':'center'}),
                                 # html.H5('add another graph here..?'), 
                                 dash_echarts.DashECharts(
                                             option = line_graph(username),
