@@ -1,15 +1,16 @@
 CATEGORY_DICT = {
-        'Fashion': ['Clothing (Brand)', 'Design & fashion', 'Jewelry/watches',
-                'Sunglasses & Eyewear Store', 'Hair Salon', 'Accessories', 'Shopping & retail', 'Retail company'], 
+        'fashion': ['Clothing (Brand)', 'Design & fashion', 'Jewelry/watches',
+                'Sunglasses & Eyewear Store', 'Hair Salon', 'Accessories'], 
         'Media': ['Actor', 'Digital creator', 'Musician', 'Artist', 
                 'Photography Videography', 'DJ', 'Photographer', 'Video creator'], 
-        'Health/Wellness': ['Health/beauty', 'Cycling Studio', 'Athlete', 'Vitamins/supplements', 'Medical & health', 'Coach'], 
+        'Health/Wellness': ['Health/beauty', 'Cycling Studio', 'Athlete', 'Vitamins/supplements', 'Medical & health'], 
         'Food':['Restaurant'],
         'Electronics':['Electronics'], 
-        'Education': ['School'],
-        'Other': ['Home Improvement','Community', 'Just for fun'], 
-        'Business': ['Product/service', 'Local business'],
-        'For Good':['Nonprofit organization', 'Youth Organization'], 
+        'Education': ['School', 'Home Improvement', ],
+        'Other': ['Home Improvement', 'Coach',
+             'Community', 'Just for fun'], 
+        'Business': ['Product/service', 'Local business', 'Shopping & retail', 'Retail company'],
+        'For Good':['Nonprofit organization', 'Youth Organization', ], 
     }
 
 # all the unique category present
