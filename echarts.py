@@ -4,6 +4,7 @@ from data import radial_data, pie_data, get_post_infos
 from mongodata import post_df
 from collections import Counter
 from datetime import datetime
+from network_graph import get_data_indiv_network
 
 def create_pie_chart(username):
     data = pie_data(username)
@@ -330,38 +331,36 @@ def line_graph(username):
     return option
 
 # def indiv_network(username):
+#     small_dict = get_data_indiv_network(username)
 #     option_graph = {
 #         'tooltip': {},
 #         'series': [
 #             {
-#             'name': 'Coauthor Network',
-#             'type': 'graph',
-#             'layout': 'force',
-#             'data': graph['nodes'],
-#             'links': graph['links'],
-#             # 'categories': graph['categories'],
-#             'roam': True,
-#             'label': {
-#             'show': True,
-#             'position': 'right',
-#             'formatter': '{b}'
-#             },
-#             'labelLayout': {
-#             'hideOverlap': True
-#             },
-#             'scaleLimit': {
-#             'min': 0.4,
-#             'max': 100,
-#             'nodeScaleRatio': 0.2
-#             },
-#             'lineStyle': {
-#             'color': 'source',
-#             'curveness': 0.1
-#             },
-#             # 'force': {
-#             #   'repulsion': 10
-#             # }
-#         }
+#                 'name': f"{username}'s Network",
+#                 'type': 'graph',
+#                 'layout': 'force',
+#                 'data': small_dict['nodes'],
+#                 'links': small_dict['links'],
+#                 'categories': small_dict['categories'],
+#                 'roam': True,
+#                 'label': {
+#                     'show': True,
+#                     'position': 'right',
+#                     'formatter': '{b}'
+#                 },
+#                 'labelLayout': {
+#                 '   hideOverlap': True
+#                 },
+#                 'scaleLimit': {
+#                     'min': 0.4,
+#                     'max': 100,
+#                     'nodeScaleRatio': 0.2
+#                 },
+#                 'lineStyle': {
+#                     'color': 'source',
+#                     'curveness': 0.1
+#                 },
+#             }
 #         ]
 #     }
 #     return
