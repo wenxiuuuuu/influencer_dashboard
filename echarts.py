@@ -272,7 +272,8 @@ def line_graph(username):
             'trigger': 'axis'
         },
         'legend': {
-            'data': ['Likes', 'Comments']
+            'data': ['Likes', 'Comments'], 
+            'left': '10'
         },
         'grid': {
             'left': '3%',
@@ -297,7 +298,6 @@ def line_graph(username):
             },
                 {
                 'name': 'Comments',
-                'nameLocation': 'start',
                 'alignTicks': True,
                 'type': 'value',
             }
@@ -313,7 +313,8 @@ def line_graph(username):
             'name': 'Comments',
             'type': 'line',
             'stack': 'Total',
-            'data': comments
+            'data': comments, 
+            'yAxisIndex': 1
             }
         ]
         }
