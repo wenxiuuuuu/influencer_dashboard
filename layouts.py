@@ -4,7 +4,7 @@ from dash.exceptions import PreventUpdate
 # Import Bootstrap components
 import dash_bootstrap_components as dbc
 # from data import get_filtered_influ_df, rank_filtered_df
-from influencer_card import create_card
+from influencer_card import create_card, engagement_rate
 # from data import dropdown_options
 from data import *
 from mongodata import influencer_df, post_df
@@ -12,6 +12,10 @@ import pandas as pd
 import dash_echarts
 from echarts import option_graph, create_bar
 import plotly.express as px
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import NearestNeighbors
+from constants import color_map
+
 
 # def update_filtered_sorted_df(data= None):
 #     print('updating filtered df')
@@ -19,7 +23,6 @@ import plotly.express as px
 #     return filtered_sorted_df
 
 # filtered_sorted_df = pd.DataFrame()
-
 
 # home page!
 home_page = html.Div(
@@ -287,7 +290,7 @@ comparison_page = html.Div(
                         id="dropdown_1",
                         options=dropdown_options(),
                         value='_shinekoh',
-                        style={"margin-left": "7px", "width": "97.8%"}
+                        style={"margin-left": "7px", "width": "96%"}
                         ),
                     html.Div(id="influencer-1"),
                 ]),
@@ -296,7 +299,7 @@ comparison_page = html.Div(
                         id="dropdown_2",
                         options=dropdown_options(),
                         value='aglimpseofrach',
-                        style={"margin-left": "7px", "width": "97.8%"}
+                        style={"margin-left": "7px", "width": "96%"}
                         ),
                     html.Div(id="influencer-2"),
                 ])
@@ -316,9 +319,10 @@ def create_table(inf_df_1, inf_df_2):
     row2 = html.Tr([html.Td("Avg Likes"), html.Td(int(inf_df_1['avg_likes'])), html.Td(int(inf_df_2['avg_likes']))])
     row3 = html.Tr([html.Td("Avg Comments"), html.Td(int(inf_df_1['avg_comments'])), html.Td(int(inf_df_2['avg_comments']))])
     row4 = html.Tr([html.Td("Avg Video Views"), html.Td(int(inf_df_1['avg_video_views'])), html.Td(int(inf_df_2['avg_video_views']))])
-    row5 = html.Tr([html.Td("Engagement Rate"), html.Td("63%"), html.Td("63%")])
+    row5 = html.Tr([html.Td("Engagement Rate"), html.Td(int(engagement_rate(inf_df_1))), html.Td(int(engagement_rate(inf_df_2)))])
     table_body = [html.Tbody([row1, row2, row3, row4, row5])]
-    table = dbc.Table(table_header + table_body, bordered=True, hover=True, responsive=True, style={'text-align':'center', 'justifyContent':'center', 'align-items':'center'})
+    table = dbc.Table(table_header + table_body, bordered=True, hover=True, responsive=True, size='sm', 
+                        style={'text-align':'center', 'justifyContent':'center', 'align-items':'center'})
 
     return table
 
@@ -359,9 +363,13 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
             html.H4("Results:", style={"margin-top": "30px", "text-align": "center"}),
             html.Br(),
             dbc.Container([
-                dbc.Row([create_table(inf_df_1, inf_df_2)]),
+                dbc.Row([create_table(inf_df_1, inf_df_2)], style={'width':'60vw', 'margin-left':'auto', 'margin-right':'auto'}),
+                html.Br(), 
                 dbc.Row([
-                    dbc.Col([dash_echarts.DashECharts(
+                    dbc.Col(
+                        [
+                            html.H4("Radial Charts Comparison", style={'text-align': 'center'}), 
+                            dash_echarts.DashECharts(
                                 option = compare_radial(dropdown_1, dropdown_2),
                                 # events = events,
                                 id='echarts_radar_compare',
@@ -370,7 +378,10 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
                                     "height": '35vh',
                                 },)
                     ]),
-                    dbc.Col([dash_echarts.DashECharts(
+                    dbc.Col(
+                        [
+                            html.H4("Type of Posts Comparison", style={'text-align': 'center'}), 
+                            dash_echarts.DashECharts(
                                 option = create_bar(dropdown_1, dropdown_2),
                                 # events = events,
                                 id='echarts_bar_compare',
@@ -380,6 +391,9 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
                                 },)
                     ])
                 ]),
+                html.Br(), 
+                html.Br(), 
+                html.Br()
                 #
             ])
         ])
@@ -394,9 +408,11 @@ img_df['clusterid'] = img_df['clusterid'].astype('category')
 
 # Create scatter plot with x and y coordinates
 imgcluster_fig = px.scatter(
-    img_df, x='1d', y='2d',
+    img_df.sort_values('clusterid', ascending = False), x='1d', y='2d',
     custom_data=['img_url'],
-    color='clusterid')
+    color='clusterid',
+    color_discrete_map = color_map
+    )
 
 # Update layout and update traces
 imgcluster_fig.update_layout(
@@ -558,16 +574,24 @@ def get_n_closest_points(x0, y0, n=5, df=img_df[['1d','2d']].copy()):
 )
 def display_hover_data(clickData, figure):
 
-    # print('clickdata',clickData)
-    # print('figure',figure)
-    # if clickData is None:
-    #     # print("nothing was clicked")
-    #     return figure
-    # else:
     if clickData:
+        print("click")
         hover_x, hover_y = clickData['points'][0]['x'], clickData['points'][0]['y']
+        
+        selected_idx = img_df.index[(img_df['1d']==clickData['points'][0]['x']) & (img_df['2d']==clickData['points'][0]['y'])].tolist()
+        print(selected_idx)
+        from features import loaded_pickle_object
+        print("PICKLEEEEE")
+        print(type(loaded_pickle_object))
+        neigh = NearestNeighbors(n_neighbors=5)
+        # print(loaded_pickle_object[selected_idx])
+        neigh.fit(loaded_pickle_object)
+        res = neigh.kneighbors(loaded_pickle_object[selected_idx])
+        closest_idx = res[1][0].tolist()
+        closest_points = img_df.iloc[closest_idx][["1d","2d", "clusterid"]].values
+        # pred = neigh.kneighbors()
 
-        closest_points = get_n_closest_points(hover_x, hover_y)
+        # closest_points = get_n_closest_points(hover_x, hover_y)
         # print(closest_points)
 
         ## this means that this function has ALREADY added another trace, so we reduce the number of traces down the original number
@@ -577,7 +601,7 @@ def display_hover_data(clickData, figure):
             # print(figure['data'])
 
         new_traces = [{
-            'marker': {'color': 'teal', 'symbol': 'circle'},
+            'marker': {'color': color_map[c], 'symbol': 'circle'},
             'mode': 'markers',
             'orientation': 'v',
             'showlegend': False,
@@ -588,7 +612,7 @@ def display_hover_data(clickData, figure):
             'type': 'scatter',
             'selectedpoints': [0],
             # 'customdata':[]
-        } for x,y in closest_points]
+        } for x,y,c in closest_points]
 
         figure['data'].extend(new_traces)
 
@@ -626,6 +650,8 @@ def display_hover_data(clickData, figure):
                 ],)
             ])
         ])
+
+        
         # return figure, img1, img2, img3, img4, img5
         return figure, click_layout
     raise PreventUpdate

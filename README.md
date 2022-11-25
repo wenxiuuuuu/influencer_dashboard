@@ -24,7 +24,9 @@ Step 1: Insert a new cronjob using crontab (for Unix-based systems)
 crontab -e
 ```
 
-Step 2:
+Step 2: Indicate frequency of database update
+
+The following cronjob will run at midnight every sunday.
 ```
 0 0 * * SUN /path/to/dir/scrape.sh
 ```

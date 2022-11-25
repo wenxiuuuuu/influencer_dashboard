@@ -203,79 +203,151 @@ def create_bar(user1, user2):
     }
     return option_bar
 
+def color_range(eng_rate): 
+    if 0<=eng_rate<25: 
+        return '#CC6155'
+    elif 25<=eng_rate<50: 
+        return '#ED820E'
+    elif 50<=eng_rate<75: 
+        return '#F5CB62'
+    else:
+        return '#7BCABB'
 def create_gauge(eng_rate):
     option_gauge = {
         'series': [
             {
-            'type': 'gauge',
-            'startAngle': 180,
-            'endAngle': 0,
-            'min': 0,
-            'max': 100,
-            'splitNumber': 10,
-            'itemStyle': {
-                'color': '#FFC300',
-            },
-            'progress': {
-                'show': True,
-                'roundCap': True,
-                'width': 12
-            },
-            'pointer': {        # no pointer
-                'icon': '',
-                'length': '75%',
-                'width': 0,
-                'offsetCenter': [0, '5%']
-            },
-            'axisLine': {
-                'roundCap': True,
-                'lineStyle': {
-                'width': 12
-                }
-            },
-            'axisTick': {
-                'splitNumber': 2,
-                'lineStyle': {
-                'width': 1,
-                'color': '#999'
-                }
-            },
-            'splitLine': {
-                'length': 6,
-                'lineStyle': {
-                'width': 2,
-                'color': '#999'
-                }
-            },
-            'axisLabel': {
-                'distance': 15,
-                'color': '#999',
-                'fontSize': 10
-            },
-            'title': {
-                'show': False
-            },
-            'detail': {
-                'formatter': '{value}%',
-                'offsetCenter': [0, '-20%'],
-                'valueAnimation': True,
-                'fontSize': 20
-            },
-            'data': [
-                {
-                'value': eng_rate
-                }
-            ]
+                'type': 'gauge',
+                'startAngle': 180,
+                'endAngle': 0,
+                'min': 0,
+                'max': 100,
+                'splitNumber': 10,
+                'itemStyle': {
+                    # 'color': '#FFC300',
+                    'color': color_range(eng_rate), 
+                },
+                'progress': {
+                    'show': True,
+                    'roundCap': True,
+                    'width': 12
+                },
+                'axisLine': {
+                    'show': True,
+                    'roundCap': True,
+                    'lineStyle': {
+                    'width': 12
+                    }
+                },
+                'axisTick': {
+                    'show': False
+                    # 'splitNumber': 2,
+                    # 'lineStyle': {
+                    # 'width': 1,
+                    # 'color': '#999'
+                    # }
+                },
+                'splitLine': {
+                    'show': False,
+                    'length': 6,
+                    'lineStyle': {
+                    'width': 2,
+                    'color': '#999'
+                    }
+                },
+                'axisLabel': {
+                    'show': False,
+                    'distance': 15,
+                    'color': '#999',
+                    'fontSize': 10
+                },
+                'pointer': {
+                    'show': False
+                },
+                'title': {
+                    'show': False
+                },
+                'detail': {
+                    'formatter': '{value}%',
+                    'offsetCenter': [0, '-20%'],
+                    'valueAnimation': True,
+                    'fontSize': 20, 
+                    'color': '#999'
+                },
+                'data': [
+                    {
+                    'value': eng_rate
+                    }
+                ]
+            }, 
+            {
+                'type': 'gauge',
+                'startAngle': 180,
+                'endAngle': 0,
+                'min': 0,
+                'max': 100,
+                'itemStyle': {
+                    'color': color_range(eng_rate), 
+                },
+                'progress': {
+                    'show': True,
+                    'width': 0, 
+                },
+                'pointer': {
+                    'show': False
+                },
+                'axisLine': {
+                    'show': False, 
+                    'lineStyle': {
+                    'width': 6,
+                    'color': [
+                        [0.25, '#CC6155'],
+                        [0.5, '#ED820E'],
+                        [0.75, '#F5CB62'],
+                        [1, '#7BCABB']
+                    ]
+        }
+                },
+                'axisTick': {
+                    'show': True, 
+                    'splitNumber': 2,
+                    'lineStyle': {
+                    'width': 1,
+                    'color': 'auto'
+                    }
+                },
+                'splitLine': {
+                    'show': True, 
+                    'length': 8,
+                    'lineStyle': {
+                    'width': 2,
+                    'color': 'auto'
+                    }
+                },
+                'axisLabel': {
+
+                    'distance': 15,
+                    'color': '#999',
+                    'fontSize': 10
+                },
+                'detail': {
+                    'show': False
+                },
+                'data': [
+                    {
+                    'value': eng_rate
+                    }
+                ]
             }
         ]
     }
     return option_gauge
 
-
 def line_graph(username):
     comments = list(get_post_infos(username)['comments_over_time'])
     likes = list(get_post_infos(username)['likes_over_time'])
-    timestamp = [datetime.fromtimestamp(i).strftime("%m-%y") for i in list(get_post_infos(username)['timestamp'])]
+    # timestamp = [datetime.fromtimestamp(i).strftime("%m-%y") for i in list(get_post_infos(username)['timestamp'])]
+    post_no = list(range(1,get_post_infos(username)['num_posts']+1))
+    post_type = list(get_post_infos(username)['post_type'])
     option = {
         'tooltip': {
             'trigger': 'axis'
@@ -298,32 +370,52 @@ def line_graph(username):
         'xAxis': {
             'type': 'category',
             'boundaryGap': False,
-            'data': timestamp
+            'data': post_no, 
+            'axisTick': {
+                'alignWithLabel': True
+            }
         },
         'yAxis': [
             {
                 'name': 'Likes',
                 'type': 'value', 
+                'axisAutoAlign': True,
+                'axisLine': {
+                    'lineStyle': {
+                        'color': 'blue'
+                    }
+                }
             },
                 {
                 'name': 'Comments',
-                'alignTicks': True,
-                'type': 'value',
+                'position': 'right',
+                'type': 'value', 
+                'axisAutoAlign': True,
+                'axisLine': {
+                    'lineStyle': {
+                        'color': 'green'
+                    }
+                }, 
+                'splitLine': {
+                    'show': False
+                }
             }
         ],
         'series': [
             {
-            'name': 'Likes',
-            'type': 'line',
-            # 'stack': 'Total',
-            'data': likes
+                'name': 'Likes',
+                'type': 'line',
+                'data': likes, 
+                'lineStyle': {
+                    'color': 'blue'
+                }
             },
             {
-            'name': 'Comments',
-            'type': 'line',
-            'stack': 'Total',
-            'data': comments, 
-            'yAxisIndex': 1
+                'name': 'Comments',
+                'type': 'line',
+                'stack': 'Total',
+                'data': comments, 
+                'yAxisIndex': 1
             }
         ]
         }
