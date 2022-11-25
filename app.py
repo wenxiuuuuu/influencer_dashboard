@@ -42,7 +42,7 @@ app.title = "Influ-Finder"
 
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("Home", href="home")),
+        dbc.NavItem(dbc.NavLink("Home", href="/")),
         dbc.NavItem(dbc.NavLink("Comparison", href="comparison")),
         # dbc.NavItem(dbc.NavLink("Influencers", href="influencers")),
         dbc.DropdownMenu(
@@ -58,7 +58,7 @@ navbar = dbc.NavbarSimple(
         )
         ],
     brand="Influ-Finder",
-    brand_href="/home",
+    brand_href="/",
     sticky='top'
 )
 
@@ -76,7 +76,7 @@ def display_page(pathname):
         # return navbar, filter_layout
     elif pathname == '/comparison':
         return navbar, comparison_page
-    elif pathname == '/home':
+    elif pathname == '/':
         return navbar, home_page
     elif pathname == '/influencer_network':
         return navbar, influencer_network_page
