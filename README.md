@@ -25,6 +25,8 @@ python app.py
 
 `data_extraction/`: Scraping instagram notebooks (might require login to run)
 
+`machine_learning/`: machine learning model training/inferencing notebooks
+
 `img_cluster/`: Image clustering layout
 
 `models/`: ML pickled models
