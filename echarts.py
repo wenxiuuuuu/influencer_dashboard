@@ -289,9 +289,18 @@ def line_graph(username):
             'boundaryGap': False,
             'data': timestamp
         },
-        'yAxis': {
-            'type': 'value'
-        },
+        'yAxis': [
+            {
+                'name': 'Likes',
+                'type': 'value', 
+            },
+                {
+                'name': 'Comments',
+                'nameLocation': 'start',
+                'alignTicks': True,
+                'type': 'value',
+            }
+        ],
         'series': [
             {
             'name': 'Likes',
