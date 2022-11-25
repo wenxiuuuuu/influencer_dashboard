@@ -1,10 +1,10 @@
-import json 
+import json
 import dash_echarts
 from data import radial_data, pie_data
 from mongodata import post_df
 from collections import Counter
 
-def create_pie_chart(username): 
+def create_pie_chart(username):
     data = pie_data(username)
     option_pie = {
         'tooltip': {
@@ -18,7 +18,7 @@ def create_pie_chart(username):
             {
             'type': 'pie',
             'radius': '50%',
-            'data': data, 
+            'data': data,
             'emphasis': {
                 'itemStyle': {
                 'shadowBlur': 10,
@@ -32,8 +32,8 @@ def create_pie_chart(username):
     return option_pie
 
 
-# radar chart 
-def create_radial(username): 
+# radar chart
+def create_radial(username):
     username, total_avg_likes, total_avg_comments, total_avg_followers, total_avg_video_views, influencer_likes, influencer_comments, influencer_followers, influencer_video_views = radial_data(username)
     option_radial = {
         'tooltip': {
@@ -76,7 +76,7 @@ def create_radial(username):
                 'lineStyle': {'color':'#FFC300'},
                 'areaStyle': {'color': '#FFC300'}
                 }
-            ], 
+            ],
             'emphasis': {
                 'itemStyle': {
                 'shadowBlur': 10,
