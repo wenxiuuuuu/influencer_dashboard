@@ -8,28 +8,34 @@ conn_str = "mongodb+srv://keiwuai30off:CZ4125keiwuaiupgrade@cluster0.aqgyhxf.mon
 client = pymongo.MongoClient(conn_str, serverSelectionTimeoutMS=5000)
 print(client.server_info()) # just a sanity check
 
-db1 = client['influencer_db']
-influencers = db1.profile_info
-posts = db1.posts
-category = db1.category
+# db1 = client['influencer_db']
+# influencers = db1.profile_info
+# posts = db1.posts
+# category = db1.category
 
-# post_df
-doc_list = []
-for document in posts.find():
-    doc_list.append(document)
-post_df = pd.DataFrame(doc_list)
+# # post_df
+# doc_list = []
+# for document in posts.find():
+#     doc_list.append(document)
+# post_df = pd.DataFrame(doc_list)
+post_df = pd.read_csv('data/posts.csv')
 
 # influencer_df
-doc_list = []
-for document in influencers.find():
-    doc_list.append(document)
-influencer_df = pd.DataFrame(doc_list)
+# doc_list = []
+# for document in influencers.find():
+#     doc_list.append(document)
+# influencer_df = pd.DataFrame(doc_list)
+influencer_df = pd.read_csv('data/influencers.csv')
 
 # 1. final category_dict
 category_dict = {}
-for document in category.find():
-    category_dict[document['username']] = document['category']
+# for document in category.find():
+#     category_dict[document['username']] = document['category']
 
+category_df = pd.read_csv('data/categories.csv')
+for document in category_df.itertuples():
+    category_dict[document.username] = document.category
+# print(category_dict)
 post_df['edge_media_to_caption'] = post_df['edge_media_to_caption'].replace(np.nan, '')
 
 
@@ -93,6 +99,9 @@ if __name__ == '__main__':
     # print(influencer_df.loc[influencer_df['username']=='ianjeevan_']['username_html'].values[0])
     # print(list(post_df.columns))
     # print()
+    print(list(influencer_df['top_category'].unique()))
+    influencer_df.to_csv("influencer.csv")
+
     # print(list(influencer_df['top_category'].unique()))
     uniquelist = []
     for v in category_dict.values():

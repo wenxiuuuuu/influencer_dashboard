@@ -5,7 +5,7 @@ from dash.exceptions import PreventUpdate
 import dash_bootstrap_components as dbc
 # from data import get_filtered_influ_df, rank_filtered_df
 from influencer_card import create_card
-# from data import dropdown_options 
+# from data import dropdown_options
 from data import *
 from mongodata import influencer_df, post_df
 import pandas as pd
@@ -23,16 +23,16 @@ import plotly.express as px
 
 # home page!
 home_page = html.Div(
-    [   
+    [
         html.Div(
             className="container",
             children=[
-                html.H3("Welcome! Please input your company details below:", 
+                html.H3("Welcome! Please input your company details below:",
                     style={"margin-top": "30px", "text-align": "center"}),
                 html.Br(),
                 html.Div([
-                    dbc.Label("Company instagram", html_for="example-ig"), 
-                    dbc.Input(id="instagram", placeholder="Eg @netflixsg"), 
+                    dbc.Label("Company instagram", html_for="example-ig"),
+                    dbc.Input(id="instagram", placeholder="Eg @netflixsg"),
                 ]),
                 html.Br(),
                 html.Div([
@@ -58,45 +58,45 @@ home_page = html.Div(
                         ),
                     ],
                     className="mb-3",
-                    ), 
+                    ),
                 html.Br(),
                 html.Div([
-                    dbc.Label("Preferred Follower Range for Influencer", html_for="range-slider"), 
+                    dbc.Label("Preferred Follower Range for Influencer", html_for="range-slider"),
                     dcc.RangeSlider(id="follower_range", min=3000, max=50000, value=[10000,25000], allowCross=False, tooltip={'placement':'bottom', 'always_visible': False})
-                ], 
-                className="mb-3"), 
-                html.Br(), 
+                ],
+                className="mb-3"),
+                html.Br(),
                 dbc.Button('Submit', id='submit', n_clicks=0, style={"width": "30%", "margin": "auto"}),
             ],
             style={"width": "40%", "display": "grid"}
-        ), 
+        ),
         html.Div(
             id="results"
         )
     ]
 )
 filtered_sorted_df = pd.DataFrame()
-search_row = [] 
+search_row = []
 
 num_filtered_users = 10
 results = pd.DataFrame()
 sort_idx = []
 @callback(
-    output=Output(component_id="results", component_property="children"), 
-    inputs=[Input(component_id="submit", component_property="n_clicks"), Input("instagram", "value"), Input("follower_range", "value"), Input("category", "value")], 
+    output=Output(component_id="results", component_property="children"),
+    inputs=[Input(component_id="submit", component_property="n_clicks"), Input("instagram", "value"), Input("follower_range", "value"), Input("category", "value")],
     # state=[State("instagram", "value"), State("follower_range", "value"), State("category", "value")]
 )
-def save_info(n_clicks, instagram, follower_range, category): 
+def save_info(n_clicks, instagram, follower_range, category):
     print(n_clicks, instagram, follower_range, category)
 
-    if n_clicks > 0: 
+    if n_clicks > 0:
     #     ig_text = html.H4("instagram is: " + str(instagram))
     #     followers = html.H4("follower range is: " + str(follower_range[0]) + " to " + str(follower_range[1]))
     #     cate = html.H4("category is: " + str(category))
-        
-    #     # INFORMATION FROM COMPANY IS AVAILABLE HERE!! USE THIS PART TO TAKE DATA FOR FILTERS 
 
-    # check if user exists in our companies db 
+    #     # INFORMATION FROM COMPANY IS AVAILABLE HERE!! USE THIS PART TO TAKE DATA FOR FILTERS
+
+    # check if user exists in our companies db
     # 1. filter the df
         filtered_df = get_filtered_influ_df(instagram, follower_range, category)
         # print('filtered_df', filtered_df)
@@ -110,21 +110,21 @@ def save_info(n_clicks, instagram, follower_range, category):
         global filtered_sorted_df
         filtered_sorted_df = sorted_df
         global search_row
-        search_row = [] 
-        for i in sorted_usernames: 
+        search_row = []
+        for i in sorted_usernames:
             search_row.append(create_card(i))
         search_cards = dbc.Container(dbc.Row(search_row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
         search_page = search_cards
         if sorted_usernames:
             success_msg = html.Div(
             [
-                html.Br(), 
+                html.Br(),
                 html.H4(f"Successful! You are matched with {len(sorted_usernames)} influencers!", style={"text-align": "center"})
             ])
-        else: 
+        else:
             success_msg = html.Div(
             [
-                html.Br(), 
+                html.Br(),
                 html.H4("Sorry... No influencers is matched with your company...", style={"text-align": "center"}),
                 html.H6("Try adjusting your preferred follower range.", style={"text-align": "center"})
             ])
@@ -154,7 +154,7 @@ sort_layout = dbc.Container([
                 dbc.InputGroupText(html.I(className="fa fa-filter"), style={'height':'36px'}),
                 dbc.InputGroupText("Category:", style={'height':'36px'}),
                 dcc.Dropdown(
-                    unique_categories, 
+                    unique_categories,
                     id="interest-input",
                     # multi=True,
                     style={'border-top-left-radius':'0px', 'border-bottom-left-radius':'0px', 'width':'30vw'}
@@ -181,17 +181,17 @@ def page_1_dropdown(input, sortby, sort_asc, interest_input, ):
     # return dash_table.DataTable(temp.to_dict('records'), [{"name": i, "id": i} for i in temp.columns])
     # return f"{df['Full Name'][0]}, {temp['Full Name'][0]}"
     row = []
-    for i in temp['username']: 
+    for i in temp['username']:
         row.append(create_card(i))
-    
+
     influencers_page = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
 
     num_results = html.P([html.Strong(f'{len(temp)}'), html.Span(' results returned.')], style={'text-align':'right','margin-right':'1.3vw'})
     return num_results, influencers_page
 
-# # influencer page 
-# row = [] 
-# for i in influencer_df['username']: 
+# # influencer page
+# row = []
+# for i in influencer_df['username']:
 #     row.append(create_card(i))
 
 # cards = dbc.Container(dbc.Row(row, style={"display": "flex", "align-items": "center", "justify-content": "center"}))
@@ -261,7 +261,7 @@ def compare_radial(user1, user2):
                 'lineStyle': {'color':'#ADD8E6'},
                 'areaStyle': {'color': '#ADD8E6'}
                 }
-            ], 
+            ],
             'emphasis': {
                 'itemStyle': {
                 'shadowBlur': 10,
@@ -276,7 +276,7 @@ def compare_radial(user1, user2):
 
 comparison_page = html.Div(
     children=[
-        html.H3("Compare Two Influencers", style={"margin-top": "30px", "text-align": "center"}), 
+        html.H3("Compare Two Influencers", style={"margin-top": "30px", "text-align": "center"}),
         html.Br(),
         dbc.Container([
             dbc.Row([
@@ -287,23 +287,23 @@ comparison_page = html.Div(
                         value='_shinekoh',
                         style={"margin-left": "7px", "width": "97.8%"}
                         ),
-                    html.Div(id="influencer-1"), 
-                ]), 
+                    html.Div(id="influencer-1"),
+                ]),
                 dbc.Col([
                     dcc.Dropdown(
                         id="dropdown_2",
                         options=dropdown_options(),
-                        value='aglimpseofrach', 
+                        value='aglimpseofrach',
                         style={"margin-left": "7px", "width": "97.8%"}
                         ),
-                    html.Div(id="influencer-2"), 
+                    html.Div(id="influencer-2"),
                 ])
-            ]), 
-        ]), 
+            ]),
+        ]),
         html.Div(
-            [dbc.Button("Submit", id="compare_options", n_clicks=0, style={"width": "20%"})], 
+            [dbc.Button("Submit", id="compare_options", n_clicks=0, style={"width": "20%"})],
             style={"display": "flex", "align-items": "center", "justify-content": "center"}
-        ),  
+        ),
         html.Div(id='comparison')
     ]
 )
@@ -321,40 +321,40 @@ def create_table(inf_df_1, inf_df_2):
     return table
 
 @callback(
-    output=Output(component_id="influencer-1", component_property="children"), 
+    output=Output(component_id="influencer-1", component_property="children"),
     inputs=[Input(component_id="dropdown_1", component_property="value")]
 )
-def dropdown_one(dropdown_1): 
+def dropdown_one(dropdown_1):
     influencer_one = dropdown_1
     return create_card(influencer_one)
 
 @callback(
-    output=Output(component_id="influencer-2", component_property="children"), 
+    output=Output(component_id="influencer-2", component_property="children"),
     inputs=[Input(component_id="dropdown_2", component_property="value")]
 )
-def dropdown_two(dropdown_2): 
+def dropdown_two(dropdown_2):
     influencer_two = dropdown_2
     return create_card(influencer_two)
 
 @callback(
-    output=Output(component_id="comparison", component_property="children"), 
-    inputs=[Input(component_id="compare_options", component_property="n_clicks"), 
+    output=Output(component_id="comparison", component_property="children"),
+    inputs=[Input(component_id="compare_options", component_property="n_clicks"),
     Input(component_id='dropdown_1', component_property="value"), Input(component_id='dropdown_2', component_property="value")]
 )
-def show_comparison(compare_options, dropdown_1, dropdown_2): 
-    if compare_options > 0: 
+def show_comparison(compare_options, dropdown_1, dropdown_2):
+    if compare_options > 0:
         result = html.H3("choice 1 is " + str(dropdown_1) + " choice2 is " + str(dropdown_2))
 
         inf_df_1 = get_cur_infl_profile(dropdown_1)
         inf_df_2 = get_cur_infl_profile(dropdown_2)
 
         radial_layout = html.Div([
-            
+
         ])
 
         comparison_layout = html.Div([
             html.Br(),
-            html.H4("Results:", style={"margin-top": "30px", "text-align": "center"}), 
+            html.H4("Results:", style={"margin-top": "30px", "text-align": "center"}),
             html.Br(),
             dbc.Container([
                 dbc.Row([create_table(inf_df_1, inf_df_2)]),
@@ -378,7 +378,7 @@ def show_comparison(compare_options, dropdown_1, dropdown_2):
                                 },)
                     ])
                 ]),
-                # 
+                #
             ])
         ])
 
@@ -392,8 +392,8 @@ img_df['clusterid'] = img_df['clusterid'].astype('category')
 
 # Create scatter plot with x and y coordinates
 imgcluster_fig = px.scatter(
-    img_df, x='1d', y='2d', 
-    custom_data=['img_url'], 
+    img_df, x='1d', y='2d',
+    custom_data=['img_url'],
     color='clusterid')
 
 # Update layout and update traces
@@ -408,32 +408,48 @@ imgcluster_fig.update_traces(marker_size=10)
 
 cluster_page = html.Div(
    [
-        html.H3("Which posts are similar?", style={"margin-top": "30px", "text-align": "center"}), 
+        html.H3("Which posts are similar?", style={"margin-top": "30px", "text-align": "center"}),
+        html.H4("Choose category"),
+        html.Div([
+        dcc.Dropdown(
+                        id="category_image",
+                        options=[
+                            {"label": "Fashion", "value": "fashion"},
+                            {"label": "Health", "value": "health"},
+                            # {"label": "Clothing (Brand)", "value": "Clothing (Brand)"},
+                            # {"label": "Actor", "value": "Actor"},
+                            # {"label": "Jewelry/watches", "value": "Jewelry/watches"},
+                            # {"label": "Food & beverage", "value": "Food & beverage"},
+                            ],
+                        value = 'fashion',
+
+                        ),
+        ],style={'width': '20%', 'text-align': 'center'}),
         html.Br(),
         html.P('These images below are the central images of 5 clusters:', style={"text-align": "center"}),
         html.Br(),
         dbc.Container([
             dbc.Row([
                 html.Img(
-                    id='centroid_1_img', 
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==0)]['img_url'].iloc[0], 
+                    id='centroid_1_img',
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==0)]['img_url'].iloc[0],
                     style={'height':'280px', 'width':'260px'}),
                     # style={'height':'20%', 'width':'20%'}),
                 html.Img(
-                    id='centroid_2_img', 
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==1)]['img_url'].iloc[0], 
+                    id='centroid_2_img',
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==1)]['img_url'].iloc[0],
                     style={'height':'280px', 'width':'260px'}),
                 html.Img(
-                    id='centroid_3_img', 
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==2)]['img_url'].iloc[0], 
+                    id='centroid_3_img',
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==2)]['img_url'].iloc[0],
                     style={'height':'280px', 'width':'260px'}),
                 html.Img(
-                    id='centroid_4_img', 
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==3)]['img_url'].iloc[0], 
+                    id='centroid_4_img',
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==3)]['img_url'].iloc[0],
                     style={'height':'280px', 'width':'260px'}),
                 html.Img(
-                    id='centroid_5_img', 
-                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==4)]['img_url'].iloc[0], 
+                    id='centroid_5_img',
+                    src=img_df[(img_df['centroid']==1) & (img_df['clusterid']==4)]['img_url'].iloc[0],
                     style={'height':'280px', 'width':'260px'}),
             ]),
 
@@ -452,10 +468,10 @@ cluster_page = html.Div(
                         # "margin-top": "15px", "margin-bottom": "15px"}
                     ),
                 ]),
-                
+
                 dbc.Col([html.Div(id='hover_cluster_name'),]),
             ])
-            
+
         ]),
 
     #   html.Img(id='hover_image', src='', style={'height':'40%', 'width':'40%',}),
@@ -486,7 +502,7 @@ def get_n_closest_points(x0, y0, n=5, df=img_df[['1d','2d']].copy()):
 
 # html callback function to hover the data on specific coordinates
 # @callback(
-#    [Output('hover_image', 'src'), 
+#    [Output('hover_image', 'src'),
 #    Output('hover_cluster_name', 'children')
 #    ],
 #    Input('graph_interaction', 'hoverData'))
@@ -499,16 +515,16 @@ def get_n_closest_points(x0, y0, n=5, df=img_df[['1d','2d']].copy()):
 #       raise PreventUpdate
 
 
- 
+
 ######################## KNN ########################
 # @callback(
-#    [Output('graph_interaction', 'figure'), 
-#    Output('neighbour_img_1', 'src'), 
+#    [Output('graph_interaction', 'figure'),
+#    Output('neighbour_img_1', 'src'),
 #    Output('neighbour_img_2', 'src'),
 #    Output('neighbour_img_3', 'src'),
 #    Output('neighbour_img_4', 'src'),
 #    Output('neighbour_img_5', 'src')],
-#    [Input('graph_interaction', 'clickData'), 
+#    [Input('graph_interaction', 'clickData'),
 #    Input('graph_interaction', 'figure')]
 #    )
 @callback(
@@ -525,7 +541,7 @@ def display_hover_data(clickData, figure):
     # else:
     if clickData:
         hover_x, hover_y = clickData['points'][0]['x'], clickData['points'][0]['y']
-        
+
         closest_points = get_n_closest_points(hover_x, hover_y)
         # print(closest_points)
 
@@ -534,7 +550,7 @@ def display_hover_data(clickData, figure):
             # print(f'reducing the number of traces to {NUMBER_OF_TRACES}')
             figure['data'] = figure['data'][:NUMBER_OF_TRACES]
             # print(figure['data'])
-        
+
         new_traces = [{
             'marker': {'color': 'teal', 'symbol': 'circle'},
             'mode': 'markers',
@@ -545,12 +561,12 @@ def display_hover_data(clickData, figure):
             'y': [y],
             'yaxis': 'y',
             'type': 'scatter',
-            'selectedpoints': [0], 
+            'selectedpoints': [0],
             # 'customdata':[]
         } for x,y in closest_points]
 
         figure['data'].extend(new_traces)
-        
+
         # get the n images
         # loop it
         selected_img = img_df[ (img_df['1d']==clickData['points'][0]['x']) & (img_df['2d']==clickData['points'][0]['y'])] ['img_url'].iloc[0]
