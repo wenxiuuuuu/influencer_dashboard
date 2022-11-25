@@ -170,7 +170,7 @@ sort_layout = dbc.Container([
 def page_1_dropdown(input, sortby, sort_asc, interest_input, ):
     temp = influencer_df.copy()
     if interest_input:
-        temp = influencer_df[influencer_df['top_category'].isin([interest_input])].reset_index(drop=True)
+        temp = influencer_df[influencer_df['category_name'].isin([interest_input])].reset_index(drop=True)
     if len(sort_asc) == 1:
         asc = True
     else:
