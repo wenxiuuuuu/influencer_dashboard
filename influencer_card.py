@@ -20,7 +20,7 @@ from mongodata import influencer_df, get_cur_infl_profile, comments_df, subset_d
 def create_listgroup(list):
     item_list = []
     for item in list:
-        create_item = dbc.ListGroupItem(item, href="https://www.instagram.com/" + item + "/")
+        create_item = dbc.ListGroupItem(item, href="https://www.instagram.com/" + item[1:] + "/")
         item_list.append(create_item)
     return dbc.ListGroup(item_list)
 
