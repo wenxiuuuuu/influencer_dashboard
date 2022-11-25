@@ -93,5 +93,10 @@ if __name__ == '__main__':
     # print(influencer_df.loc[influencer_df['username']=='ianjeevan_']['username_html'].values[0])
     # print(list(post_df.columns))
     # print()
-    print(list(influencer_df['top_category'].unique()))
-    influencer_df.to_csv("influencer.csv")
+    # print(list(influencer_df['top_category'].unique()))
+    uniquelist = []
+    for v in category_dict.values():
+        uniquelist.append(v)
+    print(set(uniquelist))
+    print()
+    influencer_df.to_csv('influencer_df.csv', index=False)
