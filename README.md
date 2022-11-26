@@ -44,7 +44,7 @@ python app.py
 Will find new posts for the current influencers in the database.
 
 ```
-cd scrapers
+cd update_db
 python update_database.py
 ```
 
